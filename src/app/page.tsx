@@ -81,12 +81,20 @@ export default function Home() {
     <div className="min-h-screen py-6 px-4 sm:px-6 lg:px-8 relative">
       {/* Logo en la esquina superior izquierda */}
       <div className="absolute left-4 top-4 z-10">
-        <div className="w-40 h-40 md:w-48 md:h-48">
-          <img 
-            src="/images/smart-solutions-logo.svg" 
-            alt="Smart Solutions Logo" 
-            className="w-full h-full object-contain drop-shadow-lg"
-          />
+        <div className="w-48 h-24">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 250" className="w-full h-full">
+            {/* Curva gris */}
+            <path d="M10,125 C50,20 150,10 200,50 C250,90 300,180 370,220 C440,260 500,220 520,200" fill="none" stroke="#666666" stroke-width="40"/>
+            
+            {/* Curva naranja */}
+            <path d="M90,145 C120,70 180,50 220,80 C260,110 280,190 350,230" fill="none" stroke="#FF6600" stroke-width="25"/>
+            
+            {/* Texto "Smart" */}
+            <text x="480" y="160" fontFamily="Arial" fontSize="110" fontWeight="bold" fill="#FF6600">Smart</text>
+            
+            {/* Texto "Solutions" */}
+            <text x="480" y="250" fontFamily="Arial" fontSize="90" fontWeight="bold" fill="#666666">Solutions</text>
+          </svg>
         </div>
       </div>
       
