@@ -35,7 +35,7 @@ export default function RegistrationForm({ onSubmit }: RegistrationFormProps) {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="space-y-1">
         <label htmlFor="fullName" className="block text-sm font-medium text-white/90">
-          Nombre y Apellido
+         
         </label>
         <input
           type="text"
@@ -51,7 +51,6 @@ export default function RegistrationForm({ onSubmit }: RegistrationFormProps) {
 
       <div className="space-y-1">
         <label htmlFor="company" className="block text-sm font-medium text-white/90">
-          Empresa
         </label>
         <input
           type="text"
@@ -67,7 +66,6 @@ export default function RegistrationForm({ onSubmit }: RegistrationFormProps) {
 
       <div className="space-y-1">
         <label htmlFor="email" className="block text-sm font-medium text-white/90">
-          Correo Corporativo
         </label>
         <input
           type="email"
@@ -89,7 +87,6 @@ export default function RegistrationForm({ onSubmit }: RegistrationFormProps) {
 
       <div className="space-y-1">
         <label htmlFor="position" className="block text-sm font-medium text-white/90">
-          Posición en la Empresa
         </label>
         <input
           type="text"
