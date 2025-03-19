@@ -109,9 +109,17 @@ export default function Home() {
           <img 
             src="/images/smart-solutions.png" 
             alt="Smart Solutions" 
-            width={200}
+            width={250}
             height={60}
-            className="h-auto"
+            className="h-auto cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={() => {
+              setUserData(null);
+              setResults([]);
+              setCurrentCategoryIndex(-1);
+              setStep(0);
+              setShowResults(false);
+              setShowInfrastructureQuestions(false);
+            }}
           />
         </div>
         
