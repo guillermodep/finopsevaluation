@@ -229,238 +229,268 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
       const doc = new jsPDF();
       const pageWidth = doc.internal.pageSize.getWidth();
       
-      // Título
-      doc.setFontSize(20);
-      doc.setTextColor(30, 64, 175); // Azul oscuro
-      doc.text('AUTOEVALUACIÓN DE MADUREZ FINOPS', pageWidth / 2, 20, { align: 'center' });
-      
-      // Datos del usuario
-      doc.setFontSize(16);
-      doc.setTextColor(0, 0, 0);
-      doc.text('Datos del Participante', 14, 35);
-      
-      doc.setFontSize(12);
-      doc.setTextColor(60, 60, 60);
-      doc.text(`Nombre: ${assessment.userData.fullName}`, 14, 45);
-      doc.text(`Empresa: ${assessment.userData.company}`, 14, 52);
-      doc.text(`Correo: ${assessment.userData.email}`, 14, 59);
-      doc.text(`Posición: ${assessment.userData.position}`, 14, 66);
-      
-      // Información de infraestructura y equipos
-      doc.setFontSize(16);
-      doc.setTextColor(0, 0, 0);
-      doc.text('Información de Infraestructura y Equipos', 14, 80);
-      
-      // Proveedores de nube
-      doc.setFontSize(12);
-      doc.setTextColor(60, 60, 60);
-      doc.text('Proveedores de nube utilizados:', 14, 90);
-      
-      let yPos = 97;
-      const providers = [];
-      if (assessment.userData.cloudProviders.aws) providers.push('AWS');
-      if (assessment.userData.cloudProviders.azure) providers.push('Microsoft Azure');
-      if (assessment.userData.cloudProviders.gcp) providers.push('Google Cloud Platform');
-      if (assessment.userData.cloudProviders.oracle) providers.push('Oracle Cloud');
-      if (assessment.userData.cloudProviders.ibm) providers.push('IBM Cloud');
-      if (assessment.userData.cloudProviders.other) providers.push(assessment.userData.cloudProviders.otherSpecified || 'Otro');
-      
-      if (providers.length > 0) {
-        providers.forEach(provider => {
-          doc.text(`• ${provider}`, 16, yPos);
-          yPos += 6;
-        });
-      } else {
-        doc.text('No se ha seleccionado ningún proveedor', 16, yPos);
-        yPos += 6;
+      // Añadimos el logo de Smart Solutions
+      try {
+        // Creamos una imagen temporal para cargar el logo
+        const img = new Image();
+        img.onload = function() {
+          // Calculamos las dimensiones para mantener la proporción
+          const imgWidth = 50;
+          const imgHeight = (img.height * imgWidth) / img.width;
+          
+          // Añadimos el logo en la esquina superior derecha
+          doc.addImage(img, 'PNG', pageWidth - imgWidth - 10, 10, imgWidth, imgHeight);
+          
+          // Continuamos con el resto del PDF
+          finalizePDF();
+        };
+        img.onerror = function() {
+          console.error('Error al cargar el logo');
+          // Si hay error, continuamos sin el logo
+          finalizePDF();
+        };
+        // Cargamos la imagen
+        img.src = '/images/smart-solutions.png';
+      } catch (error) {
+        console.error('Error al procesar el logo:', error);
+        // Si hay error, continuamos sin el logo
+        finalizePDF();
       }
       
-      // Composición del equipo
-      yPos += 4;
-      doc.text('Composición del equipo:', 14, yPos);
-      yPos += 7;
-      
-      let teamCompositionText = '';
-      switch(Number(assessment.userData.teamComposition)) {
-        case 1:
-          teamCompositionText = 'No hay equipo';
-          break;
-        case 2:
-          teamCompositionText = 'Lo hace el equipo de Infraestructura/Plataformas/Operaciones';
-          break;
-        case 3:
-          teamCompositionText = 'Equipo de Cloud con capacidades de Arquitectura/Ingeniería sin especialistas en FinOps';
-          break;
-        case 4:
-          teamCompositionText = 'Equipo de Cloud con capacidades de Arquitectura/Ingeniería CON especialistas en FinOps';
-          break;
-        case 5:
-          teamCompositionText = 'CoE Centro de Excelencia Cloud con BPO y especialistas de Gobierno y práctica FinOps';
-          break;
-        case 6:
-          teamCompositionText = assessment.userData.teamCompositionOther || 'Otro';
-          break;
-        default:
-          teamCompositionText = 'No se ha seleccionado';
-      }
-      
-      const splitTeamComposition = doc.splitTextToSize(teamCompositionText, pageWidth - 30);
-      doc.text(splitTeamComposition, 16, yPos);
-      yPos += (splitTeamComposition.length * 6) + 4;
-      
-      // Presupuesto anual
-      doc.text('Presupuesto anual:', 14, yPos);
-      yPos += 7;
-      
-      let budgetText = '';
-      switch(Number(assessment.userData.annualBudget)) {
-        case 1:
-          budgetText = 'Menos de USD 100,000';
-          break;
-        case 2:
-          budgetText = 'Entre USD 100,000 y 500,000';
-          break;
-        case 3:
-          budgetText = 'Entre USD 500,000 y 1,000,000';
-          break;
-        case 4:
-          budgetText = 'Entre USD 1,000,000 y 5,000,000';
-          break;
-        case 5:
-          budgetText = 'Más de USD 5,000,000';
-          break;
-        default:
-          budgetText = 'No se ha seleccionado';
-      }
-      
-      doc.text(`• ${budgetText}`, 16, yPos);
-      yPos += 7;
-      
-      // Gasto mensual
-      doc.text('Gasto mensual:', 14, yPos);
-      yPos += 7;
-      
-      let spendText = '';
-      switch(Number(assessment.userData.monthlySpend)) {
-        case 1:
-          spendText = 'Menos de USD 10,000';
-          break;
-        case 2:
-          spendText = 'Entre USD 10,000 y 50,000';
-          break;
-        case 3:
-          spendText = 'Entre USD 50,000 y 100,000';
-          break;
-        case 4:
-          spendText = 'Entre USD 100,000 y 500,000';
-          break;
-        case 5:
-          spendText = 'Más de USD 500,000';
-          break;
-        default:
-          spendText = 'No se ha seleccionado';
-      }
-      
-      doc.text(`• ${spendText}`, 16, yPos);
-      yPos += 12;
-      
-      // Nivel promedio
-      doc.setFontSize(14);
-      doc.setTextColor(30, 64, 175);
-      doc.text(`Nivel Promedio de Madurez: ${averageLevel}`, pageWidth / 2, yPos, { align: 'center' });
-      yPos += 10;
-      
-      // Escala de Madurez FinOps
-      doc.setFontSize(14);
-      doc.setTextColor(30, 64, 175);
-      
-      // Determinamos la escala de madurez y características
-      let escalaTexto = '';
-      let caracteristicas: string[] = [];
-      
-      if (averageLevel < 2) {
-        escalaTexto = 'GATEAR (0-2)';
-        caracteristicas = [
-          'Muy pocas herramientas y reportes implementados',
-          'Las mediciones solo proporcionan información sobre los beneficios de madurar la capacidad',
-          'KPIs básicos establecidos para medir el éxito',
-          'Procesos y políticas básicas definidas en torno a la capacidad',
-          'La capacidad es comprendida pero no seguida por todos los equipos principales',
-          'Planes para abordar "frutos al alcance de la mano" (soluciones fáciles)',
-        ];
-      } else if (averageLevel < 4) {
-        escalaTexto = 'CAMINAR (2-4)';
-        caracteristicas = [
-          'La capacidad es comprendida y seguida dentro de la organización',
-          'Se identifican casos difíciles pero se adopta la decisión de no abordarlos',
-          'La automatización y/o los procesos cubren la mayoría de los requisitos de capacidad',
-          'Los casos más difíciles son identificados y se ha estimado el esfuerzo para resolverlos',
-          'Objetivos/KPIs de nivel medio a alto establecidos para medir el éxito',
-        ];
-      } else {
-        escalaTexto = 'CORRER (+4)';
-        caracteristicas = [
-          'La capacidad es comprendida y seguida por todos los equipos de la organización',
-          'Los casos difíciles están siendo abordados activamente',
-          'Objetivos/KPIs muy altos establecidos para medir el éxito',
-          'La automatización es el enfoque preferido para todas las soluciones',
-        ];
-      }
-      
-      doc.text(`Escala de Madurez FinOps: ${escalaTexto}`, pageWidth / 2, yPos, { align: 'center' });
-      yPos += 10;
-      
-      // Características del nivel de madurez
-      doc.setFontSize(12);
-      doc.setTextColor(60, 60, 60);
-      doc.text('Características de este nivel:', 14, yPos);
-      yPos += 10;
-      
-      caracteristicas.forEach((caracteristica: string) => {
-        doc.text(`• ${caracteristica}`, 16, yPos);
-        yPos += 6;
-      });
-      yPos += 4;
-      
-      // Resultados por categoría
-      doc.setFontSize(16);
-      doc.setTextColor(0, 0, 0);
-      doc.text('Resultados por Categoría', 14, yPos);
-      yPos += 10;
-      
-      let yPosition = yPos;
-      assessment.results.forEach((result) => {
-        const category = categories.find((c) => c.name === result.category);
+      function finalizePDF() {
+        // Título
+        doc.setFontSize(20);
+        doc.setTextColor(30, 64, 175); // Azul oscuro
+        doc.text('AUTOEVALUACIÓN DE MADUREZ FINOPS', pageWidth / 2, 20, { align: 'center' });
         
-        // Si llegamos al final de la página, creamos una nueva
-        if (yPosition > 250) {
-          doc.addPage();
-          yPosition = 20;
-        }
+        // Datos del usuario
+        doc.setFontSize(16);
+        doc.setTextColor(0, 0, 0);
+        doc.text('Datos del Participante', 14, 35);
         
         doc.setFontSize(12);
-        doc.setTextColor(30, 64, 175);
-        doc.text(`${result.category} - Nivel ${result.selectedLevel}`, 14, yPosition);
-        
-        doc.setFontSize(10);
         doc.setTextColor(60, 60, 60);
-        const description = category?.levelDescriptions[result.selectedLevel - 1] || '';
+        doc.text(`Nombre: ${assessment.userData.fullName}`, 14, 45);
+        doc.text(`Empresa: ${assessment.userData.company}`, 14, 52);
+        doc.text(`Correo: ${assessment.userData.email}`, 14, 59);
+        doc.text(`Posición: ${assessment.userData.position}`, 14, 66);
         
-        // Dividimos la descripción en líneas para que quepa en la página
-        const splitDescription = doc.splitTextToSize(description, pageWidth - 30);
-        doc.text(splitDescription, 14, yPosition + 7);
+        // Información de infraestructura y equipos
+        doc.setFontSize(16);
+        doc.setTextColor(0, 0, 0);
+        doc.text('Información de Infraestructura y Equipos', 14, 80);
         
-        yPosition += 7 + (splitDescription.length * 5) + 5;
-      });
-      
-      // Añadimos fecha y hora
-      const currentDate = new Date().toLocaleDateString();
-      doc.setFontSize(8);
-      doc.setTextColor(100, 100, 100);
-      doc.text(`Generado el: ${currentDate}`, pageWidth - 14, doc.internal.pageSize.getHeight() - 10, { align: 'right' });
-      
-      // Descargamos el PDF
-      doc.save(`finops_assessment_${assessment.userData.fullName.replace(/\s+/g, '_')}.pdf`);
+        // Proveedores de nube
+        doc.setFontSize(12);
+        doc.setTextColor(60, 60, 60);
+        doc.text('Proveedores de nube utilizados:', 14, 90);
+        
+        let yPos = 97;
+        const providers = [];
+        if (assessment.userData.cloudProviders.aws) providers.push('AWS');
+        if (assessment.userData.cloudProviders.azure) providers.push('Microsoft Azure');
+        if (assessment.userData.cloudProviders.gcp) providers.push('Google Cloud Platform');
+        if (assessment.userData.cloudProviders.oracle) providers.push('Oracle Cloud');
+        if (assessment.userData.cloudProviders.ibm) providers.push('IBM Cloud');
+        if (assessment.userData.cloudProviders.other) providers.push(assessment.userData.cloudProviders.otherSpecified || 'Otro');
+        
+        if (providers.length > 0) {
+          providers.forEach(provider => {
+            doc.text(`• ${provider}`, 16, yPos);
+            yPos += 6;
+          });
+        } else {
+          doc.text('No se ha seleccionado ningún proveedor', 16, yPos);
+          yPos += 6;
+        }
+        
+        // Composición del equipo
+        yPos += 4;
+        doc.text('Composición del equipo:', 14, yPos);
+        yPos += 7;
+        
+        let teamCompositionText = '';
+        switch(Number(assessment.userData.teamComposition)) {
+          case 1:
+            teamCompositionText = 'No hay equipo';
+            break;
+          case 2:
+            teamCompositionText = 'Lo hace el equipo de Infraestructura/Plataformas/Operaciones';
+            break;
+          case 3:
+            teamCompositionText = 'Equipo de Cloud con capacidades de Arquitectura/Ingeniería sin especialistas en FinOps';
+            break;
+          case 4:
+            teamCompositionText = 'Equipo de Cloud con capacidades de Arquitectura/Ingeniería CON especialistas en FinOps';
+            break;
+          case 5:
+            teamCompositionText = 'CoE Centro de Excelencia Cloud con BPO y especialistas de Gobierno y práctica FinOps';
+            break;
+          case 6:
+            teamCompositionText = assessment.userData.teamCompositionOther || 'Otro';
+            break;
+          default:
+            teamCompositionText = 'No se ha seleccionado';
+        }
+        
+        const splitTeamComposition = doc.splitTextToSize(teamCompositionText, pageWidth - 30);
+        doc.text(splitTeamComposition, 16, yPos);
+        yPos += (splitTeamComposition.length * 6) + 4;
+        
+        // Presupuesto anual
+        doc.text('Presupuesto anual:', 14, yPos);
+        yPos += 7;
+        
+        let budgetText = '';
+        switch(Number(assessment.userData.annualBudget)) {
+          case 1:
+            budgetText = 'Menos de USD 100,000';
+            break;
+          case 2:
+            budgetText = 'Entre USD 100,000 y 500,000';
+            break;
+          case 3:
+            budgetText = 'Entre USD 500,000 y 1,000,000';
+            break;
+          case 4:
+            budgetText = 'Entre USD 1,000,000 y 5,000,000';
+            break;
+          case 5:
+            budgetText = 'Más de USD 5,000,000';
+            break;
+          default:
+            budgetText = 'No se ha seleccionado';
+        }
+        
+        doc.text(`• ${budgetText}`, 16, yPos);
+        yPos += 7;
+        
+        // Gasto mensual
+        doc.text('Gasto mensual:', 14, yPos);
+        yPos += 7;
+        
+        let spendText = '';
+        switch(Number(assessment.userData.monthlySpend)) {
+          case 1:
+            spendText = 'Menos de USD 10,000';
+            break;
+          case 2:
+            spendText = 'Entre USD 10,000 y 50,000';
+            break;
+          case 3:
+            spendText = 'Entre USD 50,000 y 100,000';
+            break;
+          case 4:
+            spendText = 'Entre USD 100,000 y 500,000';
+            break;
+          case 5:
+            spendText = 'Más de USD 500,000';
+            break;
+          default:
+            spendText = 'No se ha seleccionado';
+        }
+        
+        doc.text(`• ${spendText}`, 16, yPos);
+        yPos += 12;
+        
+        // Nivel promedio
+        doc.setFontSize(14);
+        doc.setTextColor(30, 64, 175);
+        doc.text(`Nivel Promedio de Madurez: ${averageLevel}`, pageWidth / 2, yPos, { align: 'center' });
+        yPos += 10;
+        
+        // Escala de Madurez FinOps
+        doc.setFontSize(14);
+        doc.setTextColor(30, 64, 175);
+        
+        // Determinamos la escala de madurez y características
+        let escalaTexto = '';
+        let caracteristicas: string[] = [];
+        
+        if (averageLevel < 2) {
+          escalaTexto = 'GATEAR (0-2)';
+          caracteristicas = [
+            'Muy pocas herramientas y reportes implementados',
+            'Las mediciones solo proporcionan información sobre los beneficios de madurar la capacidad',
+            'KPIs básicos establecidos para medir el éxito',
+            'Procesos y políticas básicas definidas en torno a la capacidad',
+            'La capacidad es comprendida pero no seguida por todos los equipos principales',
+            'Planes para abordar "frutos al alcance de la mano" (soluciones fáciles)',
+          ];
+        } else if (averageLevel < 4) {
+          escalaTexto = 'CAMINAR (2-4)';
+          caracteristicas = [
+            'La capacidad es comprendida y seguida dentro de la organización',
+            'Se identifican casos difíciles pero se adopta la decisión de no abordarlos',
+            'La automatización y/o los procesos cubren la mayoría de los requisitos de capacidad',
+            'Los casos más difíciles son identificados y se ha estimado el esfuerzo para resolverlos',
+            'Objetivos/KPIs de nivel medio a alto establecidos para medir el éxito',
+          ];
+        } else {
+          escalaTexto = 'CORRER (+4)';
+          caracteristicas = [
+            'La capacidad es comprendida y seguida por todos los equipos de la organización',
+            'Los casos difíciles están siendo abordados activamente',
+            'Objetivos/KPIs muy altos establecidos para medir el éxito',
+            'La automatización es el enfoque preferido para todas las soluciones',
+          ];
+        }
+        
+        doc.text(`Escala de Madurez FinOps: ${escalaTexto}`, pageWidth / 2, yPos, { align: 'center' });
+        yPos += 10;
+        
+        // Características del nivel de madurez
+        doc.setFontSize(12);
+        doc.setTextColor(60, 60, 60);
+        doc.text('Características de este nivel:', 14, yPos);
+        yPos += 10;
+        
+        caracteristicas.forEach((caracteristica: string) => {
+          doc.text(`• ${caracteristica}`, 16, yPos);
+          yPos += 6;
+        });
+        yPos += 4;
+        
+        // Resultados por categoría
+        doc.setFontSize(16);
+        doc.setTextColor(0, 0, 0);
+        doc.text('Resultados por Categoría', 14, yPos);
+        yPos += 10;
+        
+        let yPosition = yPos;
+        assessment.results.forEach((result) => {
+          const category = categories.find((c) => c.name === result.category);
+          
+          // Si llegamos al final de la página, creamos una nueva
+          if (yPosition > 250) {
+            doc.addPage();
+            yPosition = 20;
+          }
+          
+          doc.setFontSize(12);
+          doc.setTextColor(30, 64, 175);
+          doc.text(`${result.category} - Nivel ${result.selectedLevel}`, 14, yPosition);
+          
+          doc.setFontSize(10);
+          doc.setTextColor(60, 60, 60);
+          const description = category?.levelDescriptions[result.selectedLevel - 1] || '';
+          
+          // Dividimos la descripción en líneas para que quepa en la página
+          const splitDescription = doc.splitTextToSize(description, pageWidth - 30);
+          doc.text(splitDescription, 14, yPosition + 7);
+          
+          yPosition += 7 + (splitDescription.length * 5) + 5;
+        });
+        
+        // Añadimos fecha y hora
+        const currentDate = new Date().toLocaleDateString();
+        doc.setFontSize(8);
+        doc.setTextColor(100, 100, 100);
+        doc.text(`Generado el: ${currentDate}`, pageWidth - 14, doc.internal.pageSize.getHeight() - 10, { align: 'right' });
+        
+        // Al final de todo el proceso, guardamos el PDF
+        doc.save(`finops_assessment_${assessment.userData.fullName.replace(/\s+/g, '_')}.pdf`);
+      }
     } catch (error) {
       console.error('Error al generar el PDF:', error);
       alert('Hubo un error al generar el PDF. Por favor, intenta de nuevo.');
