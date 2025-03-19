@@ -14,10 +14,18 @@ export default function Home() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [results, setResults] = useState<AssessmentResult[]>([]);
   const [showResults, setShowResults] = useState(false);
+  const [allCompleted, setAllCompleted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Verificar si todas las categorías tienen respuesta
+  useEffect(() => {
+    if (results.length === categories.length) {
+      setAllCompleted(true);
+    }
+  }, [results]);
 
   const handleRegistrationSubmit = (data: UserData) => {
     setUserData(data);
@@ -45,6 +53,10 @@ export default function Home() {
     storeResult(result);
     if (step < categories.length) {
       setStep(prev => prev + 1);
+    } else {
+      // Si estamos en la última pregunta, no incrementamos el paso
+      // pero indicamos que está listo para mostrar el botón de enviar
+      setAllCompleted(true);
     }
   };
 
@@ -52,7 +64,6 @@ export default function Home() {
     setShowResults(true);
   };
 
-  const allCategoriesAnswered = results.length === categories.length;
   const currentCategory = step > 0 && step <= categories.length ? categories[step - 1] : null;
   const currentResult = currentCategory
     ? results.find((r) => r.category === currentCategory.name)
@@ -118,7 +129,7 @@ export default function Home() {
           )}
 
           {/* Botón de enviar cuando todas las categorías están contestadas pero aún no se muestran los resultados */}
-          {step > categories.length && !showResults && userData && allCategoriesAnswered && (
+          {allCompleted && !showResults && userData && step === categories.length && (
             <div className="glass-panel animate-fade-in space-y-6">
               <h2 className="text-2xl font-bold text-white">
                 ¡Has completado todas las preguntas!
