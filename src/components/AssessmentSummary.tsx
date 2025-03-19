@@ -235,11 +235,11 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         const img = new Image();
         img.onload = function() {
           // Calculamos las dimensiones para mantener la proporción
-          const imgWidth = 50;
+          const imgWidth = 30; // Reducir el tamaño
           const imgHeight = (img.height * imgWidth) / img.width;
           
-          // Añadimos el logo en la esquina superior derecha
-          doc.addImage(img, 'PNG', pageWidth - imgWidth - 10, 10, imgWidth, imgHeight);
+          // Añadimos el logo en la esquina superior izquierda con márgenes
+          doc.addImage(img, 'PNG', 14, 10, imgWidth, imgHeight);
           
           // Continuamos con el resto del PDF
           finalizePDF();
