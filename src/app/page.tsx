@@ -83,7 +83,7 @@ export default function Home() {
       <div className="absolute left-4 top-4 z-10">
         <div className="w-48 h-24">
           <img 
-            src="/images/smart-solutions-logo.svg" 
+            src="/images/smart-solutions.png" 
             alt="Smart Solutions Logo" 
             className="w-full h-full"
           />
