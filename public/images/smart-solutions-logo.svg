@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 250">
+  <!-- Curva gris -->
+  <path d="M10,125 C50,20 150,10 200,50 C250,90 300,180 370,220 C440,260 500,220 520,200" fill="none" stroke="#666666" stroke-width="40"/>
+  
+  <!-- Curva naranja -->
+  <path d="M90,145 C120,70 180,50 220,80 C260,110 280,190 350,230" fill="none" stroke="#FF6600" stroke-width="25"/>
+  
+  <!-- Texto "Smart" -->
+  <text x="480" y="160" font-family="Arial" font-size="110" font-weight="bold" fill="#FF6600">Smart</text>
+  
+  <!-- Texto "Solutions" -->
+  <text x="480" y="250" font-family="Arial" font-size="90" font-weight="bold" fill="#666666">Solutions</text>
+</svg> 

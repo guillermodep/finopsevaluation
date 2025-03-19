@@ -7,6 +7,7 @@ import RegistrationForm from '@/components/RegistrationForm';
 import CategoryAssessment from '@/components/CategoryAssessment';
 import AssessmentSummary from '@/components/AssessmentSummary';
 import { storeUserData, storeResult } from '@/store/assessmentStore';
+import Image from 'next/image';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -78,9 +79,20 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center animate-fade-in">
+    <div className="min-h-screen py-6 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto relative">
+        {/* Logo en la esquina superior izquierda */}
+        <div className="absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 md:translate-x-0 md:translate-y-0 md:left-0 md:top-0 z-10">
+          <div className="w-32 h-32 md:w-48 md:h-48 relative flex items-center justify-center">
+            <img 
+              src="/images/smart-solutions-logo.svg" 
+              alt="Smart Solutions Logo" 
+              className="w-full h-full object-contain"
+            />
+          </div>
+        </div>
+
+        <div className="text-center animate-fade-in pt-16 md:pt-32">
           <h1 className="text-4xl font-bold mb-8 title-gradient">
             🔎 Autoevaluación de Madurez FinOps
           </h1>
