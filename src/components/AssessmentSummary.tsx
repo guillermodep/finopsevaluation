@@ -263,47 +263,29 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         doc.setTextColor(30, 64, 175); // Azul oscuro
         doc.text('AUTOEVALUACIÓN DE MADUREZ FINOPS', pageWidth / 2, 30, { align: 'center' });
         
-        // Ejemplo 1: Salto de línea usando \n dentro del mismo texto
-        doc.setFontSize(10);
-        doc.setTextColor(100, 100, 100);
-        doc.text('Documento generado por:\nSmart Solutions', 14, 40);
-        
-        // Ejemplo 2: Salto de línea con múltiples llamadas a doc.text
-        doc.setFontSize(10);
-        doc.setTextColor(80, 80, 80);
-        doc.text('Para más información:', pageWidth - 15, 35, { align: 'right' });
-        doc.text('www.smartsolutions.com', pageWidth - 15, 40, { align: 'right' });
-        
-        // Ejemplo 3: Dividir textos largos automáticamente con splitTextToSize
-        doc.setFontSize(9);
-        doc.setTextColor(90, 90, 90);
-        const textoLargo = "Este texto largo se dividirá automáticamente en múltiples líneas según el ancho máximo establecido, sin necesidad de agregar manualmente los saltos de línea.";
-        const lineasTexto = doc.splitTextToSize(textoLargo, 100); // 100 es el ancho máximo en puntos
-        doc.text(lineasTexto, 15, 48);
-        
         // Datos del usuario - actualizamos las posiciones para mantener el espacio correcto
         doc.setFontSize(16);
         doc.setTextColor(0, 0, 0);
-        doc.text('Datos del Participante', 14, 55);
+        doc.text('Datos del Participante', 14, 45);
         
         doc.setFontSize(12);
         doc.setTextColor(60, 60, 60);
-        doc.text(`Nombre: ${assessment.userData.fullName}`, 14, 62);
-        doc.text(`Empresa: ${assessment.userData.company}`, 14, 69);
-        doc.text(`Correo: ${assessment.userData.email}`, 14, 76);
-        doc.text(`Posición: ${assessment.userData.position}`, 14, 83);
+        doc.text(`Nombre: ${assessment.userData.fullName}`, 14, 55);
+        doc.text(`Empresa: ${assessment.userData.company}`, 14, 65);
+        doc.text(`Correo: ${assessment.userData.email}`, 14, 75);
+        doc.text(`Posición: ${assessment.userData.position}`, 14, 85);
         
         // Información de infraestructura y equipos
         doc.setFontSize(16);
         doc.setTextColor(0, 0, 0);
-        doc.text('Información de Infraestructura y Equipos', 14, 90);
+        doc.text('Información de Infraestructura y Equipos', 14, 100);
         
         // Proveedores de nube
         doc.setFontSize(12);
         doc.setTextColor(60, 60, 60);
-        doc.text('Proveedores de nube utilizados:', 14, 100);
+        doc.text('Proveedores de nube utilizados:', 14, 110);
         
-        let yPos = 107;
+        let yPos = 120; // Comenzamos con suficiente espacio
         const providers = [];
         if (assessment.userData.cloudProviders.aws) providers.push('AWS');
         if (assessment.userData.cloudProviders.azure) providers.push('Microsoft Azure');
@@ -312,20 +294,33 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         if (assessment.userData.cloudProviders.ibm) providers.push('IBM Cloud');
         if (assessment.userData.cloudProviders.other) providers.push(assessment.userData.cloudProviders.otherSpecified || 'Otro');
         
+        // Función para verificar y cambiar de página si es necesario
+        const checkAndAddPage = (requiredSpace: number = 10) => {
+          if (yPos + requiredSpace > doc.internal.pageSize.getHeight() - 20) {
+            doc.addPage();
+            yPos = 20; // Reiniciamos en la nueva página
+            return true;
+          }
+          return false;
+        };
+        
         if (providers.length > 0) {
           providers.forEach(provider => {
+            checkAndAddPage();
             doc.text(`• ${provider}`, 16, yPos);
-            yPos += 6;
+            yPos += 10; // Mayor espaciado
           });
         } else {
+          checkAndAddPage();
           doc.text('No se ha seleccionado ningún proveedor', 16, yPos);
-          yPos += 6;
+          yPos += 10;
         }
         
         // Composición del equipo
-        yPos += 4;
+        checkAndAddPage(15);
+        yPos += 5; // Espacio extra antes de la siguiente sección
         doc.text('Composición del equipo:', 14, yPos);
-        yPos += 7;
+        yPos += 10;
         
         let teamCompositionText = '';
         switch(Number(assessment.userData.teamComposition)) {
@@ -351,13 +346,15 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
             teamCompositionText = 'No se ha seleccionado';
         }
         
+        checkAndAddPage();
         const splitTeamComposition = doc.splitTextToSize(teamCompositionText, pageWidth - 30);
         doc.text(splitTeamComposition, 16, yPos);
-        yPos += (splitTeamComposition.length * 6) + 4;
+        yPos += (splitTeamComposition.length * 7) + 10; // Aumentamos el espaciado entre líneas
         
         // Presupuesto anual
+        checkAndAddPage();
         doc.text('Presupuesto anual:', 14, yPos);
-        yPos += 7;
+        yPos += 10;
         
         let budgetText = '';
         switch(Number(assessment.userData.annualBudget)) {
@@ -380,12 +377,14 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
             budgetText = 'No se ha seleccionado';
         }
         
+        checkAndAddPage();
         doc.text(`• ${budgetText}`, 16, yPos);
-        yPos += 7;
+        yPos += 15; // Espacio extra
         
         // Gasto mensual
+        checkAndAddPage();
         doc.text('Gasto mensual:', 14, yPos);
-        yPos += 7;
+        yPos += 10;
         
         let spendText = '';
         switch(Number(assessment.userData.monthlySpend)) {
@@ -408,16 +407,19 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
             spendText = 'No se ha seleccionado';
         }
         
+        checkAndAddPage();
         doc.text(`• ${spendText}`, 16, yPos);
-        yPos += 12;
+        yPos += 20; // Mayor espacio antes del nivel promedio
         
         // Nivel promedio
+        checkAndAddPage(15);
         doc.setFontSize(14);
         doc.setTextColor(30, 64, 175);
         doc.text(`Nivel Promedio de Madurez: ${averageLevel}`, pageWidth / 2, yPos, { align: 'center' });
-        yPos += 10;
+        yPos += 15;
         
         // Escala de Madurez FinOps
+        checkAndAddPage();
         doc.setFontSize(14);
         doc.setTextColor(30, 64, 175);
         
@@ -454,40 +456,40 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
           ];
         }
         
+        checkAndAddPage();
         doc.text(`Escala de Madurez FinOps: ${escalaTexto}`, pageWidth / 2, yPos, { align: 'center' });
-        yPos += 10;
+        yPos += 15;
         
         // Características del nivel de madurez
+        checkAndAddPage();
         doc.setFontSize(12);
         doc.setTextColor(60, 60, 60);
         doc.text('Características de este nivel:', 14, yPos);
         yPos += 10;
         
         caracteristicas.forEach((caracteristica: string) => {
+          checkAndAddPage();
           doc.text(`• ${caracteristica}`, 16, yPos);
-          yPos += 6;
+          yPos += 10; // Mayor espaciado
         });
-        yPos += 4;
+        yPos += 10; // Espacio extra antes de resultados por categoría
         
         // Resultados por categoría
+        checkAndAddPage(15);
         doc.setFontSize(16);
         doc.setTextColor(0, 0, 0);
         doc.text('Resultados por Categoría', 14, yPos);
-        yPos += 10;
+        yPos += 15;
         
-        let yPosition = yPos;
         assessment.results.forEach((result) => {
           const category = categories.find((c) => c.name === result.category);
           
-          // Si llegamos al final de la página, creamos una nueva
-          if (yPosition > 250) {
-            doc.addPage();
-            yPosition = 20;
-          }
+          // Verificamos si necesitamos una nueva página
+          checkAndAddPage(25); // Espacio necesario para título, descripción y margen
           
           doc.setFontSize(12);
           doc.setTextColor(30, 64, 175);
-          doc.text(`${result.category} - Nivel ${result.selectedLevel}`, 14, yPosition);
+          doc.text(`${result.category} - Nivel ${result.selectedLevel}`, 14, yPos);
           
           doc.setFontSize(10);
           doc.setTextColor(60, 60, 60);
@@ -495,9 +497,9 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
           
           // Dividimos la descripción en líneas para que quepa en la página
           const splitDescription = doc.splitTextToSize(description, pageWidth - 30);
-          doc.text(splitDescription, 14, yPosition + 7);
+          doc.text(splitDescription, 14, yPos + 10);
           
-          yPosition += 7 + (splitDescription.length * 5) + 5;
+          yPos += 10 + (splitDescription.length * 7) + 10; // Mayor espaciado
         });
         
         // Añadimos fecha y hora
