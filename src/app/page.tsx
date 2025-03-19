@@ -7,7 +7,6 @@ import RegistrationForm from '@/components/RegistrationForm';
 import CategoryAssessment from '@/components/CategoryAssessment';
 import AssessmentSummary from '@/components/AssessmentSummary';
 import { storeUserData, storeResult } from '@/store/assessmentStore';
-import Image from 'next/image';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -83,12 +82,9 @@ export default function Home() {
       {/* Logo en la esquina superior izquierda */}
       <div className="absolute left-4 top-4 z-10">
         <div className="w-40 h-40 md:w-48 md:h-48">
-          <Image 
+          <img 
             src="/images/smart-solutions-logo.svg" 
             alt="Smart Solutions Logo" 
-            width={200}
-            height={100}
-            priority
             className="w-full h-full object-contain drop-shadow-lg"
           />
         </div>
