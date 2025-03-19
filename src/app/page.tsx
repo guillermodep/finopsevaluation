@@ -7,90 +7,103 @@ import RegistrationForm from '@/components/RegistrationForm';
 import CategoryAssessment from '@/components/CategoryAssessment';
 import AssessmentSummary from '@/components/AssessmentSummary';
 import { storeUserData, storeResult } from '@/store/assessmentStore';
+import InfrastructureQuestions from '@/components/InfrastructureQuestions';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
-  const [step, setStep] = useState(0);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [results, setResults] = useState<AssessmentResult[]>([]);
+  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(-1);
+  const [step, setStep] = useState(0);
   const [showResults, setShowResults] = useState(false);
-  const [allCompleted, setAllCompleted] = useState(false);
+  const [showInfrastructureQuestions, setShowInfrastructureQuestions] = useState(false);
+  
+  const currentCategory = currentCategoryIndex >= 0 ? categories[currentCategoryIndex] : null;
+  const currentResult = currentCategory 
+    ? results.find(r => r.category === currentCategory.name) 
+    : null;
+  
+  const allCompleted = results.length === categories.length;
 
+  // Establecer el componente como montado
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Verificar si todas las categorías tienen respuesta
-  useEffect(() => {
-    if (results.length === categories.length) {
-      setAllCompleted(true);
-    }
-  }, [results]);
-
+  // Manejar el envío del formulario de registro
   const handleRegistrationSubmit = (data: UserData) => {
     setUserData(data);
     storeUserData(data);
+    setShowInfrastructureQuestions(true);
     setStep(1);
   };
+  
+  // Manejar el envío del formulario de infraestructura
+  const handleInfrastructureSubmit = (updatedUserData: UserData) => {
+    setUserData(updatedUserData);
+    storeUserData(updatedUserData);
+    setShowInfrastructureQuestions(false);
+    setCurrentCategoryIndex(0);
+    setStep(2);
+  };
 
+  // Manejar la selección de nivel para una categoría
   const handleLevelSelect = (level: number) => {
-    const result: AssessmentResult = {
-      category: categories[step - 1].name,
-      selectedLevel: level,
-    };
+    const newResults = [...results];
+    const existingResultIndex = newResults.findIndex(
+      r => r.category === currentCategory?.name
+    );
 
-    setResults(prev => {
-      const newResults = [...prev];
-      const existingIndex = prev.findIndex(r => r.category === result.category);
-      if (existingIndex >= 0) {
-        newResults[existingIndex] = result;
-      } else {
-        newResults.push(result);
-      }
-      return newResults;
-    });
+    if (existingResultIndex >= 0) {
+      newResults[existingResultIndex].selectedLevel = level;
+    } else if (currentCategory) {
+      newResults.push({
+        category: currentCategory.name,
+        selectedLevel: level,
+      });
+    }
 
-    storeResult(result);
-    if (step < categories.length) {
-      setStep(prev => prev + 1);
-    } else {
-      // Si estamos en la última pregunta, no incrementamos el paso
-      // pero indicamos que está listo para mostrar el botón de enviar
-      setAllCompleted(true);
+    setResults(newResults);
+    
+    if (currentCategory) {
+      const resultToStore = {
+        category: currentCategory.name,
+        selectedLevel: level,
+      };
+      storeResult(resultToStore);
     }
   };
 
+  // Navegar a la siguiente categoría o mostrar los resultados
+  const handleNextCategory = () => {
+    if (currentCategoryIndex < categories.length - 1) {
+      setCurrentCategoryIndex(currentCategoryIndex + 1);
+      setStep(step + 1);
+    } else {
+      // Todas las categorías completadas
+      setStep(categories.length + 2);
+    }
+  };
+
+  // Manejar el envío de la evaluación completa
   const handleSubmitResults = () => {
     setShowResults(true);
   };
 
-  const currentCategory = step > 0 && step <= categories.length ? categories[step - 1] : null;
-  const currentResult = currentCategory
-    ? results.find((r) => r.category === currentCategory.name)
-    : null;
-
   if (!mounted) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-white text-xl">Cargando...</div>
+      <div className="bg-gradient-radial min-h-screen flex flex-col justify-center items-center p-4">
+        <div className="max-w-4xl w-full animate-pulse">
+          <div className="h-8 bg-white/10 rounded-lg mb-8"></div>
+          <div className="h-64 bg-white/5 rounded-lg"></div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen py-6 px-4 sm:px-6 lg:px-8 relative">
-      {/* Logo en la esquina superior izquierda */}
-      <div className="absolute left-4 top-4 z-10">
-        <div className="w-50 h-24">
-          <img 
-            src="/images/smart-solutions.png" 
-            alt="Smart Solutions Logo" 
-            className="w-full h-full"
-          />
-        </div>
-      </div>
-      
-      <div className="max-w-4xl mx-auto">
+    <div className="bg-gradient-radial min-h-screen flex flex-col justify-center items-center p-4">
+      <div className="max-w-4xl w-full">
         <div className="text-center animate-fade-in pt-16 md:pt-24">
           <h1 className="text-5xl font-bold mb-10 flex items-center justify-center flex-wrap">
             <span className="text-white mr-3">Autoevaluación de Madurez FinOps</span>
@@ -101,6 +114,7 @@ export default function Home() {
             />
           </h1>
           
+          {/* Paso 0: Formulario de registro inicial */}
           {step === 0 && (
             <div className="space-y-8 animate-fade-in">
               <div className="glass-panel">
@@ -136,19 +150,57 @@ export default function Home() {
               </div>
             </div>
           )}
+          
+          {/* Paso 1: Formulario de infraestructura y equipos */}
+          {step === 1 && showInfrastructureQuestions && userData && (
+            <InfrastructureQuestions 
+              userData={userData} 
+              onSubmit={handleInfrastructureSubmit} 
+            />
+          )}
 
-          {currentCategory && (
+          {/* Evaluación de categorías */}
+          {currentCategory && step >= 2 && step < categories.length + 2 && (
             <div className="animate-fade-in">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-white/70">
+                  Categoría {currentCategoryIndex + 1} de {categories.length}
+                </span>
+                {currentResult && (
+                  <button
+                    onClick={handleNextCategory}
+                    className="text-blue-300 hover:text-blue-200 transition-colors"
+                  >
+                    {currentCategoryIndex < categories.length - 1 
+                      ? 'Siguiente categoría →' 
+                      : 'Finalizar →'}
+                  </button>
+                )}
+              </div>
+              
               <CategoryAssessment
                 category={currentCategory}
                 selectedLevel={currentResult?.selectedLevel || 0}
                 onLevelSelect={handleLevelSelect}
               />
+              
+              {currentResult && (
+                <div className="flex justify-end mt-6">
+                  <button
+                    onClick={handleNextCategory}
+                    className="button-modern"
+                  >
+                    {currentCategoryIndex < categories.length - 1 
+                      ? 'Siguiente categoría' 
+                      : 'Finalizar evaluación'}
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
           {/* Botón de enviar cuando todas las categorías están contestadas pero aún no se muestran los resultados */}
-          {allCompleted && !showResults && userData && step === categories.length && (
+          {allCompleted && !showResults && userData && step === categories.length + 2 && (
             <div className="glass-panel animate-fade-in space-y-6">
               <h2 className="text-2xl font-bold text-white">
                 ¡Has completado todas las preguntas!
@@ -180,9 +232,11 @@ export default function Home() {
             </div>
           )}
 
-          {step > 0 && step <= categories.length && (
+          {step > 0 && step <= categories.length + 1 && (
             <div className="mt-6 text-white/70 animate-fade-in">
-              Paso {step} de {categories.length}
+              {step === 1 
+                ? 'Paso preliminar: Detalles de infraestructura' 
+                : `Paso ${step - 1} de ${categories.length + 1}`}
             </div>
           )}
         </div>
