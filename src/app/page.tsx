@@ -106,12 +106,13 @@ export default function Home() {
       <div className="max-w-4xl w-full">
         {/* Logo en la esquina superior izquierda */}
         <div className="absolute top-4 left-4">
-          <svg width="120" height="60" viewBox="0 0 48 24">
-            <path d="M3,6 C3,6 7,1 17,3 C27,5 36,12 45,6" stroke="#0080FF" strokeWidth="2" fill="none" />
-            <path d="M3,18 C3,18 7,23 17,21 C27,19 36,12 45,18" stroke="#0080FF" strokeWidth="2" fill="none" />
-            <text x="5" y="15" fill="white" fontSize="7" fontWeight="bold">Smart</text>
-            <text x="23" y="15" fill="#0080FF" fontSize="7" fontWeight="bold">Solutions</text>
-          </svg>
+          <img 
+            src="/images/smart-solutions.png" 
+            alt="Smart Solutions" 
+            width={120}
+            height={60}
+            className="h-auto"
+          />
         </div>
         
         <div className="text-center animate-fade-in pt-16 md:pt-24">
