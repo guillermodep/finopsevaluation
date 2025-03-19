@@ -18,6 +18,24 @@ export default function Home() {
   const [showResults, setShowResults] = useState(false);
   const [showInfrastructureQuestions, setShowInfrastructureQuestions] = useState(false);
   
+  // Función para reiniciar toda la aplicación
+  const handleReset = () => {
+    // Limpiar el localStorage
+    localStorage.removeItem('userData');
+    localStorage.removeItem('assessmentResults');
+    
+    // Reiniciar todos los estados
+    setUserData(null);
+    setResults([]);
+    setCurrentCategoryIndex(-1);
+    setStep(0);
+    setShowResults(false);
+    setShowInfrastructureQuestions(false);
+    
+    // Opcional: Mostrar feedback visual
+    window.scrollTo(0, 0);
+  };
+  
   const currentCategory = currentCategoryIndex >= 0 ? categories[currentCategoryIndex] : null;
   const currentResult = currentCategory 
     ? results.find(r => r.category === currentCategory.name) 
@@ -112,14 +130,7 @@ export default function Home() {
             width={250}
             height={60}
             className="h-auto cursor-pointer hover:opacity-80 transition-opacity"
-            onClick={() => {
-              setUserData(null);
-              setResults([]);
-              setCurrentCategoryIndex(-1);
-              setStep(0);
-              setShowResults(false);
-              setShowInfrastructureQuestions(false);
-            }}
+            onClick={handleReset}
           />
         </div>
         
