@@ -121,19 +121,20 @@ export default function Home() {
 
   return (
     <div className="bg-gradient-radial min-h-screen flex flex-col justify-center items-center p-4">
+      {/* Logo fijo en la parte superior */}
+      <div className="fixed top-4 left-0 right-0 flex justify-center z-50">
+        <img 
+          src="/images/smart-solutions.png" 
+          alt="Smart Solutions" 
+          width={250}
+          height={60}
+          className="h-auto cursor-pointer hover:opacity-80 transition-opacity shadow-lg"
+          onClick={handleReset}
+          title="Volver al inicio"
+        />
+      </div>
+      
       <div className="max-w-4xl w-full">
-        {/* Logo centrado en la parte superior */}
-        <div className="absolute top-4 left-0 right-0 flex justify-center">
-          <img 
-            src="/images/smart-solutions.png" 
-            alt="Smart Solutions" 
-            width={250}
-            height={60}
-            className="h-auto cursor-pointer hover:opacity-80 transition-opacity"
-            onClick={handleReset}
-          />
-        </div>
-        
         <div className="text-center animate-fade-in pt-16 md:pt-24">
           <h1 className="text-5xl font-bold mb-10 flex items-center justify-center flex-wrap">
             <span className="text-white mr-3">Autoevaluación de Madurez FinOps</span>
