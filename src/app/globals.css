@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gradient-start: #1e3a8a;
+  --gradient-end: #1e40af;
+}
+
+@layer base {
+  body {
+    @apply min-h-screen text-white;
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+  }
+
+  input[type="text"],
+  input[type="email"] {
+    @apply bg-white/90 text-gray-900 border border-white/30 rounded-lg px-4 py-3 w-full transition-all;
+  }
+
+  input[type="text"]:focus,
+  input[type="email"]:focus {
+    @apply outline-none bg-white border-white/50 ring-2 ring-blue-500/50;
+  }
+
+  input[type="text"]::placeholder,
+  input[type="email"]::placeholder {
+    @apply text-gray-500;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 shadow-lg;
+  }
+
+  .input-modern {
+    @apply w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50;
+    @apply focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent;
+    @apply transition-all duration-200;
+  }
+
+  .button-modern {
+    @apply px-6 py-3 bg-white text-blue-900 rounded-lg font-medium;
+    @apply hover:bg-opacity-90 hover:-translate-y-0.5;
+    @apply transition-all duration-200;
+    @apply shadow-lg hover:shadow-xl;
+  }
+
+  .title-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-200;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
+}
