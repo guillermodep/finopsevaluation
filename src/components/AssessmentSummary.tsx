@@ -263,17 +263,35 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         doc.setTextColor(30, 64, 175); // Azul oscuro
         doc.text('AUTOEVALUACIÓN DE MADUREZ FINOPS', pageWidth / 2, 30, { align: 'center' });
         
+        // Ejemplo 1: Salto de línea usando \n dentro del mismo texto
+        doc.setFontSize(10);
+        doc.setTextColor(100, 100, 100);
+        doc.text('Documento generado por:\nSmart Solutions', 14, 40);
+        
+        // Ejemplo 2: Salto de línea con múltiples llamadas a doc.text
+        doc.setFontSize(10);
+        doc.setTextColor(80, 80, 80);
+        doc.text('Para más información:', pageWidth - 15, 35, { align: 'right' });
+        doc.text('www.smartsolutions.com', pageWidth - 15, 40, { align: 'right' });
+        
+        // Ejemplo 3: Dividir textos largos automáticamente con splitTextToSize
+        doc.setFontSize(9);
+        doc.setTextColor(90, 90, 90);
+        const textoLargo = "Este texto largo se dividirá automáticamente en múltiples líneas según el ancho máximo establecido, sin necesidad de agregar manualmente los saltos de línea.";
+        const lineasTexto = doc.splitTextToSize(textoLargo, 100); // 100 es el ancho máximo en puntos
+        doc.text(lineasTexto, 15, 48);
+        
         // Datos del usuario - actualizamos las posiciones para mantener el espacio correcto
         doc.setFontSize(16);
         doc.setTextColor(0, 0, 0);
-        doc.text('Datos del Participante', 14, 45);
+        doc.text('Datos del Participante', 14, 55);
         
         doc.setFontSize(12);
         doc.setTextColor(60, 60, 60);
-        doc.text(`Nombre: ${assessment.userData.fullName}`, 14, 55);
-        doc.text(`Empresa: ${assessment.userData.company}`, 14, 62);
-        doc.text(`Correo: ${assessment.userData.email}`, 14, 69);
-        doc.text(`Posición: ${assessment.userData.position}`, 14, 76);
+        doc.text(`Nombre: ${assessment.userData.fullName}`, 14, 62);
+        doc.text(`Empresa: ${assessment.userData.company}`, 14, 69);
+        doc.text(`Correo: ${assessment.userData.email}`, 14, 76);
+        doc.text(`Posición: ${assessment.userData.position}`, 14, 83);
         
         // Información de infraestructura y equipos
         doc.setFontSize(16);
