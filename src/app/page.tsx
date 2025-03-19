@@ -92,8 +92,13 @@ export default function Home() {
       
       <div className="max-w-4xl mx-auto">
         <div className="text-center animate-fade-in pt-16 md:pt-24">
-          <h1 className="text-4xl font-bold mb-8 title-gradient">
+          <h1 className="text-4xl font-bold mb-8 title-gradient flex items-center justify-center">
             🔎 Autoevaluación de Madurez FinOps
+            <img 
+              src="https://www.finops.org/wp-content/uploads/2024/03/Maturity-Model-hero.svg" 
+              alt="Modelo de Madurez FinOps" 
+              className="ml-2 h-10 w-auto"
+            />
           </h1>
           
           {step === 0 && (
