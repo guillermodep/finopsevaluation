@@ -258,34 +258,34 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
       }
       
       function finalizePDF() {
-        // Título
+        // Título - bajamos la posición de 20 a 30 para evitar el solapamiento con el logo
         doc.setFontSize(20);
         doc.setTextColor(30, 64, 175); // Azul oscuro
-        doc.text('AUTOEVALUACIÓN DE MADUREZ FINOPS', pageWidth / 2, 20, { align: 'center' });
+        doc.text('AUTOEVALUACIÓN DE MADUREZ FINOPS', pageWidth / 2, 30, { align: 'center' });
         
-        // Datos del usuario
+        // Datos del usuario - actualizamos las posiciones para mantener el espacio correcto
         doc.setFontSize(16);
         doc.setTextColor(0, 0, 0);
-        doc.text('Datos del Participante', 14, 35);
+        doc.text('Datos del Participante', 14, 45);
         
         doc.setFontSize(12);
         doc.setTextColor(60, 60, 60);
-        doc.text(`Nombre: ${assessment.userData.fullName}`, 14, 45);
-        doc.text(`Empresa: ${assessment.userData.company}`, 14, 52);
-        doc.text(`Correo: ${assessment.userData.email}`, 14, 59);
-        doc.text(`Posición: ${assessment.userData.position}`, 14, 66);
+        doc.text(`Nombre: ${assessment.userData.fullName}`, 14, 55);
+        doc.text(`Empresa: ${assessment.userData.company}`, 14, 62);
+        doc.text(`Correo: ${assessment.userData.email}`, 14, 69);
+        doc.text(`Posición: ${assessment.userData.position}`, 14, 76);
         
         // Información de infraestructura y equipos
         doc.setFontSize(16);
         doc.setTextColor(0, 0, 0);
-        doc.text('Información de Infraestructura y Equipos', 14, 80);
+        doc.text('Información de Infraestructura y Equipos', 14, 90);
         
         // Proveedores de nube
         doc.setFontSize(12);
         doc.setTextColor(60, 60, 60);
-        doc.text('Proveedores de nube utilizados:', 14, 90);
+        doc.text('Proveedores de nube utilizados:', 14, 100);
         
-        let yPos = 97;
+        let yPos = 107;
         const providers = [];
         if (assessment.userData.cloudProviders.aws) providers.push('AWS');
         if (assessment.userData.cloudProviders.azure) providers.push('Microsoft Azure');
