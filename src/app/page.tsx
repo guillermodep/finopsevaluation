@@ -93,7 +93,7 @@ export default function Home() {
       <div className="max-w-4xl mx-auto">
         <div className="text-center animate-fade-in pt-16 md:pt-24">
           <h1 className="text-5xl font-bold mb-10 flex items-center justify-center flex-wrap">
-            <span className="title-gradient mr-3">Autoevaluación de Madurez FinOps</span>
+            <span className="text-white mr-3">Autoevaluación de Madurez FinOps</span>
             <img 
               src="https://www.finops.org/wp-content/uploads/2024/03/Maturity-Model-hero.svg" 
               alt="Modelo de Madurez FinOps" 
@@ -115,7 +115,7 @@ export default function Home() {
               </div>
 
               <div className="glass-panel">
-                <h2 className="text-2xl font-semibold mb-6 title-gradient inline-block">
+                <h2 className="text-2xl font-semibold mb-6 text-white inline-block">
                   El modelo de madurez FinOps evalúa:
                 </h2>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -129,7 +129,7 @@ export default function Home() {
               </div>
 
               <div className="glass-panel">
-                <h3 className="text-2xl font-semibold mb-6 title-gradient inline-block">
+                <h3 className="text-2xl font-semibold mb-6 text-white inline-block">
                   Completa tus datos para comenzar
                 </h3>
                 <RegistrationForm onSubmit={handleRegistrationSubmit} />

@@ -8,6 +8,8 @@
   --gradient-end: #2563eb;
   --accent-color: #60a5fa;
   --accent-color-bright: #93c5fd;
+  --title-color-light: #ffffff;
+  --title-color-accent: #93c5fd;
 }
 
 @layer base {
@@ -49,6 +51,10 @@
   input[type="email"]::placeholder {
     @apply text-gray-500;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-white;
+  }
 }
 
 @layer components {
@@ -76,9 +82,17 @@
     background: linear-gradient(to right, white, var(--accent-color-bright));
   }
 
+  /* Título con degradado (versión fija) */
   .title-gradient {
+    color: var(--title-color-light);
+    text-shadow: 0 0 10px rgba(147, 197, 253, 0.5);
+  }
+
+  /* Versión alternativa con degradado de texto */
+  .title-gradient-alt {
     @apply bg-clip-text text-transparent;
-    background: linear-gradient(to right, white, var(--accent-color-bright));
+    background: linear-gradient(to right, var(--title-color-light), var(--title-color-accent));
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   }
 }
 

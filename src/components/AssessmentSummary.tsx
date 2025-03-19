@@ -277,7 +277,7 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
   return (
     <div className="glass-panel animate-fade-in space-y-8">
       <div className="text-center mb-6">
-        <h2 className="text-4xl font-bold mb-4 title-gradient">
+        <h2 className="text-4xl font-bold mb-4 text-white">
           Resultado de tu Evaluación
         </h2>
         <p className="text-white/80 text-lg">

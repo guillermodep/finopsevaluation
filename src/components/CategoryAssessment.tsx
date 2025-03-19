@@ -13,7 +13,7 @@ export default function CategoryAssessment({
 }: CategoryAssessmentProps) {
   return (
     <div className="glass-effect rounded-xl p-7 transition-all duration-300 animate-fade-in">
-      <h2 className="text-2xl font-bold title-gradient mb-3 flex items-center">
+      <h2 className="text-2xl font-bold mb-3 flex items-center">
         {category.name}
       </h2>
       <p className="text-white/85 mb-6 text-md">{category.description}</p>
