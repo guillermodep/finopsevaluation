@@ -178,7 +178,7 @@ export default function Home() {
                   Bienvenido al Auto Assessment de FinOps
                 </p>
                 <p className="text-lg text-white/80">
-                  FinOps (Financial Operations) es una práctica de gestión financiera
+                  FinOps es una práctica de gestión financiera
                   colaborativa para entornos en la nube. Combina sistemas, finanzas y
                   equipos de negocio para maximizar el valor de la nube.
                 </p>
@@ -186,7 +186,7 @@ export default function Home() {
 
               <div className="glass-panel">
                 <h2 className="text-2xl font-semibold mb-6 text-white inline-block">
-                  El modelo de madurez FinOps evalúa:
+                  El modelo de madurez FinOps evalúa
                 </h2>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {categories.map((category) => (
@@ -228,8 +228,8 @@ export default function Home() {
                     className="text-blue-300 hover:text-blue-200 transition-colors"
                   >
                     {currentCategoryIndex < categories.length - 1 
-                      ? 'Siguiente categoría →' 
-                      : 'Finalizar →'}
+                      ? '' 
+                      : ''}
                   </button>
                 )}
               </div>
