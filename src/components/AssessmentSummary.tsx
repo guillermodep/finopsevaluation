@@ -27,17 +27,6 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
   const downloadCSV = () => {
     if (!mounted) return;
 
-    // Creamos las filas para los datos
-    const headers = ['Categoría', 'Nivel', 'Descripción'];
-    const rows = assessment.results.map((result) => {
-      const category = categories.find((c) => c.name === result.category);
-      return [
-        result.category,
-        result.selectedLevel,
-        category?.levelDescriptions[result.selectedLevel - 1] || '',
-      ];
-    });
-
     // Datos del usuario
     const userDataRows = [
       ['Nombre', assessment.userData.fullName],
@@ -48,18 +37,47 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
       ['', ''],
     ];
 
-    // Determinar escala de madurez
-    let escalaTexto = '';
+    // Determinar escala de madurez y características para CSV
+    let escalaTextoCSV = '';
+    let caracteristicasCSV: string[] = [];
+    
     if (averageLevel < 2) {
-      escalaTexto = 'GATEAR (0-2)';
+      escalaTextoCSV = 'GATEAR (0-2)';
+      caracteristicasCSV = [
+        'Muy pocas herramientas y reportes implementados',
+        'Las mediciones solo proporcionan información sobre los beneficios de madurar la capacidad',
+        'KPIs básicos establecidos para medir el éxito',
+        'Procesos y políticas básicas definidas en torno a la capacidad',
+        'La capacidad es comprendida pero no seguida por todos los equipos principales',
+        'Planes para abordar "frutos al alcance de la mano" (soluciones fáciles)',
+      ];
     } else if (averageLevel < 4) {
-      escalaTexto = 'CAMINAR (2-4)';
+      escalaTextoCSV = 'CAMINAR (2-4)';
+      caracteristicasCSV = [
+        'La capacidad es comprendida y seguida dentro de la organización',
+        'Se identifican casos difíciles pero se adopta la decisión de no abordarlos',
+        'La automatización y/o los procesos cubren la mayoría de los requisitos de capacidad',
+        'Los casos más difíciles son identificados y se ha estimado el esfuerzo para resolverlos',
+        'Objetivos/KPIs de nivel medio a alto establecidos para medir el éxito',
+      ];
     } else {
-      escalaTexto = 'CORRER (+4)';
+      escalaTextoCSV = 'CORRER (+4)';
+      caracteristicasCSV = [
+        'La capacidad es comprendida y seguida por todos los equipos de la organización',
+        'Los casos difíciles están siendo abordados activamente',
+        'Objetivos/KPIs muy altos establecidos para medir el éxito',
+        'La automatización es el enfoque preferido para todas las soluciones',
+      ];
     }
     
     // Agregamos la escala de madurez
-    userDataRows.splice(5, 0, ['Escala de Madurez FinOps', escalaTexto]);
+    userDataRows.splice(5, 0, ['Escala de Madurez FinOps', escalaTextoCSV]);
+    
+    // Agregamos las características
+    userDataRows.splice(6, 0, ['Características de este nivel:', '']);
+    caracteristicasCSV.forEach((caracteristica: string, index: number) => {
+      userDataRows.splice(7 + index, 0, ['', `• ${caracteristica}`]);
+    });
 
     // Formato del CSV
     const csvContent =
@@ -71,8 +89,15 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         ...userDataRows.map((row) => row.join(',')),
         '',
         'RESULTADOS POR CATEGORÍA:',
-        headers.join(','),
-        ...rows.map((row) => row.join(',')),
+        'Categoría,Nivel,Descripción',
+        ...assessment.results.map((result) => {
+          const category = categories.find((c) => c.name === result.category);
+          return [
+            result.category,
+            result.selectedLevel,
+            category?.levelDescriptions[result.selectedLevel - 1] || '',
+          ].join(',');
+        }),
       ].join('\n');
 
     // Descarga del CSV
@@ -118,22 +143,59 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
       // Escala de Madurez FinOps
       doc.setFontSize(14);
       doc.setTextColor(30, 64, 175);
+      
+      // Determinamos la escala de madurez y características
       let escalaTexto = '';
+      let caracteristicas: string[] = [];
+      
       if (averageLevel < 2) {
         escalaTexto = 'GATEAR (0-2)';
+        caracteristicas = [
+          'Muy pocas herramientas y reportes implementados',
+          'Las mediciones solo proporcionan información sobre los beneficios de madurar la capacidad',
+          'KPIs básicos establecidos para medir el éxito',
+          'Procesos y políticas básicas definidas en torno a la capacidad',
+          'La capacidad es comprendida pero no seguida por todos los equipos principales',
+          'Planes para abordar "frutos al alcance de la mano" (soluciones fáciles)',
+        ];
       } else if (averageLevel < 4) {
         escalaTexto = 'CAMINAR (2-4)';
+        caracteristicas = [
+          'La capacidad es comprendida y seguida dentro de la organización',
+          'Se identifican casos difíciles pero se adopta la decisión de no abordarlos',
+          'La automatización y/o los procesos cubren la mayoría de los requisitos de capacidad',
+          'Los casos más difíciles son identificados y se ha estimado el esfuerzo para resolverlos',
+          'Objetivos/KPIs de nivel medio a alto establecidos para medir el éxito',
+        ];
       } else {
         escalaTexto = 'CORRER (+4)';
+        caracteristicas = [
+          'La capacidad es comprendida y seguida por todos los equipos de la organización',
+          'Los casos difíciles están siendo abordados activamente',
+          'Objetivos/KPIs muy altos establecidos para medir el éxito',
+          'La automatización es el enfoque preferido para todas las soluciones',
+        ];
       }
+      
       doc.text(`Escala de Madurez FinOps: ${escalaTexto}`, pageWidth / 2, 90, { align: 'center' });
+      
+      // Características del nivel de madurez
+      doc.setFontSize(12);
+      doc.setTextColor(60, 60, 60);
+      doc.text('Características de este nivel:', 14, 100);
+      
+      let caracteristicaY = 110;
+      caracteristicas.forEach((caracteristica: string, index: number) => {
+        doc.text(`• ${caracteristica}`, 16, caracteristicaY);
+        caracteristicaY += 6;
+      });
       
       // Resultados por categoría
       doc.setFontSize(16);
       doc.setTextColor(0, 0, 0);
-      doc.text('Resultados por Categoría', 14, 105);
+      doc.text('Resultados por Categoría', 14, caracteristicaY + 10);
       
-      let yPosition = 115;
+      let yPosition = caracteristicaY + 20;
       assessment.results.forEach((result) => {
         const category = categories.find((c) => c.name === result.category);
         
@@ -259,6 +321,17 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
                 Tu promedio de {averageLevel} indica que estás comenzando 
                 a implementar prácticas FinOps en tu organización.
               </p>
+              <div className="mt-2 text-left bg-white/5 p-3 rounded-lg text-sm text-white/70">
+                <p className="font-semibold mb-1">Características de este nivel:</p>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Muy pocas herramientas y reportes implementados</li>
+                  <li>Las mediciones solo proporcionan información sobre los beneficios de madurar la capacidad</li>
+                  <li>KPIs básicos establecidos para medir el éxito</li>
+                  <li>Procesos y políticas básicas definidas en torno a la capacidad</li>
+                  <li>La capacidad es comprendida pero no seguida por todos los equipos principales de la organización</li>
+                  <li>Planes para abordar "frutos al alcance de la mano" (soluciones fáciles)</li>
+                </ul>
+              </div>
             </div>
           ) : averageLevel < 4 ? (
             <div className="bg-white/5 p-4 rounded-xl flex flex-col items-center space-y-3">
@@ -273,6 +346,16 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
                 Tu promedio de {averageLevel} indica que ya tienes establecidas 
                 prácticas FinOps y estás trabajando en su mejora continua.
               </p>
+              <div className="mt-2 text-left bg-white/5 p-3 rounded-lg text-sm text-white/70">
+                <p className="font-semibold mb-1">Características de este nivel:</p>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>La capacidad es comprendida y seguida dentro de la organización</li>
+                  <li>Se identifican casos difíciles pero se adopta la decisión de no abordarlos</li>
+                  <li>La automatización y/o los procesos cubren la mayoría de los requisitos de capacidad</li>
+                  <li>Los casos más difíciles (aquellos que amenazan el bienestar financiero de la organización) son identificados y se ha estimado el esfuerzo para resolverlos</li>
+                  <li>Objetivos/KPIs de nivel medio a alto establecidos para medir el éxito</li>
+                </ul>
+              </div>
             </div>
           ) : (
             <div className="bg-white/5 p-4 rounded-xl flex flex-col items-center space-y-3">
@@ -287,6 +370,15 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
                 Tu promedio de {averageLevel} demuestra que tu organización tiene un 
                 alto nivel de implementación y optimización de prácticas FinOps.
               </p>
+              <div className="mt-2 text-left bg-white/5 p-3 rounded-lg text-sm text-white/70">
+                <p className="font-semibold mb-1">Características de este nivel:</p>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>La capacidad es comprendida y seguida por todos los equipos de la organización</li>
+                  <li>Los casos difíciles están siendo abordados activamente</li>
+                  <li>Objetivos/KPIs muy altos establecidos para medir el éxito</li>
+                  <li>La automatización es el enfoque preferido para todas las soluciones</li>
+                </ul>
+              </div>
             </div>
           )}
         </div>
