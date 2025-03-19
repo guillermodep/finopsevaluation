@@ -17,31 +17,6 @@ export default function Home() {
   const [step, setStep] = useState(0);
   const [showResults, setShowResults] = useState(false);
   const [showInfrastructureQuestions, setShowInfrastructureQuestions] = useState(false);
-  const [showLogo, setShowLogo] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-  
-  // Función para controlar la visibilidad del logo al hacer scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // Scrolling down & past threshold
-        setShowLogo(false);
-      } else {
-        // Scrolling up or at top
-        setShowLogo(true);
-      }
-      
-      setLastScrollY(currentScrollY);
-    };
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [lastScrollY]);
   
   // Función para reiniciar toda la aplicación
   const handleReset = () => {
@@ -147,7 +122,7 @@ export default function Home() {
   return (
     <div className="bg-gradient-radial min-h-screen flex flex-col justify-center items-center p-4">
       {/* Logo fijo en la parte superior */}
-      <div className={`fixed top-4 left-0 right-0 flex justify-center z-50 transition-transform duration-300 ${showLogo ? 'translate-y-0' : '-translate-y-20'}`}>
+      <div className="fixed top-4 left-0 right-0 flex justify-center z-50">
         <img 
           src="/images/smart-solutions.png" 
           alt="Smart Solutions" 
