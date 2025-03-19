@@ -92,19 +92,19 @@ export default function Home() {
       
       <div className="max-w-4xl mx-auto">
         <div className="text-center animate-fade-in pt-16 md:pt-24">
-          <h1 className="text-4xl font-bold mb-8 title-gradient flex items-center justify-center">
-            🔎 Autoevaluación de Madurez FinOps
+          <h1 className="text-5xl font-bold mb-10 flex items-center justify-center flex-wrap">
+            <span className="title-gradient mr-3">Autoevaluación de Madurez FinOps</span>
             <img 
               src="https://www.finops.org/wp-content/uploads/2024/03/Maturity-Model-hero.svg" 
               alt="Modelo de Madurez FinOps" 
-              className="ml-2 h-10 w-auto"
+              className="h-12 w-auto mt-2 md:mt-0"
             />
           </h1>
           
           {step === 0 && (
             <div className="space-y-8 animate-fade-in">
               <div className="glass-panel">
-                <p className="text-xl text-white/90 mb-4">
+                <p className="text-xl text-white/90 mb-4 font-medium">
                   Bienvenido al Auto Assessment de FinOps
                 </p>
                 <p className="text-lg text-white/80">
@@ -115,13 +115,13 @@ export default function Home() {
               </div>
 
               <div className="glass-panel">
-                <h2 className="text-2xl font-semibold mb-6">
+                <h2 className="text-2xl font-semibold mb-6 title-gradient inline-block">
                   El modelo de madurez FinOps evalúa:
                 </h2>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {categories.map((category) => (
-                    <li key={category.name} className="flex items-center space-x-3 text-white/90">
-                      <span className="text-blue-200">•</span>
+                    <li key={category.name} className="flex items-center space-x-3 text-white/90 p-2 rounded-lg hover:bg-white/5 transition-all duration-200">
+                      <span className="text-blue-300 text-xl">•</span>
                       <span>{category.name}</span>
                     </li>
                   ))}
@@ -129,6 +129,9 @@ export default function Home() {
               </div>
 
               <div className="glass-panel">
+                <h3 className="text-2xl font-semibold mb-6 title-gradient inline-block">
+                  Completa tus datos para comenzar
+                </h3>
                 <RegistrationForm onSubmit={handleRegistrationSubmit} />
               </div>
             </div>

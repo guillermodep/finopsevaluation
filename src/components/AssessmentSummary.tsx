@@ -277,24 +277,24 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
   return (
     <div className="glass-panel animate-fade-in space-y-8">
       <div className="text-center mb-6">
-        <h2 className="text-3xl font-bold mb-2 title-gradient">
+        <h2 className="text-4xl font-bold mb-4 title-gradient">
           Resultado de tu Evaluación
         </h2>
-        <p className="text-white/70">
+        <p className="text-white/80 text-lg">
           A continuación se presenta un resumen de tu nivel de madurez FinOps
         </p>
       </div>
 
       {/* Nivel Promedio */}
-      <div className="mb-6">
+      <div className="mb-8">
         <div className="flex items-center justify-center mb-4">
-          <div className="text-center p-6 bg-white/20 backdrop-blur-sm rounded-xl shadow-lg">
-            <p className="text-lg font-medium text-white/80 mb-1">Nivel Promedio de Madurez</p>
+          <div className="text-center p-8 glass-effect rounded-xl shadow-lg">
+            <p className="text-xl font-medium text-white/90 mb-2">Nivel Promedio de Madurez</p>
             <div className="flex items-center justify-center">
-              <p className="text-6xl font-bold text-white">{averageLevel}</p>
-              <span className="text-4xl ml-2">{getLevelEmoji(Math.round(averageLevel))}</span>
+              <p className="text-7xl font-bold text-white">{averageLevel}</p>
+              <span className="text-5xl ml-3">{getLevelEmoji(Math.round(averageLevel))}</span>
             </div>
-            <p className="text-sm text-white/60 mt-2">
+            <p className="text-base text-white/70 mt-3">
               Basado en tus respuestas en las {categories.length} categorías
             </p>
           </div>

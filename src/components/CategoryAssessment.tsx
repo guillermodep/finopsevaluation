@@ -12,13 +12,22 @@ export default function CategoryAssessment({
   onLevelSelect,
 }: CategoryAssessmentProps) {
   return (
-    <div className="bg-white/5 rounded-lg p-6">
-      <h2 className="text-2xl font-bold text-white mb-4">{category.name}</h2>
-      <p className="text-white/80 mb-6">{category.description}</p>
+    <div className="glass-effect rounded-xl p-7 transition-all duration-300 animate-fade-in">
+      <h2 className="text-2xl font-bold title-gradient mb-3 flex items-center">
+        {category.name}
+      </h2>
+      <p className="text-white/85 mb-6 text-md">{category.description}</p>
 
-      <div className="space-y-4">
+      <div className="space-y-5">
         {[1, 2, 3, 4, 5].map((level) => (
-          <div key={level} className="flex items-start">
+          <div 
+            key={level} 
+            className={`flex items-start p-3 rounded-lg transition-all duration-200 ${
+              selectedLevel === level 
+                ? 'bg-white/15 border border-white/25 shadow-md' 
+                : 'hover:bg-white/10'
+            }`}
+          >
             <input
               type="radio"
               id={`level-${level}`}
@@ -26,14 +35,24 @@ export default function CategoryAssessment({
               value={level}
               checked={selectedLevel === level}
               onChange={() => onLevelSelect(level)}
-              className="mt-1"
+              className="mt-1 w-4 h-4 accent-blue-400"
             />
             <label
               htmlFor={`level-${level}`}
-              className="ml-3 text-left cursor-pointer"
+              className="ml-3 text-left cursor-pointer w-full"
             >
-              <div className="text-white font-medium">Nivel {level}</div>
-              <div className="text-white/80 text-sm">
+              <div className={`font-medium text-lg ${
+                selectedLevel === level 
+                  ? 'text-white' 
+                  : 'text-white/90'
+              }`}>
+                Nivel {level}
+              </div>
+              <div className={`text-sm mt-1 ${
+                selectedLevel === level 
+                  ? 'text-white/95' 
+                  : 'text-white/70'
+              }`}>
                 {category.levelDescriptions[level - 1]}
               </div>
             </label>
