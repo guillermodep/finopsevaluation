@@ -78,6 +78,116 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
     caracteristicasCSV.forEach((caracteristica: string, index: number) => {
       userDataRows.splice(7 + index, 0, ['', `• ${caracteristica}`]);
     });
+    
+    // Información de infraestructura y equipos
+    const infrastructureRows: string[][] = [
+      ['', ''],
+      ['INFORMACIÓN DE INFRAESTRUCTURA Y EQUIPOS:', ''],
+      ['', ''],
+      ['Proveedores de nube utilizados:', ''],
+    ];
+    
+    // Proveedores de nube
+    const providers = [];
+    if (assessment.userData.cloudProviders.aws) providers.push('AWS');
+    if (assessment.userData.cloudProviders.azure) providers.push('Microsoft Azure');
+    if (assessment.userData.cloudProviders.gcp) providers.push('Google Cloud Platform');
+    if (assessment.userData.cloudProviders.oracle) providers.push('Oracle Cloud');
+    if (assessment.userData.cloudProviders.ibm) providers.push('IBM Cloud');
+    if (assessment.userData.cloudProviders.other) providers.push(assessment.userData.cloudProviders.otherSpecified || 'Otro');
+    
+    if (providers.length > 0) {
+      providers.forEach(provider => {
+        infrastructureRows.push(['', `• ${provider}`]);
+      });
+    } else {
+      infrastructureRows.push(['', 'No se ha seleccionado ningún proveedor']);
+    }
+    
+    // Composición del equipo
+    infrastructureRows.push(['', '']);
+    infrastructureRows.push(['Composición del equipo:', '']);
+    
+    let teamCompositionText = '';
+    switch(Number(assessment.userData.teamComposition)) {
+      case 1:
+        teamCompositionText = 'No hay equipo';
+        break;
+      case 2:
+        teamCompositionText = 'Lo hace el equipo de Infraestructura/Plataformas/Operaciones';
+        break;
+      case 3:
+        teamCompositionText = 'Equipo de Cloud con capacidades de Arquitectura/Ingeniería sin especialistas en FinOps';
+        break;
+      case 4:
+        teamCompositionText = 'Equipo de Cloud con capacidades de Arquitectura/Ingeniería CON especialistas en FinOps';
+        break;
+      case 5:
+        teamCompositionText = 'CoE Centro de Excelencia Cloud con BPO y especialistas de Gobierno y práctica FinOps';
+        break;
+      case 6:
+        teamCompositionText = assessment.userData.teamCompositionOther || 'Otro';
+        break;
+      default:
+        teamCompositionText = 'No se ha seleccionado';
+    }
+    
+    infrastructureRows.push(['', teamCompositionText]);
+    
+    // Presupuesto anual
+    infrastructureRows.push(['', '']);
+    infrastructureRows.push(['Presupuesto anual:', '']);
+    
+    let budgetText = '';
+    switch(Number(assessment.userData.annualBudget)) {
+      case 1:
+        budgetText = 'Menos de USD 100,000';
+        break;
+      case 2:
+        budgetText = 'Entre USD 100,000 y 500,000';
+        break;
+      case 3:
+        budgetText = 'Entre USD 500,000 y 1,000,000';
+        break;
+      case 4:
+        budgetText = 'Entre USD 1,000,000 y 5,000,000';
+        break;
+      case 5:
+        budgetText = 'Más de USD 5,000,000';
+        break;
+      default:
+        budgetText = 'No se ha seleccionado';
+    }
+    
+    infrastructureRows.push(['', `• ${budgetText}`]);
+    
+    // Gasto mensual
+    infrastructureRows.push(['', '']);
+    infrastructureRows.push(['Gasto mensual promedio:', '']);
+    
+    let spendText = '';
+    switch(Number(assessment.userData.monthlySpend)) {
+      case 1:
+        spendText = 'Menos de USD 10,000';
+        break;
+      case 2:
+        spendText = 'Entre USD 10,000 y 50,000';
+        break;
+      case 3:
+        spendText = 'Entre USD 50,000 y 100,000';
+        break;
+      case 4:
+        spendText = 'Entre USD 100,000 y 500,000';
+        break;
+      case 5:
+        spendText = 'Más de USD 500,000';
+        break;
+      default:
+        spendText = 'No se ha seleccionado';
+    }
+    
+    infrastructureRows.push(['', `• ${spendText}`]);
+    infrastructureRows.push(['', '']);
 
     // Formato del CSV
     const csvContent =
@@ -87,6 +197,7 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         '',
         'DATOS DEL PARTICIPANTE:',
         ...userDataRows.map((row) => row.join(',')),
+        ...infrastructureRows.map((row) => row.join(',')),
         '',
         'RESULTADOS POR CATEGORÍA:',
         'Categoría,Nivel,Descripción',
@@ -135,10 +246,129 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
       doc.text(`Correo: ${assessment.userData.email}`, 14, 59);
       doc.text(`Posición: ${assessment.userData.position}`, 14, 66);
       
+      // Información de infraestructura y equipos
+      doc.setFontSize(16);
+      doc.setTextColor(0, 0, 0);
+      doc.text('Información de Infraestructura y Equipos', 14, 80);
+      
+      // Proveedores de nube
+      doc.setFontSize(12);
+      doc.setTextColor(60, 60, 60);
+      doc.text('Proveedores de nube utilizados:', 14, 90);
+      
+      let yPos = 97;
+      const providers = [];
+      if (assessment.userData.cloudProviders.aws) providers.push('AWS');
+      if (assessment.userData.cloudProviders.azure) providers.push('Microsoft Azure');
+      if (assessment.userData.cloudProviders.gcp) providers.push('Google Cloud Platform');
+      if (assessment.userData.cloudProviders.oracle) providers.push('Oracle Cloud');
+      if (assessment.userData.cloudProviders.ibm) providers.push('IBM Cloud');
+      if (assessment.userData.cloudProviders.other) providers.push(assessment.userData.cloudProviders.otherSpecified || 'Otro');
+      
+      if (providers.length > 0) {
+        providers.forEach(provider => {
+          doc.text(`• ${provider}`, 16, yPos);
+          yPos += 6;
+        });
+      } else {
+        doc.text('No se ha seleccionado ningún proveedor', 16, yPos);
+        yPos += 6;
+      }
+      
+      // Composición del equipo
+      yPos += 4;
+      doc.text('Composición del equipo:', 14, yPos);
+      yPos += 7;
+      
+      let teamCompositionText = '';
+      switch(Number(assessment.userData.teamComposition)) {
+        case 1:
+          teamCompositionText = 'No hay equipo';
+          break;
+        case 2:
+          teamCompositionText = 'Lo hace el equipo de Infraestructura/Plataformas/Operaciones';
+          break;
+        case 3:
+          teamCompositionText = 'Equipo de Cloud con capacidades de Arquitectura/Ingeniería sin especialistas en FinOps';
+          break;
+        case 4:
+          teamCompositionText = 'Equipo de Cloud con capacidades de Arquitectura/Ingeniería CON especialistas en FinOps';
+          break;
+        case 5:
+          teamCompositionText = 'CoE Centro de Excelencia Cloud con BPO y especialistas de Gobierno y práctica FinOps';
+          break;
+        case 6:
+          teamCompositionText = assessment.userData.teamCompositionOther || 'Otro';
+          break;
+        default:
+          teamCompositionText = 'No se ha seleccionado';
+      }
+      
+      const splitTeamComposition = doc.splitTextToSize(teamCompositionText, pageWidth - 30);
+      doc.text(splitTeamComposition, 16, yPos);
+      yPos += (splitTeamComposition.length * 6) + 4;
+      
+      // Presupuesto anual
+      doc.text('Presupuesto anual:', 14, yPos);
+      yPos += 7;
+      
+      let budgetText = '';
+      switch(Number(assessment.userData.annualBudget)) {
+        case 1:
+          budgetText = 'Menos de USD 100,000';
+          break;
+        case 2:
+          budgetText = 'Entre USD 100,000 y 500,000';
+          break;
+        case 3:
+          budgetText = 'Entre USD 500,000 y 1,000,000';
+          break;
+        case 4:
+          budgetText = 'Entre USD 1,000,000 y 5,000,000';
+          break;
+        case 5:
+          budgetText = 'Más de USD 5,000,000';
+          break;
+        default:
+          budgetText = 'No se ha seleccionado';
+      }
+      
+      doc.text(`• ${budgetText}`, 16, yPos);
+      yPos += 7;
+      
+      // Gasto mensual
+      doc.text('Gasto mensual:', 14, yPos);
+      yPos += 7;
+      
+      let spendText = '';
+      switch(Number(assessment.userData.monthlySpend)) {
+        case 1:
+          spendText = 'Menos de USD 10,000';
+          break;
+        case 2:
+          spendText = 'Entre USD 10,000 y 50,000';
+          break;
+        case 3:
+          spendText = 'Entre USD 50,000 y 100,000';
+          break;
+        case 4:
+          spendText = 'Entre USD 100,000 y 500,000';
+          break;
+        case 5:
+          spendText = 'Más de USD 500,000';
+          break;
+        default:
+          spendText = 'No se ha seleccionado';
+      }
+      
+      doc.text(`• ${spendText}`, 16, yPos);
+      yPos += 12;
+      
       // Nivel promedio
       doc.setFontSize(14);
       doc.setTextColor(30, 64, 175);
-      doc.text(`Nivel Promedio de Madurez: ${averageLevel}`, pageWidth / 2, 80, { align: 'center' });
+      doc.text(`Nivel Promedio de Madurez: ${averageLevel}`, pageWidth / 2, yPos, { align: 'center' });
+      yPos += 10;
       
       // Escala de Madurez FinOps
       doc.setFontSize(14);
@@ -177,25 +407,28 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         ];
       }
       
-      doc.text(`Escala de Madurez FinOps: ${escalaTexto}`, pageWidth / 2, 90, { align: 'center' });
+      doc.text(`Escala de Madurez FinOps: ${escalaTexto}`, pageWidth / 2, yPos, { align: 'center' });
+      yPos += 10;
       
       // Características del nivel de madurez
       doc.setFontSize(12);
       doc.setTextColor(60, 60, 60);
-      doc.text('Características de este nivel:', 14, 100);
+      doc.text('Características de este nivel:', 14, yPos);
+      yPos += 10;
       
-      let caracteristicaY = 110;
-      caracteristicas.forEach((caracteristica: string, index: number) => {
-        doc.text(`• ${caracteristica}`, 16, caracteristicaY);
-        caracteristicaY += 6;
+      caracteristicas.forEach((caracteristica: string) => {
+        doc.text(`• ${caracteristica}`, 16, yPos);
+        yPos += 6;
       });
+      yPos += 4;
       
       // Resultados por categoría
       doc.setFontSize(16);
       doc.setTextColor(0, 0, 0);
-      doc.text('Resultados por Categoría', 14, caracteristicaY + 10);
+      doc.text('Resultados por Categoría', 14, yPos);
+      yPos += 10;
       
-      let yPosition = caracteristicaY + 20;
+      let yPosition = yPos;
       assessment.results.forEach((result) => {
         const category = categories.find((c) => c.name === result.category);
         
@@ -420,6 +653,123 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
           <div className="p-3 bg-white/5 rounded-lg">
             <p className="text-sm font-medium text-white/70">Posición</p>
             <p className="text-base text-white">{assessment.userData.position}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Información de Infraestructura y Equipos */}
+      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6 shadow-lg">
+        <h3 className="text-xl font-semibold mb-4 flex items-center">
+          <span className="mr-2">🖥️</span>
+          Información de Infraestructura y Equipos
+        </h3>
+        
+        {/* Proveedores de nube */}
+        <div className="mb-6">
+          <h4 className="text-lg font-medium text-white/90 mb-2">Proveedores de nube utilizados</h4>
+          <div className="p-3 bg-white/5 rounded-lg">
+            <div className="flex flex-wrap gap-2">
+              {assessment.userData.cloudProviders.aws && (
+                <span className="px-3 py-1 bg-blue-500/20 text-white rounded-full text-sm">AWS</span>
+              )}
+              {assessment.userData.cloudProviders.azure && (
+                <span className="px-3 py-1 bg-blue-600/20 text-white rounded-full text-sm">Microsoft Azure</span>
+              )}
+              {assessment.userData.cloudProviders.gcp && (
+                <span className="px-3 py-1 bg-green-500/20 text-white rounded-full text-sm">Google Cloud Platform</span>
+              )}
+              {assessment.userData.cloudProviders.oracle && (
+                <span className="px-3 py-1 bg-red-500/20 text-white rounded-full text-sm">Oracle Cloud</span>
+              )}
+              {assessment.userData.cloudProviders.ibm && (
+                <span className="px-3 py-1 bg-blue-800/20 text-white rounded-full text-sm">IBM Cloud</span>
+              )}
+              {assessment.userData.cloudProviders.other && (
+                <span className="px-3 py-1 bg-purple-500/20 text-white rounded-full text-sm">
+                  {assessment.userData.cloudProviders.otherSpecified || "Otro"}
+                </span>
+              )}
+              {!assessment.userData.cloudProviders.aws && 
+                !assessment.userData.cloudProviders.azure && 
+                !assessment.userData.cloudProviders.gcp && 
+                !assessment.userData.cloudProviders.oracle && 
+                !assessment.userData.cloudProviders.ibm && 
+                !assessment.userData.cloudProviders.other && (
+                <span className="text-white/70 text-sm">No se ha seleccionado ningún proveedor</span>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        {/* Composición del equipo */}
+        <div className="mb-6">
+          <h4 className="text-lg font-medium text-white/90 mb-2">Composición del equipo</h4>
+          <div className="p-3 bg-white/5 rounded-lg">
+            {(() => {
+              switch(Number(assessment.userData.teamComposition)) {
+                case 1:
+                  return <p className="text-white">No hay equipo</p>;
+                case 2:
+                  return <p className="text-white">Lo hace el equipo de Infraestructura/Plataformas/Operaciones</p>;
+                case 3:
+                  return <p className="text-white">Equipo de Cloud con capacidades de Arquitectura/Ingeniería sin especialistas en FinOps</p>;
+                case 4:
+                  return <p className="text-white">Equipo de Cloud con capacidades de Arquitectura/Ingeniería CON especialistas en FinOps</p>;
+                case 5:
+                  return <p className="text-white">CoE Centro de Excelencia Cloud con BPO y especialistas de Gobierno y práctica FinOps</p>;
+                case 6:
+                  return <p className="text-white">{assessment.userData.teamCompositionOther || "Otro"}</p>;
+                default:
+                  return <p className="text-white/70 text-sm">No se ha seleccionado</p>;
+              }
+            })()}
+          </div>
+        </div>
+        
+        {/* Presupuesto anual y gasto mensual */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h4 className="text-lg font-medium text-white/90 mb-2">Presupuesto anual</h4>
+            <div className="p-3 bg-white/5 rounded-lg">
+              {(() => {
+                switch(Number(assessment.userData.annualBudget)) {
+                  case 1:
+                    return <p className="text-white">Menos de USD 100,000</p>;
+                  case 2:
+                    return <p className="text-white">Entre USD 100,000 y 500,000</p>;
+                  case 3:
+                    return <p className="text-white">Entre USD 500,000 y 1,000,000</p>;
+                  case 4:
+                    return <p className="text-white">Entre USD 1,000,000 y 5,000,000</p>;
+                  case 5:
+                    return <p className="text-white">Más de USD 5,000,000</p>;
+                  default:
+                    return <p className="text-white/70 text-sm">No se ha seleccionado</p>;
+                }
+              })()}
+            </div>
+          </div>
+          
+          <div>
+            <h4 className="text-lg font-medium text-white/90 mb-2">Gasto mensual</h4>
+            <div className="p-3 bg-white/5 rounded-lg">
+              {(() => {
+                switch(Number(assessment.userData.monthlySpend)) {
+                  case 1:
+                    return <p className="text-white">Menos de USD 10,000</p>;
+                  case 2:
+                    return <p className="text-white">Entre USD 10,000 y 50,000</p>;
+                  case 3:
+                    return <p className="text-white">Entre USD 50,000 y 100,000</p>;
+                  case 4:
+                    return <p className="text-white">Entre USD 100,000 y 500,000</p>;
+                  case 5:
+                    return <p className="text-white">Más de USD 500,000</p>;
+                  default:
+                    return <p className="text-white/70 text-sm">No se ha seleccionado</p>;
+                }
+              })()}
+            </div>
           </div>
         </div>
       </div>
