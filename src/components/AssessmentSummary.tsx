@@ -14,7 +14,10 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
   const [averageLevel, setAverageLevel] = useState(0);
 
   useEffect(() => {
+    // Solo ejecutamos esto en el cliente
     setMounted(true);
+    
+    // Calculamos el nivel promedio de madurez
     if (assessment.results.length > 0) {
       const total = assessment.results.reduce((sum, result) => sum + result.selectedLevel, 0);
       setAverageLevel(Math.round((total / assessment.results.length) * 10) / 10);
@@ -24,6 +27,7 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
   const downloadCSV = () => {
     if (!mounted) return;
 
+    // Creamos las filas para los datos
     const headers = ['Categoría', 'Nivel', 'Descripción'];
     const rows = assessment.results.map((result) => {
       const category = categories.find((c) => c.name === result.category);
@@ -34,6 +38,7 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
       ];
     });
 
+    // Datos del usuario
     const userDataRows = [
       ['Nombre', assessment.userData.fullName],
       ['Empresa', assessment.userData.company],
@@ -43,6 +48,7 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
       ['', ''],
     ];
 
+    // Formato del CSV
     const csvContent =
       'data:text/csv;charset=utf-8,' +
       [
@@ -56,6 +62,7 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         ...rows.map((row) => row.join(',')),
       ].join('\n');
 
+    // Descarga del CSV
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
@@ -68,82 +75,94 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
   const downloadPDF = () => {
     if (!mounted) return;
 
-    const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.getWidth();
-    
-    // Título
-    doc.setFontSize(20);
-    doc.setTextColor(30, 64, 175); // Azul oscuro
-    doc.text('AUTOEVALUACIÓN DE MADUREZ FINOPS', pageWidth / 2, 20, { align: 'center' });
-    
-    // Datos del usuario
-    doc.setFontSize(16);
-    doc.setTextColor(0, 0, 0);
-    doc.text('Datos del Participante', 14, 35);
-    
-    doc.setFontSize(12);
-    doc.setTextColor(60, 60, 60);
-    doc.text(`Nombre: ${assessment.userData.fullName}`, 14, 45);
-    doc.text(`Empresa: ${assessment.userData.company}`, 14, 52);
-    doc.text(`Correo: ${assessment.userData.email}`, 14, 59);
-    doc.text(`Posición: ${assessment.userData.position}`, 14, 66);
-    
-    // Nivel promedio
-    doc.setFontSize(14);
-    doc.setTextColor(30, 64, 175);
-    doc.text(`Nivel Promedio de Madurez: ${averageLevel}`, pageWidth / 2, 80, { align: 'center' });
-    
-    // Resultados por categoría
-    doc.setFontSize(16);
-    doc.setTextColor(0, 0, 0);
-    doc.text('Resultados por Categoría', 14, 95);
-    
-    let yPosition = 105;
-    assessment.results.forEach((result, index) => {
-      const category = categories.find((c) => c.name === result.category);
+    try {
+      // Creamos el documento PDF
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
       
-      // Si llegamos al final de la página, creamos una nueva
-      if (yPosition > 250) {
-        doc.addPage();
-        yPosition = 20;
-      }
+      // Título
+      doc.setFontSize(20);
+      doc.setTextColor(30, 64, 175); // Azul oscuro
+      doc.text('AUTOEVALUACIÓN DE MADUREZ FINOPS', pageWidth / 2, 20, { align: 'center' });
+      
+      // Datos del usuario
+      doc.setFontSize(16);
+      doc.setTextColor(0, 0, 0);
+      doc.text('Datos del Participante', 14, 35);
       
       doc.setFontSize(12);
-      doc.setTextColor(30, 64, 175);
-      doc.text(`${result.category} - Nivel ${result.selectedLevel}`, 14, yPosition);
-      
-      doc.setFontSize(10);
       doc.setTextColor(60, 60, 60);
-      const description = category?.levelDescriptions[result.selectedLevel - 1] || '';
+      doc.text(`Nombre: ${assessment.userData.fullName}`, 14, 45);
+      doc.text(`Empresa: ${assessment.userData.company}`, 14, 52);
+      doc.text(`Correo: ${assessment.userData.email}`, 14, 59);
+      doc.text(`Posición: ${assessment.userData.position}`, 14, 66);
       
-      // Dividimos la descripción en líneas para que quepa en la página
-      const splitDescription = doc.splitTextToSize(description, pageWidth - 30);
-      doc.text(splitDescription, 14, yPosition + 7);
+      // Nivel promedio
+      doc.setFontSize(14);
+      doc.setTextColor(30, 64, 175);
+      doc.text(`Nivel Promedio de Madurez: ${averageLevel}`, pageWidth / 2, 80, { align: 'center' });
       
-      yPosition += 7 + (splitDescription.length * 5) + 5;
-    });
-    
-    // Añadimos fecha y hora
-    const currentDate = new Date().toLocaleDateString();
-    doc.setFontSize(8);
-    doc.setTextColor(100, 100, 100);
-    doc.text(`Generado el: ${currentDate}`, pageWidth - 14, doc.internal.pageSize.getHeight() - 10, { align: 'right' });
-    
-    // Descargamos el PDF
-    doc.save(`finops_assessment_${assessment.userData.fullName.replace(/\s+/g, '_')}.pdf`);
+      // Resultados por categoría
+      doc.setFontSize(16);
+      doc.setTextColor(0, 0, 0);
+      doc.text('Resultados por Categoría', 14, 95);
+      
+      let yPosition = 105;
+      assessment.results.forEach((result) => {
+        const category = categories.find((c) => c.name === result.category);
+        
+        // Si llegamos al final de la página, creamos una nueva
+        if (yPosition > 250) {
+          doc.addPage();
+          yPosition = 20;
+        }
+        
+        doc.setFontSize(12);
+        doc.setTextColor(30, 64, 175);
+        doc.text(`${result.category} - Nivel ${result.selectedLevel}`, 14, yPosition);
+        
+        doc.setFontSize(10);
+        doc.setTextColor(60, 60, 60);
+        const description = category?.levelDescriptions[result.selectedLevel - 1] || '';
+        
+        // Dividimos la descripción en líneas para que quepa en la página
+        const splitDescription = doc.splitTextToSize(description, pageWidth - 30);
+        doc.text(splitDescription, 14, yPosition + 7);
+        
+        yPosition += 7 + (splitDescription.length * 5) + 5;
+      });
+      
+      // Añadimos fecha y hora
+      const currentDate = new Date().toLocaleDateString();
+      doc.setFontSize(8);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`Generado el: ${currentDate}`, pageWidth - 14, doc.internal.pageSize.getHeight() - 10, { align: 'right' });
+      
+      // Descargamos el PDF
+      doc.save(`finops_assessment_${assessment.userData.fullName.replace(/\s+/g, '_')}.pdf`);
+    } catch (error) {
+      console.error('Error al generar el PDF:', error);
+      alert('Hubo un error al generar el PDF. Por favor, intenta de nuevo.');
+    }
   };
 
+  // Mostramos un skeleton mientras se carga el componente
   if (!mounted) {
     return (
-      <div className="animate-pulse">
-        <div className="h-8 bg-white/20 rounded w-1/2 mb-4"></div>
+      <div className="glass-panel animate-pulse space-y-8">
+        <div className="h-8 bg-white/20 rounded w-1/2 mb-4 mx-auto"></div>
         <div className="h-32 bg-white/10 rounded mb-8"></div>
         <div className="h-8 bg-white/20 rounded w-1/3 mb-4"></div>
         <div className="h-64 bg-white/10 rounded"></div>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="h-10 bg-white/20 rounded flex-1"></div>
+          <div className="h-10 bg-white/20 rounded flex-1"></div>
+        </div>
       </div>
     );
   }
 
+  // Función para asignar colores según el nivel
   const getLevelColor = (level: number) => {
     switch(level) {
       case 1: return 'bg-red-100 text-red-800';
@@ -155,10 +174,22 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
     }
   };
 
+  // Función para obtener un emoji según el nivel
+  const getLevelEmoji = (level: number) => {
+    switch(level) {
+      case 1: return '😟';
+      case 2: return '🙂';
+      case 3: return '😊';
+      case 4: return '😃';
+      case 5: return '🤩';
+      default: return '🔍';
+    }
+  };
+
   return (
     <div className="glass-panel animate-fade-in space-y-8">
       <div className="text-center mb-6">
-        <h2 className="text-3xl font-bold mb-2">
+        <h2 className="text-3xl font-bold mb-2 title-gradient">
           Resultado de tu Evaluación
         </h2>
         <p className="text-white/70">
@@ -166,41 +197,52 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         </p>
       </div>
 
+      {/* Nivel Promedio */}
       <div className="mb-6">
         <div className="flex items-center justify-center mb-4">
-          <div className="text-center p-6 bg-white/20 backdrop-blur-sm rounded-xl">
+          <div className="text-center p-6 bg-white/20 backdrop-blur-sm rounded-xl shadow-lg">
             <p className="text-lg font-medium text-white/80 mb-1">Nivel Promedio de Madurez</p>
-            <p className="text-5xl font-bold text-white">{averageLevel}</p>
+            <div className="flex items-center justify-center">
+              <p className="text-6xl font-bold text-white">{averageLevel}</p>
+              <span className="text-4xl ml-2">{getLevelEmoji(Math.round(averageLevel))}</span>
+            </div>
+            <p className="text-sm text-white/60 mt-2">
+              Basado en tus respuestas en las {categories.length} categorías
+            </p>
           </div>
         </div>
       </div>
 
-      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6">
-        <h3 className="text-xl font-semibold mb-4">
+      {/* Datos del Participante */}
+      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6 shadow-lg">
+        <h3 className="text-xl font-semibold mb-4 flex items-center">
+          <span className="mr-2">👤</span>
           Datos del Participante
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
+          <div className="p-3 bg-white/5 rounded-lg">
             <p className="text-sm font-medium text-white/70">Nombre y Apellido</p>
             <p className="text-base text-white">{assessment.userData.fullName}</p>
           </div>
-          <div>
+          <div className="p-3 bg-white/5 rounded-lg">
             <p className="text-sm font-medium text-white/70">Empresa</p>
             <p className="text-base text-white">{assessment.userData.company}</p>
           </div>
-          <div>
+          <div className="p-3 bg-white/5 rounded-lg">
             <p className="text-sm font-medium text-white/70">Correo Electrónico</p>
             <p className="text-base text-white">{assessment.userData.email}</p>
           </div>
-          <div>
+          <div className="p-3 bg-white/5 rounded-lg">
             <p className="text-sm font-medium text-white/70">Posición</p>
             <p className="text-base text-white">{assessment.userData.position}</p>
           </div>
         </div>
       </div>
 
-      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6">
-        <h3 className="text-xl font-semibold mb-4">
+      {/* Resultados por Categoría */}
+      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6 shadow-lg">
+        <h3 className="text-xl font-semibold mb-4 flex items-center">
+          <span className="mr-2">📊</span>
           Resultados por Categoría
         </h3>
         <div className="space-y-4">
@@ -210,10 +252,11 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
             return (
               <div
                 key={result.category}
-                className="p-4 bg-white/5 border border-white/10 rounded-lg transition-all hover:bg-white/10"
+                className="p-4 bg-white/5 border border-white/10 rounded-lg transition-all hover:bg-white/10 hover:shadow-lg"
               >
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
-                  <h4 className="text-lg font-medium text-white">
+                  <h4 className="text-lg font-medium text-white flex items-center">
+                    <span className="mr-2">{getLevelEmoji(result.selectedLevel)}</span>
                     {result.category}
                   </h4>
                   <span className={`px-3 py-1 text-sm font-medium rounded-full ${getLevelColor(result.selectedLevel)}`}>
@@ -227,17 +270,20 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         </div>
       </div>
 
+      {/* Botones de Descarga */}
       <div className="flex flex-col sm:flex-row gap-4">
         <button
           onClick={downloadPDF}
-          className="flex-1 button-modern bg-blue-600 text-white hover:bg-blue-700"
+          className="flex-1 button-modern bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center"
         >
+          <span className="mr-2">📄</span>
           Descargar PDF
         </button>
         <button
           onClick={downloadCSV}
-          className="flex-1 button-modern"
+          className="flex-1 button-modern flex items-center justify-center"
         >
+          <span className="mr-2">📊</span>
           Descargar CSV
         </button>
       </div>
