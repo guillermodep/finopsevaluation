@@ -104,6 +104,16 @@ export default function Home() {
   return (
     <div className="bg-gradient-radial min-h-screen flex flex-col justify-center items-center p-4">
       <div className="max-w-4xl w-full">
+        {/* Logo en la esquina superior izquierda */}
+        <div className="absolute top-4 left-4">
+          <svg width="120" height="60" viewBox="0 0 48 24">
+            <path d="M3,6 C3,6 7,1 17,3 C27,5 36,12 45,6" stroke="#0080FF" strokeWidth="2" fill="none" />
+            <path d="M3,18 C3,18 7,23 17,21 C27,19 36,12 45,18" stroke="#0080FF" strokeWidth="2" fill="none" />
+            <text x="5" y="15" fill="white" fontSize="7" fontWeight="bold">Smart</text>
+            <text x="23" y="15" fill="#0080FF" fontSize="7" fontWeight="bold">Solutions</text>
+          </svg>
+        </div>
+        
         <div className="text-center animate-fade-in pt-16 md:pt-24">
           <h1 className="text-5xl font-bold mb-10 flex items-center justify-center flex-wrap">
             <span className="text-white mr-3">Autoevaluación de Madurez FinOps</span>
