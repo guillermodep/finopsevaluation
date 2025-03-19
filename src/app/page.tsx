@@ -13,6 +13,7 @@ export default function Home() {
   const [step, setStep] = useState(0);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [results, setResults] = useState<AssessmentResult[]>([]);
+  const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -47,6 +48,11 @@ export default function Home() {
     }
   };
 
+  const handleSubmitResults = () => {
+    setShowResults(true);
+  };
+
+  const allCategoriesAnswered = results.length === categories.length;
   const currentCategory = step > 0 && step <= categories.length ? categories[step - 1] : null;
   const currentResult = currentCategory
     ? results.find((r) => r.category === currentCategory.name)
@@ -111,7 +117,29 @@ export default function Home() {
             </div>
           )}
 
-          {step > categories.length && userData && (
+          {/* Botón de enviar cuando todas las categorías están contestadas pero aún no se muestran los resultados */}
+          {step > categories.length && !showResults && userData && allCategoriesAnswered && (
+            <div className="glass-panel animate-fade-in space-y-6">
+              <h2 className="text-2xl font-bold text-white">
+                ¡Has completado todas las preguntas!
+              </h2>
+              <p className="text-lg text-white/80">
+                Has evaluado todas las categorías. Haz clic en el botón "Enviar" para ver tu resultado.
+              </p>
+              <div className="flex justify-center mt-6">
+                <button 
+                  onClick={handleSubmitResults}
+                  className="button-modern bg-blue-600 text-white hover:bg-blue-700 px-8 py-3 text-lg flex items-center shadow-lg"
+                >
+                  <span className="mr-2">✓</span>
+                  Enviar Evaluación
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Mostrar los resultados solo después de hacer clic en "Enviar" */}
+          {showResults && userData && (
             <div className="animate-fade-in">
               <AssessmentSummary
                 assessment={{
