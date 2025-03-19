@@ -104,12 +104,12 @@ export default function Home() {
   return (
     <div className="bg-gradient-radial min-h-screen flex flex-col justify-center items-center p-4">
       <div className="max-w-4xl w-full">
-        {/* Logo en la esquina superior izquierda */}
-        <div className="absolute top-4 left-4">
+        {/* Logo centrado en la parte superior */}
+        <div className="absolute top-4 left-0 right-0 flex justify-center">
           <img 
             src="/images/smart-solutions.png" 
             alt="Smart Solutions" 
-            width={120}
+            width={200}
             height={60}
             className="h-auto"
           />
