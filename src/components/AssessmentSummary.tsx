@@ -48,6 +48,19 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
       ['', ''],
     ];
 
+    // Determinar escala de madurez
+    let escalaTexto = '';
+    if (averageLevel < 2) {
+      escalaTexto = 'GATEAR (0-2)';
+    } else if (averageLevel < 4) {
+      escalaTexto = 'CAMINAR (2-4)';
+    } else {
+      escalaTexto = 'CORRER (+4)';
+    }
+    
+    // Agregamos la escala de madurez
+    userDataRows.splice(5, 0, ['Escala de Madurez FinOps', escalaTexto]);
+
     // Formato del CSV
     const csvContent =
       'data:text/csv;charset=utf-8,' +
@@ -102,12 +115,25 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
       doc.setTextColor(30, 64, 175);
       doc.text(`Nivel Promedio de Madurez: ${averageLevel}`, pageWidth / 2, 80, { align: 'center' });
       
+      // Escala de Madurez FinOps
+      doc.setFontSize(14);
+      doc.setTextColor(30, 64, 175);
+      let escalaTexto = '';
+      if (averageLevel < 2) {
+        escalaTexto = 'GATEAR (0-2)';
+      } else if (averageLevel < 4) {
+        escalaTexto = 'CAMINAR (2-4)';
+      } else {
+        escalaTexto = 'CORRER (+4)';
+      }
+      doc.text(`Escala de Madurez FinOps: ${escalaTexto}`, pageWidth / 2, 90, { align: 'center' });
+      
       // Resultados por categoría
       doc.setFontSize(16);
       doc.setTextColor(0, 0, 0);
-      doc.text('Resultados por Categoría', 14, 95);
+      doc.text('Resultados por Categoría', 14, 105);
       
-      let yPosition = 105;
+      let yPosition = 115;
       assessment.results.forEach((result) => {
         const category = categories.find((c) => c.name === result.category);
         
@@ -209,6 +235,73 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
             <p className="text-sm text-white/60 mt-2">
               Basado en tus respuestas en las {categories.length} categorías
             </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Escala del Modelo de Madurez FinOps */}
+      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6 shadow-lg">
+        <h3 className="text-xl font-semibold mb-4 flex items-center">
+          <span className="mr-2">🚀</span>
+          Escala de Madurez FinOps
+        </h3>
+        <div className="text-center mb-4">
+          {averageLevel < 2 ? (
+            <div className="bg-white/5 p-4 rounded-xl flex flex-col items-center space-y-3">
+              <h4 className="text-xl font-bold text-white">GATEAR</h4>
+              <img 
+                src="https://www.finops.org/wp-content/uploads/2024/03/Crawl@2x.svg" 
+                alt="Etapa Gatear" 
+                className="h-24 w-auto" 
+              />
+              <p className="text-white/80">
+                Estás en la fase inicial del modelo de madurez FinOps. 
+                Tu promedio de {averageLevel} indica que estás comenzando 
+                a implementar prácticas FinOps en tu organización.
+              </p>
+            </div>
+          ) : averageLevel < 4 ? (
+            <div className="bg-white/5 p-4 rounded-xl flex flex-col items-center space-y-3">
+              <h4 className="text-xl font-bold text-white">CAMINAR</h4>
+              <img 
+                src="https://www.finops.org/wp-content/uploads/2024/03/Walk@2x.svg" 
+                alt="Etapa Caminar" 
+                className="h-24 w-auto" 
+              />
+              <p className="text-white/80">
+                ¡Bien hecho! Estás en la fase intermedia del modelo de madurez FinOps. 
+                Tu promedio de {averageLevel} indica que ya tienes establecidas 
+                prácticas FinOps y estás trabajando en su mejora continua.
+              </p>
+            </div>
+          ) : (
+            <div className="bg-white/5 p-4 rounded-xl flex flex-col items-center space-y-3">
+              <h4 className="text-xl font-bold text-white">CORRER</h4>
+              <img 
+                src="https://www.finops.org/wp-content/uploads/2024/03/Run@2x.svg" 
+                alt="Etapa Correr" 
+                className="h-24 w-auto" 
+              />
+              <p className="text-white/80">
+                ¡Excelente! Has alcanzado la fase avanzada del modelo de madurez FinOps. 
+                Tu promedio de {averageLevel} demuestra que tu organización tiene un 
+                alto nivel de implementación y optimización de prácticas FinOps.
+              </p>
+            </div>
+          )}
+        </div>
+        <div className="grid grid-cols-3 gap-2 mt-4">
+          <div className="text-center p-2 rounded-lg border border-white/10">
+            <p className="text-sm font-medium">Gatear</p>
+            <p className="text-xs text-white/60">0-2</p>
+          </div>
+          <div className="text-center p-2 rounded-lg border border-white/10">
+            <p className="text-sm font-medium">Caminar</p>
+            <p className="text-xs text-white/60">2-4</p>
+          </div>
+          <div className="text-center p-2 rounded-lg border border-white/10">
+            <p className="text-sm font-medium">Correr</p>
+            <p className="text-xs text-white/60">+4</p>
           </div>
         </div>
       </div>
