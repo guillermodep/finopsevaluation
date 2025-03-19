@@ -81,7 +81,7 @@ export default function Home() {
     <div className="min-h-screen py-6 px-4 sm:px-6 lg:px-8 relative">
       {/* Logo en la esquina superior izquierda */}
       <div className="absolute left-4 top-4 z-10">
-        <div className="w-48 h-24">
+        <div className="w-50 h-24">
           <img 
             src="/images/smart-solutions.png" 
             alt="Smart Solutions Logo" 
