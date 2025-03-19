@@ -79,20 +79,23 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen py-6 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto relative">
-        {/* Logo en la esquina superior izquierda */}
-        <div className="absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 md:translate-x-0 md:translate-y-0 md:left-0 md:top-0 z-10">
-          <div className="w-32 h-32 md:w-48 md:h-48 relative flex items-center justify-center">
-            <img 
-              src="/images/smart-solutions-logo.svg" 
-              alt="Smart Solutions Logo" 
-              className="w-full h-full object-contain"
-            />
-          </div>
+    <div className="min-h-screen py-6 px-4 sm:px-6 lg:px-8 relative">
+      {/* Logo en la esquina superior izquierda */}
+      <div className="absolute left-4 top-4 z-10">
+        <div className="w-40 h-40 md:w-48 md:h-48">
+          <Image 
+            src="/images/smart-solutions-logo.svg" 
+            alt="Smart Solutions Logo" 
+            width={200}
+            height={100}
+            priority
+            className="w-full h-full object-contain drop-shadow-lg"
+          />
         </div>
-
-        <div className="text-center animate-fade-in pt-16 md:pt-32">
+      </div>
+      
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center animate-fade-in pt-16 md:pt-24">
           <h1 className="text-4xl font-bold mb-8 title-gradient">
             🔎 Autoevaluación de Madurez FinOps
           </h1>
@@ -179,6 +182,11 @@ export default function Home() {
             </div>
           )}
         </div>
+      </div>
+      
+      {/* Firma en el footer */}
+      <div className="text-center text-white/40 text-xs mt-8">
+        Desarrollado por Smart Solutions
       </div>
     </div>
   );
