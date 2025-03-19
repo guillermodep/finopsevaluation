@@ -262,7 +262,7 @@ export default function Home() {
                 ¡Has completado todas las preguntas!
               </h2>
               <p className="text-lg text-white/80">
-                Has evaluado todas las categorías. Haz clic en el botón "Enviar" para ver tu resultado.
+                Has evaluado todas las categorías. Haz clic en el botón "Enviar" para ver tu resultado y descargar una copia.
               </p>
               <div className="flex justify-center mt-6">
                 <button 
