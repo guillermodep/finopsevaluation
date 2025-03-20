@@ -30,6 +30,37 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
       teamCompositionOther: '',
       annualBudget: 0,
       monthlySpend: 0,
+      workloadTypes: {
+        iaas: false,
+        paas: false,
+        saas: false,
+        faas: false,
+        dbaas: false,
+      },
+      serversCount: 0,
+      marketplacePurchases: 0,
+      paymentModels: {
+        onDemand: false,
+        reserved: false,
+        longTermContracts: false,
+        byol: false,
+        freeTier: false,
+      },
+      finOpsTools: {
+        nativeTools: false,
+        thirdPartyTools: false,
+        internalTools: false,
+        noTools: false,
+        other: false,
+        otherSpecified: '',
+      },
+      costReductionPractices: {
+        rightsizing: false,
+        storageReconfiguration: false,
+        scheduledShutdown: false,
+        reservedInstances: false,
+        licenseOptimization: false,
+      },
     },
   });
 
@@ -312,7 +343,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
         <div className="mb-8">
           <fieldset>
             <legend className="block text-lg font-medium text-white/90 mb-3">
-              ¿Cuál es el gasto mensual promedio actual en todas las nubes combinadas?
+              ¿Cuál es el gasto mensual promedio en servicios de nube?
             </legend>
             <div className="space-y-3">
               <div className="flex items-center">
@@ -381,14 +412,440 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
             )}
           </fieldset>
         </div>
-
+        
+        {/* NUEVAS PREGUNTAS */}
+        
+        {/* Pregunta sobre tipos de carga */}
+        <div className="mb-8">
+          <fieldset>
+            <legend className="block text-lg font-medium text-white/90 mb-3">
+              ¿Qué tipo(s) de carga utiliza mayoritariamente tu organización?
+            </legend>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="iaas"
+                  {...register('workloadTypes.iaas')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="iaas" className="text-white/90">
+                  IaaS (Infrastructure as a Service) – Ej: VMs, almacenamiento, redes
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="paas"
+                  {...register('workloadTypes.paas')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="paas" className="text-white/90">
+                  PaaS (Platform as a Service) – Ej: App Services, Kubernetes, Azure SQL
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="saas"
+                  {...register('workloadTypes.saas')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="saas" className="text-white/90">
+                  SaaS (Software as a Service) – Ej: Microsoft 365, Salesforce
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="faas"
+                  {...register('workloadTypes.faas')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="faas" className="text-white/90">
+                  FaaS (Function as a Service) – Ej: AWS Lambda, Azure Functions
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="dbaas"
+                  {...register('workloadTypes.dbaas')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="dbaas" className="text-white/90">
+                  DBaaS (Database as a Service) – Ej: AWS RDS, Azure CosmosDB, GCP Cloud SQL
+                </label>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        
+        {/* Pregunta sobre cantidad de servidores */}
+        <div className="mb-8">
+          <fieldset>
+            <legend className="block text-lg font-medium text-white/90 mb-3">
+              ¿Cuántos servidores (VMs, EC2, Compute Instances) tiene actualmente tu organización en la nube?
+            </legend>
+            <div className="space-y-3">
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="servers1"
+                  value="1"
+                  {...register('serversCount', { required: 'Debes seleccionar una opción' })}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="servers1" className="text-white/90">
+                  Menos de 50
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="servers2"
+                  value="2"
+                  {...register('serversCount', { required: 'Debes seleccionar una opción' })}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="servers2" className="text-white/90">
+                  Entre 50 y 200
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="servers3"
+                  value="3"
+                  {...register('serversCount', { required: 'Debes seleccionar una opción' })}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="servers3" className="text-white/90">
+                  Entre 200 y 500
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="servers4"
+                  value="4"
+                  {...register('serversCount', { required: 'Debes seleccionar una opción' })}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="servers4" className="text-white/90">
+                  Entre 500 y 1000
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="servers5"
+                  value="5"
+                  {...register('serversCount', { required: 'Debes seleccionar una opción' })}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="servers5" className="text-white/90">
+                  Más de 1000
+                </label>
+              </div>
+            </div>
+            {errors.serversCount && (
+              <p className="mt-2 text-sm text-red-300 animate-fade-in">{errors.serversCount.message}</p>
+            )}
+          </fieldset>
+        </div>
+        
+        {/* Pregunta sobre compras en Marketplace */}
+        <div className="mb-8">
+          <fieldset>
+            <legend className="block text-lg font-medium text-white/90 mb-3">
+              ¿Cuántas compras por Marketplace o Private Offers realizaron en el último año?
+            </legend>
+            <div className="space-y-3">
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="marketplace1"
+                  value="1"
+                  {...register('marketplacePurchases', { required: 'Debes seleccionar una opción' })}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="marketplace1" className="text-white/90">
+                  Ninguna
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="marketplace2"
+                  value="2"
+                  {...register('marketplacePurchases', { required: 'Debes seleccionar una opción' })}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="marketplace2" className="text-white/90">
+                  1 a 5 compras
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="marketplace3"
+                  value="3"
+                  {...register('marketplacePurchases', { required: 'Debes seleccionar una opción' })}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="marketplace3" className="text-white/90">
+                  6 a 15 compras
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="marketplace4"
+                  value="4"
+                  {...register('marketplacePurchases', { required: 'Debes seleccionar una opción' })}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="marketplace4" className="text-white/90">
+                  16 a 30 compras
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="marketplace5"
+                  value="5"
+                  {...register('marketplacePurchases', { required: 'Debes seleccionar una opción' })}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="marketplace5" className="text-white/90">
+                  Más de 30 compras
+                </label>
+              </div>
+            </div>
+            {errors.marketplacePurchases && (
+              <p className="mt-2 text-sm text-red-300 animate-fade-in">{errors.marketplacePurchases.message}</p>
+            )}
+          </fieldset>
+        </div>
+        
+        {/* Pregunta sobre modelos de pago */}
+        <div className="mb-8">
+          <fieldset>
+            <legend className="block text-lg font-medium text-white/90 mb-3">
+              ¿Qué modelo(s) de pago utilizan mayormente para sus servicios en la nube?
+            </legend>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="onDemand"
+                  {...register('paymentModels.onDemand')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="onDemand" className="text-white/90">
+                  Pago por demanda (On-Demand)
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="reserved"
+                  {...register('paymentModels.reserved')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="reserved" className="text-white/90">
+                  Instancias reservadas / Savings Plans
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="contracts"
+                  {...register('paymentModels.longTermContracts')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="contracts" className="text-white/90">
+                  Contratos a largo plazo con descuentos
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="byol"
+                  {...register('paymentModels.byol')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="byol" className="text-white/90">
+                  Licencias Bring Your Own License (BYOL)
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="freeTier"
+                  {...register('paymentModels.freeTier')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="freeTier" className="text-white/90">
+                  Free tier / créditos promocionales
+                </label>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        
+        {/* Pregunta sobre herramientas FinOps */}
+        <div className="mb-8">
+          <fieldset>
+            <legend className="block text-lg font-medium text-white/90 mb-3">
+              ¿Qué herramientas utilizan actualmente para la gestión y optimización de costos en la nube?
+            </legend>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="nativeTools"
+                  {...register('finOpsTools.nativeTools')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="nativeTools" className="text-white/90">
+                  Herramientas nativas del CSP (Cost Explorer, Azure Cost Management, etc.)
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="thirdPartyTools"
+                  {...register('finOpsTools.thirdPartyTools')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="thirdPartyTools" className="text-white/90">
+                  Herramientas de terceros (CloudHealth, Apptio Cloudability, Spot.io, etc.)
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="internalTools"
+                  {...register('finOpsTools.internalTools')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="internalTools" className="text-white/90">
+                  Herramientas internas desarrolladas en la empresa
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="noTools"
+                  {...register('finOpsTools.noTools')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="noTools" className="text-white/90">
+                  No utilizamos ninguna herramienta específica
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="otherTools"
+                  {...register('finOpsTools.other')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="otherTools" className="text-white/90">
+                  Otro
+                </label>
+              </div>
+            </div>
+            
+            {watch('finOpsTools.other') && (
+              <div className="mt-3">
+                <input
+                  type="text"
+                  id="otherToolsSpecified"
+                  placeholder="Especificar otra herramienta"
+                  {...register('finOpsTools.otherSpecified')}
+                  className="input-modern"
+                />
+              </div>
+            )}
+          </fieldset>
+        </div>
+        
+        {/* Pregunta sobre prácticas de reducción de costos */}
+        <div className="mb-8">
+          <fieldset>
+            <legend className="block text-lg font-medium text-white/90 mb-3">
+              ¿Aplica actualmente alguno de estos tipos de prácticas de reducción de costos en su organización?
+            </legend>
+            <div className="grid grid-cols-1 gap-3">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="rightsizing"
+                  {...register('costReductionPractices.rightsizing')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="rightsizing" className="text-white/90">
+                  Rightsizing – Ajuste del tamaño de instancias y recursos según uso real
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="storageReconfiguration"
+                  {...register('costReductionPractices.storageReconfiguration')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="storageReconfiguration" className="text-white/90">
+                  Reconfiguración de Discos/Storage según locación – Moviendo almacenamiento a regiones o tipos más económicos
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="scheduledShutdown"
+                  {...register('costReductionPractices.scheduledShutdown')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="scheduledShutdown" className="text-white/90">
+                  Apagado de recursos no utilizados fuera de horario laboral – Por ejemplo, apagar ambientes de desarrollo fuera del horario de oficina
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="reservedInstances"
+                  {...register('costReductionPractices.reservedInstances')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="reservedInstances" className="text-white/90">
+                  Uso de instancias reservadas / Savings Plans – Compra anticipada de capacidad con descuentos por compromiso
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="licenseOptimization"
+                  {...register('costReductionPractices.licenseOptimization')}
+                  className="w-4 h-4 mr-2"
+                />
+                <label htmlFor="licenseOptimization" className="text-white/90">
+                  Optimización del uso de licencias – Aplicación de BYOL (Bring Your Own License) o reducción de licencias innecesarias
+                </label>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        
         <div className="flex justify-end mt-8">
-          <button
-            type="submit"
-            disabled={isSubmitting}
+          <button 
+            type="submit" 
             className="button-modern"
+            disabled={isSubmitting}
           >
-            {isSubmitting ? 'Procesando...' : 'Continuar con la Evaluación'}
+            Continuar con la evaluación
           </button>
         </div>
       </form>

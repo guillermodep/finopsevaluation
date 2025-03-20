@@ -104,6 +104,25 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
       infrastructureRows.push(['', 'No se ha seleccionado ningún proveedor']);
     }
     
+    // Tipos de carga
+    infrastructureRows.push(['', '']);
+    infrastructureRows.push(['Tipos de carga utilizados:', '']);
+    
+    const workloadTypes = [];
+    if (assessment.userData.workloadTypes?.iaas) workloadTypes.push('IaaS (Infrastructure as a Service)');
+    if (assessment.userData.workloadTypes?.paas) workloadTypes.push('PaaS (Platform as a Service)');
+    if (assessment.userData.workloadTypes?.saas) workloadTypes.push('SaaS (Software as a Service)');
+    if (assessment.userData.workloadTypes?.faas) workloadTypes.push('FaaS (Function as a Service)');
+    if (assessment.userData.workloadTypes?.dbaas) workloadTypes.push('DBaaS (Database as a Service)');
+    
+    if (workloadTypes.length > 0) {
+      workloadTypes.forEach(type => {
+        infrastructureRows.push(['', `• ${type}`]);
+      });
+    } else {
+      infrastructureRows.push(['', 'No se ha seleccionado ningún tipo de carga']);
+    }
+    
     // Composición del equipo
     infrastructureRows.push(['', '']);
     infrastructureRows.push(['Composición del equipo:', '']);
@@ -133,6 +152,33 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
     }
     
     infrastructureRows.push(['', teamCompositionText]);
+    
+    // Cantidad de servidores
+    infrastructureRows.push(['', '']);
+    infrastructureRows.push(['Cantidad de servidores:', '']);
+    
+    let serversCountText = '';
+    switch(Number(assessment.userData.serversCount)) {
+      case 1:
+        serversCountText = 'Menos de 50';
+        break;
+      case 2:
+        serversCountText = 'Entre 50 y 200';
+        break;
+      case 3:
+        serversCountText = 'Entre 200 y 500';
+        break;
+      case 4:
+        serversCountText = 'Entre 500 y 1000';
+        break;
+      case 5:
+        serversCountText = 'Más de 1000';
+        break;
+      default:
+        serversCountText = 'No se ha seleccionado';
+    }
+    
+    infrastructureRows.push(['', `• ${serversCountText}`]);
     
     // Presupuesto anual
     infrastructureRows.push(['', '']);
@@ -187,6 +233,91 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
     }
     
     infrastructureRows.push(['', `• ${spendText}`]);
+    
+    // Compras Marketplace
+    infrastructureRows.push(['', '']);
+    infrastructureRows.push(['Compras por Marketplace:', '']);
+    
+    let marketplaceText = '';
+    switch(Number(assessment.userData.marketplacePurchases)) {
+      case 1:
+        marketplaceText = 'Ninguna';
+        break;
+      case 2:
+        marketplaceText = '1 a 5 compras';
+        break;
+      case 3:
+        marketplaceText = '6 a 15 compras';
+        break;
+      case 4:
+        marketplaceText = '16 a 30 compras';
+        break;
+      case 5:
+        marketplaceText = 'Más de 30 compras';
+        break;
+      default:
+        marketplaceText = 'No se ha seleccionado';
+    }
+    
+    infrastructureRows.push(['', `• ${marketplaceText}`]);
+    
+    // Modelos de pago
+    infrastructureRows.push(['', '']);
+    infrastructureRows.push(['Modelos de pago utilizados:', '']);
+    
+    const paymentModels = [];
+    if (assessment.userData.paymentModels?.onDemand) paymentModels.push('Pago por demanda (On-Demand)');
+    if (assessment.userData.paymentModels?.reserved) paymentModels.push('Instancias reservadas / Savings Plans');
+    if (assessment.userData.paymentModels?.longTermContracts) paymentModels.push('Contratos a largo plazo con descuentos');
+    if (assessment.userData.paymentModels?.byol) paymentModels.push('Licencias Bring Your Own License (BYOL)');
+    if (assessment.userData.paymentModels?.freeTier) paymentModels.push('Free tier / créditos promocionales');
+    
+    if (paymentModels.length > 0) {
+      paymentModels.forEach(model => {
+        infrastructureRows.push(['', `• ${model}`]);
+      });
+    } else {
+      infrastructureRows.push(['', 'No se ha seleccionado ningún modelo de pago']);
+    }
+    
+    // Herramientas FinOps
+    infrastructureRows.push(['', '']);
+    infrastructureRows.push(['Herramientas de gestión y optimización:', '']);
+    
+    const finOpsTools = [];
+    if (assessment.userData.finOpsTools?.nativeTools) finOpsTools.push('Herramientas nativas del CSP');
+    if (assessment.userData.finOpsTools?.thirdPartyTools) finOpsTools.push('Herramientas de terceros');
+    if (assessment.userData.finOpsTools?.internalTools) finOpsTools.push('Herramientas internas desarrolladas en la empresa');
+    if (assessment.userData.finOpsTools?.noTools) finOpsTools.push('No utilizamos ninguna herramienta específica');
+    if (assessment.userData.finOpsTools?.other) finOpsTools.push(assessment.userData.finOpsTools.otherSpecified || 'Otra herramienta');
+    
+    if (finOpsTools.length > 0) {
+      finOpsTools.forEach(tool => {
+        infrastructureRows.push(['', `• ${tool}`]);
+      });
+    } else {
+      infrastructureRows.push(['', 'No se ha seleccionado ninguna herramienta']);
+    }
+    
+    // Prácticas de reducción de costos
+    infrastructureRows.push(['', '']);
+    infrastructureRows.push(['Prácticas de reducción de costos:', '']);
+    
+    const costReductionPractices = [];
+    if (assessment.userData.costReductionPractices?.rightsizing) costReductionPractices.push('Rightsizing - Ajuste del tamaño de instancias y recursos');
+    if (assessment.userData.costReductionPractices?.storageReconfiguration) costReductionPractices.push('Reconfiguración de Discos/Storage según locación');
+    if (assessment.userData.costReductionPractices?.scheduledShutdown) costReductionPractices.push('Apagado de recursos no utilizados fuera de horario laboral');
+    if (assessment.userData.costReductionPractices?.reservedInstances) costReductionPractices.push('Uso de instancias reservadas / Savings Plans');
+    if (assessment.userData.costReductionPractices?.licenseOptimization) costReductionPractices.push('Optimización del uso de licencias');
+    
+    if (costReductionPractices.length > 0) {
+      costReductionPractices.forEach(practice => {
+        infrastructureRows.push(['', `• ${practice}`]);
+      });
+    } else {
+      infrastructureRows.push(['', 'No se ha seleccionado ninguna práctica de reducción de costos']);
+    }
+    
     infrastructureRows.push(['', '']);
 
     // Formato del CSV
@@ -316,6 +447,32 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
           yPos += 10;
         }
         
+        // Tipos de carga
+        checkAndAddPage(15);
+        doc.setFontSize(12);
+        doc.setTextColor(60, 60, 60);
+        doc.text('Tipos de carga utilizados:', 14, yPos);
+        yPos += 10;
+        
+        const workloadTypes = [];
+        if (assessment.userData.workloadTypes?.iaas) workloadTypes.push('IaaS (Infrastructure as a Service)');
+        if (assessment.userData.workloadTypes?.paas) workloadTypes.push('PaaS (Platform as a Service)');
+        if (assessment.userData.workloadTypes?.saas) workloadTypes.push('SaaS (Software as a Service)');
+        if (assessment.userData.workloadTypes?.faas) workloadTypes.push('FaaS (Function as a Service)');
+        if (assessment.userData.workloadTypes?.dbaas) workloadTypes.push('DBaaS (Database as a Service)');
+        
+        if (workloadTypes.length > 0) {
+          workloadTypes.forEach(type => {
+            checkAndAddPage();
+            doc.text(`• ${type}`, 16, yPos);
+            yPos += 8;
+          });
+        } else {
+          checkAndAddPage();
+          doc.text('No se ha seleccionado ningún tipo de carga', 16, yPos);
+          yPos += 8;
+        }
+        
         // Composición del equipo
         checkAndAddPage(15);
         yPos += 5; // Espacio extra antes de la siguiente sección
@@ -350,6 +507,25 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         const splitTeamComposition = doc.splitTextToSize(teamCompositionText, pageWidth - 30);
         doc.text(splitTeamComposition, 16, yPos);
         yPos += (splitTeamComposition.length * 7) + 10; // Aumentamos el espaciado entre líneas
+        
+        // Cantidad de servidores
+        checkAndAddPage(15);
+        doc.text('Cantidad de servidores en la nube:', 14, yPos);
+        yPos += 10;
+        
+        let serversCountText = '';
+        switch(Number(assessment.userData.serversCount)) {
+          case 1: serversCountText = 'Menos de 50'; break;
+          case 2: serversCountText = 'Entre 50 y 200'; break;
+          case 3: serversCountText = 'Entre 200 y 500'; break;
+          case 4: serversCountText = 'Entre 500 y 1000'; break;
+          case 5: serversCountText = 'Más de 1000'; break;
+          default: serversCountText = 'No se ha seleccionado';
+        }
+        
+        checkAndAddPage();
+        doc.text(`• ${serversCountText}`, 16, yPos);
+        yPos += 15;
         
         // Presupuesto anual
         checkAndAddPage();
@@ -410,6 +586,99 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         checkAndAddPage();
         doc.text(`• ${spendText}`, 16, yPos);
         yPos += 20; // Mayor espacio antes del nivel promedio
+        
+        // Compras Marketplace
+        checkAndAddPage(15);
+        doc.text('Compras por Marketplace / Private Offers:', 14, yPos);
+        yPos += 10;
+        
+        let marketplaceText = '';
+        switch(Number(assessment.userData.marketplacePurchases)) {
+          case 1: marketplaceText = 'Ninguna'; break;
+          case 2: marketplaceText = '1 a 5 compras'; break;
+          case 3: marketplaceText = '6 a 15 compras'; break;
+          case 4: marketplaceText = '16 a 30 compras'; break;
+          case 5: marketplaceText = 'Más de 30 compras'; break;
+          default: marketplaceText = 'No se ha seleccionado';
+        }
+        
+        checkAndAddPage();
+        doc.text(`• ${marketplaceText}`, 16, yPos);
+        yPos += 15;
+        
+        // Modelos de pago
+        checkAndAddPage(15);
+        doc.text('Modelos de pago utilizados:', 14, yPos);
+        yPos += 10;
+        
+        const paymentModels = [];
+        if (assessment.userData.paymentModels?.onDemand) paymentModels.push('Pago por demanda (On-Demand)');
+        if (assessment.userData.paymentModels?.reserved) paymentModels.push('Instancias reservadas / Savings Plans');
+        if (assessment.userData.paymentModels?.longTermContracts) paymentModels.push('Contratos a largo plazo con descuentos');
+        if (assessment.userData.paymentModels?.byol) paymentModels.push('Licencias Bring Your Own License (BYOL)');
+        if (assessment.userData.paymentModels?.freeTier) paymentModels.push('Free tier / créditos promocionales');
+        
+        if (paymentModels.length > 0) {
+          paymentModels.forEach(model => {
+            checkAndAddPage();
+            doc.text(`• ${model}`, 16, yPos);
+            yPos += 8;
+          });
+        } else {
+          checkAndAddPage();
+          doc.text('No se ha seleccionado ningún modelo de pago', 16, yPos);
+          yPos += 8;
+        }
+        
+        // Herramientas FinOps
+        checkAndAddPage(15);
+        doc.text('Herramientas de gestión y optimización:', 14, yPos);
+        yPos += 10;
+        
+        const finOpsTools = [];
+        if (assessment.userData.finOpsTools?.nativeTools) finOpsTools.push('Herramientas nativas del CSP');
+        if (assessment.userData.finOpsTools?.thirdPartyTools) finOpsTools.push('Herramientas de terceros');
+        if (assessment.userData.finOpsTools?.internalTools) finOpsTools.push('Herramientas internas desarrolladas en la empresa');
+        if (assessment.userData.finOpsTools?.noTools) finOpsTools.push('No utilizamos ninguna herramienta específica');
+        if (assessment.userData.finOpsTools?.other) finOpsTools.push(assessment.userData.finOpsTools.otherSpecified || 'Otra herramienta');
+        
+        if (finOpsTools.length > 0) {
+          finOpsTools.forEach(tool => {
+            checkAndAddPage();
+            doc.text(`• ${tool}`, 16, yPos);
+            yPos += 8;
+          });
+        } else {
+          checkAndAddPage();
+          doc.text('No se ha seleccionado ninguna herramienta', 16, yPos);
+          yPos += 8;
+        }
+        
+        // Prácticas de reducción de costos
+        checkAndAddPage(15);
+        doc.text('Prácticas de reducción de costos:', 14, yPos);
+        yPos += 10;
+        
+        const costReductionPractices = [];
+        if (assessment.userData.costReductionPractices?.rightsizing) costReductionPractices.push('Rightsizing - Ajuste del tamaño de instancias y recursos');
+        if (assessment.userData.costReductionPractices?.storageReconfiguration) costReductionPractices.push('Reconfiguración de Discos/Storage según locación');
+        if (assessment.userData.costReductionPractices?.scheduledShutdown) costReductionPractices.push('Apagado de recursos no utilizados fuera de horario laboral');
+        if (assessment.userData.costReductionPractices?.reservedInstances) costReductionPractices.push('Uso de instancias reservadas / Savings Plans');
+        if (assessment.userData.costReductionPractices?.licenseOptimization) costReductionPractices.push('Optimización del uso de licencias');
+        
+        if (costReductionPractices.length > 0) {
+          costReductionPractices.forEach(practice => {
+            checkAndAddPage();
+            doc.text(`• ${practice}`, 16, yPos);
+            yPos += 8;
+          });
+        } else {
+          checkAndAddPage();
+          doc.text('No se ha seleccionado ninguna práctica de reducción de costos', 16, yPos);
+          yPos += 8;
+        }
+        
+        yPos += 10; // Espacio extra antes del nivel promedio
         
         // Nivel promedio
         checkAndAddPage(15);
@@ -751,6 +1020,37 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
           </div>
         </div>
         
+        {/* Tipos de carga */}
+        <div className="mb-6">
+          <h4 className="text-lg font-medium text-white/90 mb-2">Tipos de carga utilizados</h4>
+          <div className="p-3 bg-white/5 rounded-lg">
+            <div className="flex flex-wrap gap-2">
+              {assessment.userData.workloadTypes?.iaas && (
+                <span className="px-3 py-1 bg-blue-500/20 text-white rounded-full text-sm">IaaS (VMs, almacenamiento)</span>
+              )}
+              {assessment.userData.workloadTypes?.paas && (
+                <span className="px-3 py-1 bg-green-500/20 text-white rounded-full text-sm">PaaS (App Services, Kubernetes)</span>
+              )}
+              {assessment.userData.workloadTypes?.saas && (
+                <span className="px-3 py-1 bg-purple-500/20 text-white rounded-full text-sm">SaaS (Microsoft 365, Salesforce)</span>
+              )}
+              {assessment.userData.workloadTypes?.faas && (
+                <span className="px-3 py-1 bg-yellow-500/20 text-white rounded-full text-sm">FaaS (AWS Lambda, Azure Functions)</span>
+              )}
+              {assessment.userData.workloadTypes?.dbaas && (
+                <span className="px-3 py-1 bg-red-500/20 text-white rounded-full text-sm">DBaaS (AWS RDS, CosmosDB)</span>
+              )}
+              {(!assessment.userData.workloadTypes?.iaas && 
+                !assessment.userData.workloadTypes?.paas && 
+                !assessment.userData.workloadTypes?.saas && 
+                !assessment.userData.workloadTypes?.faas && 
+                !assessment.userData.workloadTypes?.dbaas) && (
+                <span className="text-white/70 text-sm">No se ha seleccionado ningún tipo de carga</span>
+              )}
+            </div>
+          </div>
+        </div>
+        
         {/* Composición del equipo */}
         <div className="mb-6">
           <h4 className="text-lg font-medium text-white/90 mb-2">Composición del equipo</h4>
@@ -776,8 +1076,31 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
           </div>
         </div>
         
+        {/* Cantidad de servidores */}
+        <div className="mb-6">
+          <h4 className="text-lg font-medium text-white/90 mb-2">Cantidad de servidores en la nube</h4>
+          <div className="p-3 bg-white/5 rounded-lg">
+            {(() => {
+              switch(Number(assessment.userData.serversCount)) {
+                case 1:
+                  return <p className="text-white">Menos de 50</p>;
+                case 2:
+                  return <p className="text-white">Entre 50 y 200</p>;
+                case 3:
+                  return <p className="text-white">Entre 200 y 500</p>;
+                case 4:
+                  return <p className="text-white">Entre 500 y 1000</p>;
+                case 5:
+                  return <p className="text-white">Más de 1000</p>;
+                default:
+                  return <p className="text-white/70 text-sm">No se ha seleccionado</p>;
+              }
+            })()}
+          </div>
+        </div>
+        
         {/* Presupuesto anual y gasto mensual */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
             <h4 className="text-lg font-medium text-white/90 mb-2">Presupuesto anual</h4>
             <div className="p-3 bg-white/5 rounded-lg">
@@ -819,6 +1142,124 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
                     return <p className="text-white/70 text-sm">No se ha seleccionado</p>;
                 }
               })()}
+            </div>
+          </div>
+        </div>
+        
+        {/* Compras Marketplace */}
+        <div className="mb-6">
+          <h4 className="text-lg font-medium text-white/90 mb-2">Compras por Marketplace / Private Offers</h4>
+          <div className="p-3 bg-white/5 rounded-lg">
+            {(() => {
+              switch(Number(assessment.userData.marketplacePurchases)) {
+                case 1:
+                  return <p className="text-white">Ninguna</p>;
+                case 2:
+                  return <p className="text-white">1 a 5 compras</p>;
+                case 3:
+                  return <p className="text-white">6 a 15 compras</p>;
+                case 4:
+                  return <p className="text-white">16 a 30 compras</p>;
+                case 5:
+                  return <p className="text-white">Más de 30 compras</p>;
+                default:
+                  return <p className="text-white/70 text-sm">No se ha seleccionado</p>;
+              }
+            })()}
+          </div>
+        </div>
+        
+        {/* Modelos de pago */}
+        <div className="mb-6">
+          <h4 className="text-lg font-medium text-white/90 mb-2">Modelos de pago utilizados</h4>
+          <div className="p-3 bg-white/5 rounded-lg">
+            <div className="flex flex-wrap gap-2">
+              {assessment.userData.paymentModels?.onDemand && (
+                <span className="px-3 py-1 bg-blue-500/20 text-white rounded-full text-sm">Pago por demanda (On-Demand)</span>
+              )}
+              {assessment.userData.paymentModels?.reserved && (
+                <span className="px-3 py-1 bg-green-500/20 text-white rounded-full text-sm">Instancias reservadas / Savings Plans</span>
+              )}
+              {assessment.userData.paymentModels?.longTermContracts && (
+                <span className="px-3 py-1 bg-purple-500/20 text-white rounded-full text-sm">Contratos a largo plazo con descuentos</span>
+              )}
+              {assessment.userData.paymentModels?.byol && (
+                <span className="px-3 py-1 bg-yellow-500/20 text-white rounded-full text-sm">Licencias BYOL</span>
+              )}
+              {assessment.userData.paymentModels?.freeTier && (
+                <span className="px-3 py-1 bg-red-500/20 text-white rounded-full text-sm">Free tier / créditos promocionales</span>
+              )}
+              {(!assessment.userData.paymentModels?.onDemand && 
+                !assessment.userData.paymentModels?.reserved && 
+                !assessment.userData.paymentModels?.longTermContracts && 
+                !assessment.userData.paymentModels?.byol && 
+                !assessment.userData.paymentModels?.freeTier) && (
+                <span className="text-white/70 text-sm">No se ha seleccionado ningún modelo de pago</span>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        {/* Herramientas FinOps */}
+        <div className="mb-6">
+          <h4 className="text-lg font-medium text-white/90 mb-2">Herramientas de gestión y optimización</h4>
+          <div className="p-3 bg-white/5 rounded-lg">
+            <div className="flex flex-wrap gap-2">
+              {assessment.userData.finOpsTools?.nativeTools && (
+                <span className="px-3 py-1 bg-blue-500/20 text-white rounded-full text-sm">Herramientas nativas del CSP</span>
+              )}
+              {assessment.userData.finOpsTools?.thirdPartyTools && (
+                <span className="px-3 py-1 bg-green-500/20 text-white rounded-full text-sm">Herramientas de terceros</span>
+              )}
+              {assessment.userData.finOpsTools?.internalTools && (
+                <span className="px-3 py-1 bg-purple-500/20 text-white rounded-full text-sm">Herramientas internas</span>
+              )}
+              {assessment.userData.finOpsTools?.noTools && (
+                <span className="px-3 py-1 bg-gray-500/20 text-white rounded-full text-sm">No utilizamos herramientas específicas</span>
+              )}
+              {assessment.userData.finOpsTools?.other && (
+                <span className="px-3 py-1 bg-yellow-500/20 text-white rounded-full text-sm">
+                  {assessment.userData.finOpsTools.otherSpecified || "Otra herramienta"}
+                </span>
+              )}
+              {(!assessment.userData.finOpsTools?.nativeTools && 
+                !assessment.userData.finOpsTools?.thirdPartyTools && 
+                !assessment.userData.finOpsTools?.internalTools && 
+                !assessment.userData.finOpsTools?.noTools && 
+                !assessment.userData.finOpsTools?.other) && (
+                <span className="text-white/70 text-sm">No se ha seleccionado ninguna herramienta</span>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        {/* Prácticas de reducción de costos */}
+        <div className="mb-0">
+          <h4 className="text-lg font-medium text-white/90 mb-2">Prácticas de reducción de costos</h4>
+          <div className="p-3 bg-white/5 rounded-lg">
+            <div className="flex flex-wrap gap-2">
+              {assessment.userData.costReductionPractices?.rightsizing && (
+                <span className="px-3 py-1 bg-blue-500/20 text-white rounded-full text-sm">Rightsizing</span>
+              )}
+              {assessment.userData.costReductionPractices?.storageReconfiguration && (
+                <span className="px-3 py-1 bg-green-500/20 text-white rounded-full text-sm">Reconfiguración de almacenamiento</span>
+              )}
+              {assessment.userData.costReductionPractices?.scheduledShutdown && (
+                <span className="px-3 py-1 bg-purple-500/20 text-white rounded-full text-sm">Apagado programado</span>
+              )}
+              {assessment.userData.costReductionPractices?.reservedInstances && (
+                <span className="px-3 py-1 bg-yellow-500/20 text-white rounded-full text-sm">Instancias reservadas</span>
+              )}
+              {assessment.userData.costReductionPractices?.licenseOptimization && (
+                <span className="px-3 py-1 bg-red-500/20 text-white rounded-full text-sm">Optimización de licencias</span>
+              )}
+              {(!assessment.userData.costReductionPractices?.rightsizing && 
+                !assessment.userData.costReductionPractices?.storageReconfiguration && 
+                !assessment.userData.costReductionPractices?.scheduledShutdown && 
+                !assessment.userData.costReductionPractices?.reservedInstances && 
+                !assessment.userData.costReductionPractices?.licenseOptimization) && (
+                <span className="text-white/70 text-sm">No se ha seleccionado ninguna práctica</span>
+              )}
             </div>
           </div>
         </div>
