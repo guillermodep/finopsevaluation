@@ -418,7 +418,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
         {/* Pregunta sobre tipos de carga */}
         <div className="mb-8">
           <fieldset>
-            <legend className="block text-lg font-medium text-white/90 mb-3">
+            <legend className="block text-lg font-medium text-white/90 mb-3 text-center md:text-left">
               ¿Qué tipo(s) de carga utiliza mayoritariamente tu organización?
             </legend>
             <div className="grid grid-cols-1 gap-4">
@@ -430,7 +430,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="iaas" className="text-white/90">
-                  IaaS (Infrastructure as a Service) – Ej: VMs, almacenamiento, redes
+                  <span className="font-medium">IaaS</span> (Infrastructure as a Service) – Ej: VMs, almacenamiento, redes
                 </label>
               </div>
               <div className="flex items-start">
@@ -441,7 +441,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="paas" className="text-white/90">
-                  PaaS (Platform as a Service) – Ej: App Services, Kubernetes, Azure SQL
+                  <span className="font-medium">PaaS</span> (Platform as a Service) – Ej: App Services, Kubernetes, Azure SQL
                 </label>
               </div>
               <div className="flex items-start">
@@ -452,7 +452,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="saas" className="text-white/90">
-                  SaaS (Software as a Service) – Ej: Microsoft 365, Salesforce
+                  <span className="font-medium">SaaS</span> (Software as a Service) – Ej: Microsoft 365, Salesforce
                 </label>
               </div>
               <div className="flex items-start">
@@ -463,7 +463,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="faas" className="text-white/90">
-                  FaaS (Function as a Service) – Ej: AWS Lambda, Azure Functions
+                  <span className="font-medium">FaaS</span> (Function as a Service) – Ej: AWS Lambda, Azure Functions
                 </label>
               </div>
               <div className="flex items-start">
@@ -474,7 +474,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="dbaas" className="text-white/90">
-                  DBaaS (Database as a Service) – Ej: AWS RDS, Azure CosmosDB, GCP Cloud SQL
+                  <span className="font-medium">DBaaS</span> (Database as a Service) – Ej: AWS RDS, Azure CosmosDB, GCP Cloud SQL
                 </label>
               </div>
             </div>
@@ -632,7 +632,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
         {/* Pregunta sobre modelos de pago */}
         <div className="mb-8">
           <fieldset>
-            <legend className="block text-lg font-medium text-white/90 mb-3">
+            <legend className="block text-lg font-medium text-white/90 mb-3 text-center md:text-left">
               ¿Qué modelo(s) de pago utilizan mayormente para sus servicios en la nube?
             </legend>
             <div className="grid grid-cols-1 gap-4">
@@ -644,7 +644,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="onDemand" className="text-white/90">
-                  Pago por demanda (On-Demand)
+                  <span className="font-medium">Pago por demanda</span> (On-Demand)
                 </label>
               </div>
               <div className="flex items-start">
@@ -655,7 +655,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="reserved" className="text-white/90">
-                  Instancias reservadas / Savings Plans
+                  <span className="font-medium">Instancias reservadas / Savings Plans</span>
                 </label>
               </div>
               <div className="flex items-start">
@@ -666,7 +666,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="contracts" className="text-white/90">
-                  Contratos a largo plazo con descuentos
+                  <span className="font-medium">Contratos a largo plazo</span> con descuentos
                 </label>
               </div>
               <div className="flex items-start">
@@ -677,7 +677,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="byol" className="text-white/90">
-                  Licencias Bring Your Own License (BYOL)
+                  <span className="font-medium">Licencias BYOL</span> (Bring Your Own License)
                 </label>
               </div>
               <div className="flex items-start">
@@ -688,7 +688,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="freeTier" className="text-white/90">
-                  Free tier / créditos promocionales
+                  <span className="font-medium">Free tier</span> / créditos promocionales
                 </label>
               </div>
             </div>
@@ -698,7 +698,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
         {/* Pregunta sobre herramientas FinOps */}
         <div className="mb-8">
           <fieldset>
-            <legend className="block text-lg font-medium text-white/90 mb-3">
+            <legend className="block text-lg font-medium text-white/90 mb-3 text-center md:text-left">
               ¿Qué herramientas utilizan actualmente para la gestión y optimización de costos en la nube?
             </legend>
             <div className="grid grid-cols-1 gap-4">
@@ -710,7 +710,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="nativeTools" className="text-white/90">
-                  Herramientas nativas del CSP (Cost Explorer, Azure Cost Management, etc.)
+                  <span className="font-medium">Herramientas nativas del CSP</span> (Cost Explorer, Azure Cost Management, etc.)
                 </label>
               </div>
               <div className="flex items-start">
@@ -721,7 +721,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="thirdPartyTools" className="text-white/90">
-                  Herramientas de terceros (CloudHealth, Apptio Cloudability, Spot.io, etc.)
+                  <span className="font-medium">Herramientas de terceros</span> (CloudHealth, Apptio Cloudability, Spot.io, etc.)
                 </label>
               </div>
               <div className="flex items-start">
@@ -732,7 +732,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="internalTools" className="text-white/90">
-                  Herramientas internas desarrolladas en la empresa
+                  <span className="font-medium">Herramientas internas</span> desarrolladas en la empresa
                 </label>
               </div>
               <div className="flex items-start">
@@ -743,7 +743,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="noTools" className="text-white/90">
-                  No utilizamos ninguna herramienta específica
+                  <span className="font-medium">No utilizamos</span> ninguna herramienta específica
                 </label>
               </div>
               <div className="flex items-start">
@@ -754,7 +754,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="otherTools" className="text-white/90">
-                  Otro
+                  <span className="font-medium">Otro</span>
                 </label>
               </div>
             </div>
@@ -776,7 +776,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
         {/* Pregunta sobre prácticas de reducción de costos */}
         <div className="mb-8">
           <fieldset>
-            <legend className="block text-lg font-medium text-white/90 mb-3">
+            <legend className="block text-lg font-medium text-white/90 mb-3 text-center md:text-left">
               ¿Aplica actualmente alguno de estos tipos de prácticas de reducción de costos en su organización?
             </legend>
             <div className="grid grid-cols-1 gap-4">
@@ -788,7 +788,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="rightsizing" className="text-white/90">
-                  Rightsizing – Ajuste del tamaño de instancias y recursos según uso real
+                  <span className="font-medium">Rightsizing</span> – Ajuste del tamaño de instancias y recursos según uso real
                 </label>
               </div>
               <div className="flex items-start">
@@ -799,7 +799,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="storageReconfiguration" className="text-white/90">
-                  Reconfiguración de Discos/Storage según locación – Moviendo almacenamiento a regiones o tipos más económicos
+                  <span className="font-medium">Reconfiguración de Discos/Storage</span> – Moviendo almacenamiento a regiones o tipos más económicos
                 </label>
               </div>
               <div className="flex items-start">
@@ -810,7 +810,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="scheduledShutdown" className="text-white/90">
-                  Apagado de recursos no utilizados fuera de horario laboral – Por ejemplo, apagar ambientes de desarrollo fuera del horario de oficina
+                  <span className="font-medium">Apagado programado de recursos</span> – Por ejemplo, apagar ambientes de desarrollo fuera del horario de oficina
                 </label>
               </div>
               <div className="flex items-start">
@@ -821,7 +821,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="reservedInstances" className="text-white/90">
-                  Uso de instancias reservadas / Savings Plans – Compra anticipada de capacidad con descuentos por compromiso
+                  <span className="font-medium">Uso de instancias reservadas / Savings Plans</span> – Compra anticipada de capacidad con descuentos por compromiso
                 </label>
               </div>
               <div className="flex items-start">
@@ -832,7 +832,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="licenseOptimization" className="text-white/90">
-                  Optimización del uso de licencias – Aplicación de BYOL (Bring Your Own License) o reducción de licencias innecesarias
+                  <span className="font-medium">Optimización del uso de licencias</span> – Aplicación de BYOL (Bring Your Own License) o reducción de licencias innecesarias
                 </label>
               </div>
             </div>
