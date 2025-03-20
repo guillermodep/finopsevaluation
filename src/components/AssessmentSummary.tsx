@@ -109,11 +109,11 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
     infrastructureRows.push(['Tipos de carga utilizados:', '']);
     
     const workloadTypes = [];
-    if (assessment.userData.workloadTypes?.iaas) workloadTypes.push('IaaS (Infrastructure as a Service)');
-    if (assessment.userData.workloadTypes?.paas) workloadTypes.push('PaaS (Platform as a Service)');
-    if (assessment.userData.workloadTypes?.saas) workloadTypes.push('SaaS (Software as a Service)');
-    if (assessment.userData.workloadTypes?.faas) workloadTypes.push('FaaS (Function as a Service)');
-    if (assessment.userData.workloadTypes?.dbaas) workloadTypes.push('DBaaS (Database as a Service)');
+    if (assessment.userData.workloadTypes && assessment.userData.workloadTypes.iaas) workloadTypes.push('IaaS (Infrastructure as a Service)');
+    if (assessment.userData.workloadTypes && assessment.userData.workloadTypes.paas) workloadTypes.push('PaaS (Platform as a Service)');
+    if (assessment.userData.workloadTypes && assessment.userData.workloadTypes.saas) workloadTypes.push('SaaS (Software as a Service)');
+    if (assessment.userData.workloadTypes && assessment.userData.workloadTypes.faas) workloadTypes.push('FaaS (Function as a Service)');
+    if (assessment.userData.workloadTypes && assessment.userData.workloadTypes.dbaas) workloadTypes.push('DBaaS (Database as a Service)');
     
     if (workloadTypes.length > 0) {
       workloadTypes.forEach(type => {
@@ -266,11 +266,11 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
     infrastructureRows.push(['Modelos de pago utilizados:', '']);
     
     const paymentModels = [];
-    if (assessment.userData.paymentModels?.onDemand) paymentModels.push('Pago por demanda (On-Demand)');
-    if (assessment.userData.paymentModels?.reserved) paymentModels.push('Instancias reservadas / Savings Plans');
-    if (assessment.userData.paymentModels?.longTermContracts) paymentModels.push('Contratos a largo plazo con descuentos');
-    if (assessment.userData.paymentModels?.byol) paymentModels.push('Licencias Bring Your Own License (BYOL)');
-    if (assessment.userData.paymentModels?.freeTier) paymentModels.push('Free tier / créditos promocionales');
+    if (assessment.userData.paymentModels && assessment.userData.paymentModels.onDemand) paymentModels.push('Pago por demanda (On-Demand)');
+    if (assessment.userData.paymentModels && assessment.userData.paymentModels.reserved) paymentModels.push('Instancias reservadas / Savings Plans');
+    if (assessment.userData.paymentModels && assessment.userData.paymentModels.longTermContracts) paymentModels.push('Contratos a largo plazo con descuentos');
+    if (assessment.userData.paymentModels && assessment.userData.paymentModels.byol) paymentModels.push('Licencias Bring Your Own License (BYOL)');
+    if (assessment.userData.paymentModels && assessment.userData.paymentModels.freeTier) paymentModels.push('Free tier / créditos promocionales');
     
     if (paymentModels.length > 0) {
       paymentModels.forEach(model => {
@@ -285,11 +285,11 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
     infrastructureRows.push(['Herramientas de gestión y optimización:', '']);
     
     const finOpsTools = [];
-    if (assessment.userData.finOpsTools?.nativeTools) finOpsTools.push('Herramientas nativas del CSP');
-    if (assessment.userData.finOpsTools?.thirdPartyTools) finOpsTools.push('Herramientas de terceros');
-    if (assessment.userData.finOpsTools?.internalTools) finOpsTools.push('Herramientas internas desarrolladas en la empresa');
-    if (assessment.userData.finOpsTools?.noTools) finOpsTools.push('No utilizamos ninguna herramienta específica');
-    if (assessment.userData.finOpsTools?.other) finOpsTools.push(assessment.userData.finOpsTools.otherSpecified || 'Otra herramienta');
+    if (assessment.userData.finOpsTools && assessment.userData.finOpsTools.nativeTools) finOpsTools.push('Herramientas nativas del CSP');
+    if (assessment.userData.finOpsTools && assessment.userData.finOpsTools.thirdPartyTools) finOpsTools.push('Herramientas de terceros');
+    if (assessment.userData.finOpsTools && assessment.userData.finOpsTools.internalTools) finOpsTools.push('Herramientas internas desarrolladas en la empresa');
+    if (assessment.userData.finOpsTools && assessment.userData.finOpsTools.noTools) finOpsTools.push('No utilizamos ninguna herramienta específica');
+    if (assessment.userData.finOpsTools && assessment.userData.finOpsTools.other) finOpsTools.push(assessment.userData.finOpsTools.otherSpecified || 'Otra herramienta');
     
     if (finOpsTools.length > 0) {
       finOpsTools.forEach(tool => {
@@ -304,11 +304,11 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
     infrastructureRows.push(['Prácticas de reducción de costos:', '']);
     
     const costReductionPractices = [];
-    if (assessment.userData.costReductionPractices?.rightsizing) costReductionPractices.push('Rightsizing - Ajuste del tamaño de instancias y recursos');
-    if (assessment.userData.costReductionPractices?.storageReconfiguration) costReductionPractices.push('Reconfiguración de Discos/Storage según locación');
-    if (assessment.userData.costReductionPractices?.scheduledShutdown) costReductionPractices.push('Apagado de recursos no utilizados fuera de horario laboral');
-    if (assessment.userData.costReductionPractices?.reservedInstances) costReductionPractices.push('Uso de instancias reservadas / Savings Plans');
-    if (assessment.userData.costReductionPractices?.licenseOptimization) costReductionPractices.push('Optimización del uso de licencias');
+    if (assessment.userData.costReductionPractices && assessment.userData.costReductionPractices.rightsizing) costReductionPractices.push('Rightsizing - Ajuste del tamaño de instancias y recursos');
+    if (assessment.userData.costReductionPractices && assessment.userData.costReductionPractices.storageReconfiguration) costReductionPractices.push('Reconfiguración de Discos/Storage según locación');
+    if (assessment.userData.costReductionPractices && assessment.userData.costReductionPractices.scheduledShutdown) costReductionPractices.push('Apagado de recursos no utilizados fuera de horario laboral');
+    if (assessment.userData.costReductionPractices && assessment.userData.costReductionPractices.reservedInstances) costReductionPractices.push('Uso de instancias reservadas / Savings Plans');
+    if (assessment.userData.costReductionPractices && assessment.userData.costReductionPractices.licenseOptimization) costReductionPractices.push('Optimización del uso de licencias');
     
     if (costReductionPractices.length > 0) {
       costReductionPractices.forEach(practice => {
@@ -455,11 +455,11 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         yPos += 10;
         
         const workloadTypes = [];
-        if (assessment.userData.workloadTypes?.iaas) workloadTypes.push('IaaS (Infrastructure as a Service)');
-        if (assessment.userData.workloadTypes?.paas) workloadTypes.push('PaaS (Platform as a Service)');
-        if (assessment.userData.workloadTypes?.saas) workloadTypes.push('SaaS (Software as a Service)');
-        if (assessment.userData.workloadTypes?.faas) workloadTypes.push('FaaS (Function as a Service)');
-        if (assessment.userData.workloadTypes?.dbaas) workloadTypes.push('DBaaS (Database as a Service)');
+        if (assessment.userData.workloadTypes && assessment.userData.workloadTypes.iaas) workloadTypes.push('IaaS (Infrastructure as a Service)');
+        if (assessment.userData.workloadTypes && assessment.userData.workloadTypes.paas) workloadTypes.push('PaaS (Platform as a Service)');
+        if (assessment.userData.workloadTypes && assessment.userData.workloadTypes.saas) workloadTypes.push('SaaS (Software as a Service)');
+        if (assessment.userData.workloadTypes && assessment.userData.workloadTypes.faas) workloadTypes.push('FaaS (Function as a Service)');
+        if (assessment.userData.workloadTypes && assessment.userData.workloadTypes.dbaas) workloadTypes.push('DBaaS (Database as a Service)');
         
         if (workloadTypes.length > 0) {
           workloadTypes.forEach(type => {
@@ -612,11 +612,11 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         yPos += 10;
         
         const paymentModels = [];
-        if (assessment.userData.paymentModels?.onDemand) paymentModels.push('Pago por demanda (On-Demand)');
-        if (assessment.userData.paymentModels?.reserved) paymentModels.push('Instancias reservadas / Savings Plans');
-        if (assessment.userData.paymentModels?.longTermContracts) paymentModels.push('Contratos a largo plazo con descuentos');
-        if (assessment.userData.paymentModels?.byol) paymentModels.push('Licencias Bring Your Own License (BYOL)');
-        if (assessment.userData.paymentModels?.freeTier) paymentModels.push('Free tier / créditos promocionales');
+        if (assessment.userData.paymentModels && assessment.userData.paymentModels.onDemand) paymentModels.push('Pago por demanda (On-Demand)');
+        if (assessment.userData.paymentModels && assessment.userData.paymentModels.reserved) paymentModels.push('Instancias reservadas / Savings Plans');
+        if (assessment.userData.paymentModels && assessment.userData.paymentModels.longTermContracts) paymentModels.push('Contratos a largo plazo con descuentos');
+        if (assessment.userData.paymentModels && assessment.userData.paymentModels.byol) paymentModels.push('Licencias BYOL');
+        if (assessment.userData.paymentModels && assessment.userData.paymentModels.freeTier) paymentModels.push('Free tier / créditos promocionales');
         
         if (paymentModels.length > 0) {
           paymentModels.forEach(model => {
@@ -636,11 +636,11 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         yPos += 10;
         
         const finOpsTools = [];
-        if (assessment.userData.finOpsTools?.nativeTools) finOpsTools.push('Herramientas nativas del CSP');
-        if (assessment.userData.finOpsTools?.thirdPartyTools) finOpsTools.push('Herramientas de terceros');
-        if (assessment.userData.finOpsTools?.internalTools) finOpsTools.push('Herramientas internas desarrolladas en la empresa');
-        if (assessment.userData.finOpsTools?.noTools) finOpsTools.push('No utilizamos ninguna herramienta específica');
-        if (assessment.userData.finOpsTools?.other) finOpsTools.push(assessment.userData.finOpsTools.otherSpecified || 'Otra herramienta');
+        if (assessment.userData.finOpsTools && assessment.userData.finOpsTools.nativeTools) finOpsTools.push('Herramientas nativas del CSP');
+        if (assessment.userData.finOpsTools && assessment.userData.finOpsTools.thirdPartyTools) finOpsTools.push('Herramientas de terceros');
+        if (assessment.userData.finOpsTools && assessment.userData.finOpsTools.internalTools) finOpsTools.push('Herramientas internas');
+        if (assessment.userData.finOpsTools && assessment.userData.finOpsTools.noTools) finOpsTools.push('No utilizamos herramientas específicas');
+        if (assessment.userData.finOpsTools && assessment.userData.finOpsTools.other) finOpsTools.push(assessment.userData.finOpsTools.otherSpecified || 'Otra herramienta');
         
         if (finOpsTools.length > 0) {
           finOpsTools.forEach(tool => {
@@ -660,11 +660,11 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         yPos += 10;
         
         const costReductionPractices = [];
-        if (assessment.userData.costReductionPractices?.rightsizing) costReductionPractices.push('Rightsizing - Ajuste del tamaño de instancias y recursos');
-        if (assessment.userData.costReductionPractices?.storageReconfiguration) costReductionPractices.push('Reconfiguración de Discos/Storage según locación');
-        if (assessment.userData.costReductionPractices?.scheduledShutdown) costReductionPractices.push('Apagado de recursos no utilizados fuera de horario laboral');
-        if (assessment.userData.costReductionPractices?.reservedInstances) costReductionPractices.push('Uso de instancias reservadas / Savings Plans');
-        if (assessment.userData.costReductionPractices?.licenseOptimization) costReductionPractices.push('Optimización del uso de licencias');
+        if (assessment.userData.costReductionPractices && assessment.userData.costReductionPractices.rightsizing) costReductionPractices.push('Rightsizing');
+        if (assessment.userData.costReductionPractices && assessment.userData.costReductionPractices.storageReconfiguration) costReductionPractices.push('Reconfiguración de almacenamiento');
+        if (assessment.userData.costReductionPractices && assessment.userData.costReductionPractices.scheduledShutdown) costReductionPractices.push('Apagado programado');
+        if (assessment.userData.costReductionPractices && assessment.userData.costReductionPractices.reservedInstances) costReductionPractices.push('Instancias reservadas');
+        if (assessment.userData.costReductionPractices && assessment.userData.costReductionPractices.licenseOptimization) costReductionPractices.push('Optimización de licencias');
         
         if (costReductionPractices.length > 0) {
           costReductionPractices.forEach(practice => {
@@ -674,7 +674,7 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
           });
         } else {
           checkAndAddPage();
-          doc.text('No se ha seleccionado ninguna práctica de reducción de costos', 16, yPos);
+          doc.text('No se ha seleccionado ninguna práctica', 16, yPos);
           yPos += 8;
         }
         
@@ -1025,26 +1025,27 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
           <h4 className="text-lg font-medium text-white/90 mb-2">Tipos de carga utilizados</h4>
           <div className="p-3 bg-white/5 rounded-lg">
             <div className="flex flex-wrap gap-2">
-              {assessment.userData.workloadTypes?.iaas && (
+              {assessment.userData.workloadTypes && assessment.userData.workloadTypes.iaas && (
                 <span className="px-3 py-1 bg-blue-500/20 text-white rounded-full text-sm">IaaS (VMs, almacenamiento)</span>
               )}
-              {assessment.userData.workloadTypes?.paas && (
+              {assessment.userData.workloadTypes && assessment.userData.workloadTypes.paas && (
                 <span className="px-3 py-1 bg-green-500/20 text-white rounded-full text-sm">PaaS (App Services, Kubernetes)</span>
               )}
-              {assessment.userData.workloadTypes?.saas && (
+              {assessment.userData.workloadTypes && assessment.userData.workloadTypes.saas && (
                 <span className="px-3 py-1 bg-purple-500/20 text-white rounded-full text-sm">SaaS (Microsoft 365, Salesforce)</span>
               )}
-              {assessment.userData.workloadTypes?.faas && (
+              {assessment.userData.workloadTypes && assessment.userData.workloadTypes.faas && (
                 <span className="px-3 py-1 bg-yellow-500/20 text-white rounded-full text-sm">FaaS (AWS Lambda, Azure Functions)</span>
               )}
-              {assessment.userData.workloadTypes?.dbaas && (
+              {assessment.userData.workloadTypes && assessment.userData.workloadTypes.dbaas && (
                 <span className="px-3 py-1 bg-red-500/20 text-white rounded-full text-sm">DBaaS (AWS RDS, CosmosDB)</span>
               )}
-              {(!assessment.userData.workloadTypes?.iaas && 
-                !assessment.userData.workloadTypes?.paas && 
-                !assessment.userData.workloadTypes?.saas && 
-                !assessment.userData.workloadTypes?.faas && 
-                !assessment.userData.workloadTypes?.dbaas) && (
+              {(!assessment.userData.workloadTypes || (
+                !assessment.userData.workloadTypes.iaas && 
+                !assessment.userData.workloadTypes.paas && 
+                !assessment.userData.workloadTypes.saas && 
+                !assessment.userData.workloadTypes.faas && 
+                !assessment.userData.workloadTypes.dbaas)) && (
                 <span className="text-white/70 text-sm">No se ha seleccionado ningún tipo de carga</span>
               )}
             </div>
@@ -1174,26 +1175,27 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
           <h4 className="text-lg font-medium text-white/90 mb-2">Modelos de pago utilizados</h4>
           <div className="p-3 bg-white/5 rounded-lg">
             <div className="flex flex-wrap gap-2">
-              {assessment.userData.paymentModels?.onDemand && (
+              {assessment.userData.paymentModels && assessment.userData.paymentModels.onDemand && (
                 <span className="px-3 py-1 bg-blue-500/20 text-white rounded-full text-sm">Pago por demanda (On-Demand)</span>
               )}
-              {assessment.userData.paymentModels?.reserved && (
+              {assessment.userData.paymentModels && assessment.userData.paymentModels.reserved && (
                 <span className="px-3 py-1 bg-green-500/20 text-white rounded-full text-sm">Instancias reservadas / Savings Plans</span>
               )}
-              {assessment.userData.paymentModels?.longTermContracts && (
+              {assessment.userData.paymentModels && assessment.userData.paymentModels.longTermContracts && (
                 <span className="px-3 py-1 bg-purple-500/20 text-white rounded-full text-sm">Contratos a largo plazo con descuentos</span>
               )}
-              {assessment.userData.paymentModels?.byol && (
+              {assessment.userData.paymentModels && assessment.userData.paymentModels.byol && (
                 <span className="px-3 py-1 bg-yellow-500/20 text-white rounded-full text-sm">Licencias BYOL</span>
               )}
-              {assessment.userData.paymentModels?.freeTier && (
+              {assessment.userData.paymentModels && assessment.userData.paymentModels.freeTier && (
                 <span className="px-3 py-1 bg-red-500/20 text-white rounded-full text-sm">Free tier / créditos promocionales</span>
               )}
-              {(!assessment.userData.paymentModels?.onDemand && 
-                !assessment.userData.paymentModels?.reserved && 
-                !assessment.userData.paymentModels?.longTermContracts && 
-                !assessment.userData.paymentModels?.byol && 
-                !assessment.userData.paymentModels?.freeTier) && (
+              {(!assessment.userData.paymentModels || (
+                !assessment.userData.paymentModels.onDemand && 
+                !assessment.userData.paymentModels.reserved && 
+                !assessment.userData.paymentModels.longTermContracts && 
+                !assessment.userData.paymentModels.byol && 
+                !assessment.userData.paymentModels.freeTier)) && (
                 <span className="text-white/70 text-sm">No se ha seleccionado ningún modelo de pago</span>
               )}
             </div>
@@ -1205,28 +1207,29 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
           <h4 className="text-lg font-medium text-white/90 mb-2">Herramientas de gestión y optimización</h4>
           <div className="p-3 bg-white/5 rounded-lg">
             <div className="flex flex-wrap gap-2">
-              {assessment.userData.finOpsTools?.nativeTools && (
+              {assessment.userData.finOpsTools && assessment.userData.finOpsTools.nativeTools && (
                 <span className="px-3 py-1 bg-blue-500/20 text-white rounded-full text-sm">Herramientas nativas del CSP</span>
               )}
-              {assessment.userData.finOpsTools?.thirdPartyTools && (
+              {assessment.userData.finOpsTools && assessment.userData.finOpsTools.thirdPartyTools && (
                 <span className="px-3 py-1 bg-green-500/20 text-white rounded-full text-sm">Herramientas de terceros</span>
               )}
-              {assessment.userData.finOpsTools?.internalTools && (
+              {assessment.userData.finOpsTools && assessment.userData.finOpsTools.internalTools && (
                 <span className="px-3 py-1 bg-purple-500/20 text-white rounded-full text-sm">Herramientas internas</span>
               )}
-              {assessment.userData.finOpsTools?.noTools && (
+              {assessment.userData.finOpsTools && assessment.userData.finOpsTools.noTools && (
                 <span className="px-3 py-1 bg-gray-500/20 text-white rounded-full text-sm">No utilizamos herramientas específicas</span>
               )}
-              {assessment.userData.finOpsTools?.other && (
+              {assessment.userData.finOpsTools && assessment.userData.finOpsTools.other && (
                 <span className="px-3 py-1 bg-yellow-500/20 text-white rounded-full text-sm">
                   {assessment.userData.finOpsTools.otherSpecified || "Otra herramienta"}
                 </span>
               )}
-              {(!assessment.userData.finOpsTools?.nativeTools && 
-                !assessment.userData.finOpsTools?.thirdPartyTools && 
-                !assessment.userData.finOpsTools?.internalTools && 
-                !assessment.userData.finOpsTools?.noTools && 
-                !assessment.userData.finOpsTools?.other) && (
+              {(!assessment.userData.finOpsTools || (
+                !assessment.userData.finOpsTools.nativeTools && 
+                !assessment.userData.finOpsTools.thirdPartyTools && 
+                !assessment.userData.finOpsTools.internalTools && 
+                !assessment.userData.finOpsTools.noTools && 
+                !assessment.userData.finOpsTools.other)) && (
                 <span className="text-white/70 text-sm">No se ha seleccionado ninguna herramienta</span>
               )}
             </div>
@@ -1238,26 +1241,27 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
           <h4 className="text-lg font-medium text-white/90 mb-2">Prácticas de reducción de costos</h4>
           <div className="p-3 bg-white/5 rounded-lg">
             <div className="flex flex-wrap gap-2">
-              {assessment.userData.costReductionPractices?.rightsizing && (
+              {assessment.userData.costReductionPractices && assessment.userData.costReductionPractices.rightsizing && (
                 <span className="px-3 py-1 bg-blue-500/20 text-white rounded-full text-sm">Rightsizing</span>
               )}
-              {assessment.userData.costReductionPractices?.storageReconfiguration && (
+              {assessment.userData.costReductionPractices && assessment.userData.costReductionPractices.storageReconfiguration && (
                 <span className="px-3 py-1 bg-green-500/20 text-white rounded-full text-sm">Reconfiguración de almacenamiento</span>
               )}
-              {assessment.userData.costReductionPractices?.scheduledShutdown && (
+              {assessment.userData.costReductionPractices && assessment.userData.costReductionPractices.scheduledShutdown && (
                 <span className="px-3 py-1 bg-purple-500/20 text-white rounded-full text-sm">Apagado programado</span>
               )}
-              {assessment.userData.costReductionPractices?.reservedInstances && (
+              {assessment.userData.costReductionPractices && assessment.userData.costReductionPractices.reservedInstances && (
                 <span className="px-3 py-1 bg-yellow-500/20 text-white rounded-full text-sm">Instancias reservadas</span>
               )}
-              {assessment.userData.costReductionPractices?.licenseOptimization && (
+              {assessment.userData.costReductionPractices && assessment.userData.costReductionPractices.licenseOptimization && (
                 <span className="px-3 py-1 bg-red-500/20 text-white rounded-full text-sm">Optimización de licencias</span>
               )}
-              {(!assessment.userData.costReductionPractices?.rightsizing && 
-                !assessment.userData.costReductionPractices?.storageReconfiguration && 
-                !assessment.userData.costReductionPractices?.scheduledShutdown && 
-                !assessment.userData.costReductionPractices?.reservedInstances && 
-                !assessment.userData.costReductionPractices?.licenseOptimization) && (
+              {(!assessment.userData.costReductionPractices || (
+                !assessment.userData.costReductionPractices.rightsizing && 
+                !assessment.userData.costReductionPractices.storageReconfiguration && 
+                !assessment.userData.costReductionPractices.scheduledShutdown && 
+                !assessment.userData.costReductionPractices.reservedInstances && 
+                !assessment.userData.costReductionPractices.licenseOptimization)) && (
                 <span className="text-white/70 text-sm">No se ha seleccionado ninguna práctica</span>
               )}
             </div>

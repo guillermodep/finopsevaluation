@@ -170,20 +170,20 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
         {/* Pregunta sobre la composición del equipo */}
         <div className="mb-8">
           <fieldset>
-            <legend className="block text-lg font-medium text-white/90 mb-3">
+            <legend className="block text-lg font-medium text-white/90 mb-3 text-center md:text-left">
               ¿Cuál es la composición del equipo que administra los costos en cloud?
             </legend>
-            <div className="space-y-3">
+            <div className="grid grid-cols-1 gap-4">
               <div className="flex items-start">
                 <input
                   type="radio"
                   id="teamComp1"
                   value="1"
                   {...register('teamComposition', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mt-1 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="teamComp1" className="text-white/90">
-                  No hay equipo
+                  <span className="font-medium">No hay equipo</span>
                 </label>
               </div>
               <div className="flex items-start">
@@ -192,10 +192,10 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   id="teamComp2"
                   value="2"
                   {...register('teamComposition', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mt-1 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="teamComp2" className="text-white/90">
-                  Lo hace el equipo de Infraestructura/Plataformas/Operaciones
+                  <span className="font-medium">Equipo de Infraestructura/Plataformas/Operaciones</span>
                 </label>
               </div>
               <div className="flex items-start">
@@ -204,10 +204,10 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   id="teamComp3"
                   value="3"
                   {...register('teamComposition', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mt-1 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="teamComp3" className="text-white/90">
-                  Equipo de Cloud con capacidades de Arquitectura/Ingeniería sin especialistas en FinOps
+                  <span className="font-medium">Equipo de Cloud</span> con capacidades de Arquitectura/Ingeniería sin especialistas en FinOps
                 </label>
               </div>
               <div className="flex items-start">
@@ -216,10 +216,10 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   id="teamComp4"
                   value="4"
                   {...register('teamComposition', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mt-1 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="teamComp4" className="text-white/90">
-                  Equipo de Cloud con capacidades de Arquitectura/Ingeniería CON especialistas en FinOps
+                  <span className="font-medium">Equipo de Cloud</span> con capacidades de Arquitectura/Ingeniería CON especialistas en FinOps
                 </label>
               </div>
               <div className="flex items-start">
@@ -228,10 +228,10 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   id="teamComp5"
                   value="5"
                   {...register('teamComposition', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mt-1 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="teamComp5" className="text-white/90">
-                  CoE Centro de Excelencia Cloud con BPO y especialistas de Gobierno y práctica FinOps
+                  <span className="font-medium">Centro de Excelencia Cloud (CoE)</span> con BPO y especialistas de Gobierno y práctica FinOps
                 </label>
               </div>
               <div className="flex items-start">
@@ -240,21 +240,21 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   id="teamComp6"
                   value="6"
                   {...register('teamComposition', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mt-1 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="teamComp6" className="text-white/90">
-                  Otro
+                  <span className="font-medium">Otro</span>
                 </label>
               </div>
               
               {otherTeamComposition && (
-                <div className="mt-3 pl-6">
+                <div className="mt-1 ml-7">
                   <input
                     type="text"
                     id="teamCompOther"
                     placeholder="Especificar otra composición de equipo"
                     {...register('teamCompositionOther')}
-                    className="input-modern"
+                    className="input-modern w-full max-w-md"
                   />
                 </div>
               )}
@@ -268,68 +268,68 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
         {/* Pregunta sobre presupuesto anual */}
         <div className="mb-8">
           <fieldset>
-            <legend className="block text-lg font-medium text-white/90 mb-3">
+            <legend className="block text-lg font-medium text-white/90 mb-3 text-center md:text-left">
               ¿Cuál es el presupuesto anual aproximado destinado a los servicios de nube?
             </legend>
-            <div className="space-y-3">
-              <div className="flex items-center">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="budget1"
                   value="1"
                   {...register('annualBudget', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="budget1" className="text-white/90">
-                  Menos de USD 100,000
+                  <span className="font-medium">Menos de USD 100,000</span>
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="budget2"
                   value="2"
                   {...register('annualBudget', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="budget2" className="text-white/90">
-                  Entre USD 100,000 y 500,000
+                  <span className="font-medium">Entre USD 100,000 y 500,000</span>
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="budget3"
                   value="3"
                   {...register('annualBudget', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="budget3" className="text-white/90">
-                  Entre USD 500,000 y 1,000,000
+                  <span className="font-medium">Entre USD 500,000 y 1,000,000</span>
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="budget4"
                   value="4"
                   {...register('annualBudget', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="budget4" className="text-white/90">
-                  Entre USD 1,000,000 y 5,000,000
+                  <span className="font-medium">Entre USD 1,000,000 y 5,000,000</span>
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="budget5"
                   value="5"
                   {...register('annualBudget', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="budget5" className="text-white/90">
-                  Más de USD 5,000,000
+                  <span className="font-medium">Más de USD 5,000,000</span>
                 </label>
               </div>
             </div>
@@ -342,68 +342,68 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
         {/* Pregunta sobre gasto mensual */}
         <div className="mb-8">
           <fieldset>
-            <legend className="block text-lg font-medium text-white/90 mb-3">
+            <legend className="block text-lg font-medium text-white/90 mb-3 text-center md:text-left">
               ¿Cuál es el gasto mensual promedio en servicios de nube?
             </legend>
-            <div className="space-y-3">
-              <div className="flex items-center">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="spend1"
                   value="1"
                   {...register('monthlySpend', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="spend1" className="text-white/90">
-                  Menos de USD 10,000
+                  <span className="font-medium">Menos de USD 10,000</span>
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="spend2"
                   value="2"
                   {...register('monthlySpend', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="spend2" className="text-white/90">
-                  Entre USD 10,000 y 50,000
+                  <span className="font-medium">Entre USD 10,000 y 50,000</span>
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="spend3"
                   value="3"
                   {...register('monthlySpend', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="spend3" className="text-white/90">
-                  Entre USD 50,000 y 100,000
+                  <span className="font-medium">Entre USD 50,000 y 100,000</span>
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="spend4"
                   value="4"
                   {...register('monthlySpend', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="spend4" className="text-white/90">
-                  Entre USD 100,000 y 500,000
+                  <span className="font-medium">Entre USD 100,000 y 500,000</span>
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="spend5"
                   value="5"
                   {...register('monthlySpend', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="spend5" className="text-white/90">
-                  Más de USD 500,000
+                  <span className="font-medium">Más de USD 500,000</span>
                 </label>
               </div>
             </div>
@@ -484,68 +484,68 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
         {/* Pregunta sobre cantidad de servidores */}
         <div className="mb-8">
           <fieldset>
-            <legend className="block text-lg font-medium text-white/90 mb-3">
+            <legend className="block text-lg font-medium text-white/90 mb-3 text-center md:text-left">
               ¿Cuántos servidores (VMs, EC2, Compute Instances) tiene actualmente tu organización en la nube?
             </legend>
-            <div className="space-y-3">
-              <div className="flex items-center">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="servers1"
                   value="1"
                   {...register('serversCount', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="servers1" className="text-white/90">
-                  Menos de 50
+                  <span className="font-medium">Menos de 50</span>
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="servers2"
                   value="2"
                   {...register('serversCount', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="servers2" className="text-white/90">
-                  Entre 50 y 200
+                  <span className="font-medium">Entre 50 y 200</span>
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="servers3"
                   value="3"
                   {...register('serversCount', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="servers3" className="text-white/90">
-                  Entre 200 y 500
+                  <span className="font-medium">Entre 200 y 500</span>
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="servers4"
                   value="4"
                   {...register('serversCount', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="servers4" className="text-white/90">
-                  Entre 500 y 1000
+                  <span className="font-medium">Entre 500 y 1000</span>
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="servers5"
                   value="5"
                   {...register('serversCount', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="servers5" className="text-white/90">
-                  Más de 1000
+                  <span className="font-medium">Más de 1000</span>
                 </label>
               </div>
             </div>
@@ -558,68 +558,68 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
         {/* Pregunta sobre compras en Marketplace */}
         <div className="mb-8">
           <fieldset>
-            <legend className="block text-lg font-medium text-white/90 mb-3">
+            <legend className="block text-lg font-medium text-white/90 mb-3 text-center md:text-left">
               ¿Cuántas compras por Marketplace o Private Offers realizaron en el último año?
             </legend>
-            <div className="space-y-3">
-              <div className="flex items-center">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="marketplace1"
                   value="1"
                   {...register('marketplacePurchases', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="marketplace1" className="text-white/90">
-                  Ninguna
+                  <span className="font-medium">Ninguna</span>
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="marketplace2"
                   value="2"
                   {...register('marketplacePurchases', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="marketplace2" className="text-white/90">
-                  1 a 5 compras
+                  <span className="font-medium">1 a 5 compras</span>
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="marketplace3"
                   value="3"
                   {...register('marketplacePurchases', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="marketplace3" className="text-white/90">
-                  6 a 15 compras
+                  <span className="font-medium">6 a 15 compras</span>
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="marketplace4"
                   value="4"
                   {...register('marketplacePurchases', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="marketplace4" className="text-white/90">
-                  16 a 30 compras
+                  <span className="font-medium">16 a 30 compras</span>
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="radio"
                   id="marketplace5"
                   value="5"
                   {...register('marketplacePurchases', { required: 'Debes seleccionar una opción' })}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="marketplace5" className="text-white/90">
-                  Más de 30 compras
+                  <span className="font-medium">Más de 30 compras</span>
                 </label>
               </div>
             </div>

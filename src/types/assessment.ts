@@ -33,6 +33,44 @@ export interface UserData {
   annualBudget: number; // 1-5
   
   monthlySpend: number; // 1-5
+
+  // Campos para preguntas adicionales - asegúrate de que estén como parte de la interfaz principal
+  workloadTypes: {
+    iaas: boolean;
+    paas: boolean;
+    saas: boolean;
+    faas: boolean;
+    dbaas: boolean;
+  };
+
+  serversCount: number; // 1-5
+
+  marketplacePurchases: number; // 1-5
+
+  paymentModels: {
+    onDemand: boolean;
+    reserved: boolean;
+    longTermContracts: boolean;
+    byol: boolean;
+    freeTier: boolean;
+  };
+
+  finOpsTools: {
+    nativeTools: boolean;
+    thirdPartyTools: boolean;
+    internalTools: boolean;
+    noTools: boolean;
+    other: boolean;
+    otherSpecified: string;
+  };
+
+  costReductionPractices: {
+    rightsizing: boolean;
+    storageReconfiguration: boolean;
+    scheduledShutdown: boolean;
+    reservedInstances: boolean;
+    licenseOptimization: boolean;
+  };
 }
 
 export interface AssessmentResult {
