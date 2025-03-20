@@ -799,7 +799,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="storageReconfiguration" className="text-white/90">
-                  <span className="font-medium">Reconfiguración de Discos/Storage</span> – Moviendo almacenamiento a regiones o tipos más económicos
+                  <span className="font-medium">Reconfiguración de Discos/Storage</span> - Moviendo almacenamiento a regiones o tipos más económicos
                 </label>
               </div>
               <div className="flex items-start">
@@ -810,7 +810,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="scheduledShutdown" className="text-white/90">
-                  <span className="font-medium">Apagado programado de recursos</span> – Por ejemplo, apagar ambientes de desarrollo fuera del horario de oficina
+                  <span className="font-medium">Apagado programado de recursos</span> - Ejemplo, apagar ambientes de desarrollo fuera del horario de oficina
                 </label>
               </div>
               <div className="flex items-start">
@@ -821,7 +821,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="reservedInstances" className="text-white/90">
-                  <span className="font-medium">Uso de instancias reservadas / Savings Plans</span> – Compra anticipada de capacidad con descuentos por compromiso
+                  <span className="font-medium">Uso de instancias reservadas / Savings Plans</span> - Compra anticipada de capacidad con descuentos
                 </label>
               </div>
               <div className="flex items-start">
@@ -832,7 +832,7 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
                   className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="licenseOptimization" className="text-white/90">
-                  <span className="font-medium">Optimización del uso de licencias</span> – Aplicación de BYOL (Bring Your Own License) o reducción de licencias innecesarias
+                  <span className="font-medium">Optimización del uso de licencias</span> - Aplicación de BYOL o reducción de licencias innecesarias
                 </label>
               </div>
             </div>
