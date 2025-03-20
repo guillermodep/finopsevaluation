@@ -96,71 +96,71 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
             <legend className="block text-lg font-medium text-white/90 mb-3">
               ¿Qué proveedor(es) de nube utiliza actualmente? (CSP - Cloud Service Provider)
             </legend>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="flex items-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="aws"
                   {...register('cloudProviders.aws')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="aws" className="text-white/90">AWS</label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="azure"
                   {...register('cloudProviders.azure')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="azure" className="text-white/90">Microsoft Azure</label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="gcp"
                   {...register('cloudProviders.gcp')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="gcp" className="text-white/90">Google Cloud Platform (GCP)</label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="oracle"
                   {...register('cloudProviders.oracle')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="oracle" className="text-white/90">Oracle Cloud</label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="ibm"
                   {...register('cloudProviders.ibm')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="ibm" className="text-white/90">IBM Cloud</label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="otherCloud"
                   {...register('cloudProviders.other')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="otherCloud" className="text-white/90">Otro</label>
               </div>
             </div>
             
             {otherCloudProvider && (
-              <div className="mt-3">
+              <div className="mt-4 ml-7">
                 <input
                   type="text"
                   id="otherCloudSpecified"
                   placeholder="Especificar otro proveedor"
                   {...register('cloudProviders.otherSpecified')}
-                  className="input-modern"
+                  className="input-modern w-full max-w-md"
                 />
               </div>
             )}
@@ -421,57 +421,57 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
             <legend className="block text-lg font-medium text-white/90 mb-3">
               ¿Qué tipo(s) de carga utiliza mayoritariamente tu organización?
             </legend>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="flex items-center">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="iaas"
                   {...register('workloadTypes.iaas')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="iaas" className="text-white/90">
                   IaaS (Infrastructure as a Service) – Ej: VMs, almacenamiento, redes
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="paas"
                   {...register('workloadTypes.paas')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="paas" className="text-white/90">
                   PaaS (Platform as a Service) – Ej: App Services, Kubernetes, Azure SQL
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="saas"
                   {...register('workloadTypes.saas')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="saas" className="text-white/90">
                   SaaS (Software as a Service) – Ej: Microsoft 365, Salesforce
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="faas"
                   {...register('workloadTypes.faas')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="faas" className="text-white/90">
                   FaaS (Function as a Service) – Ej: AWS Lambda, Azure Functions
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="dbaas"
                   {...register('workloadTypes.dbaas')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="dbaas" className="text-white/90">
                   DBaaS (Database as a Service) – Ej: AWS RDS, Azure CosmosDB, GCP Cloud SQL
@@ -635,57 +635,57 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
             <legend className="block text-lg font-medium text-white/90 mb-3">
               ¿Qué modelo(s) de pago utilizan mayormente para sus servicios en la nube?
             </legend>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="flex items-center">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="onDemand"
                   {...register('paymentModels.onDemand')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="onDemand" className="text-white/90">
                   Pago por demanda (On-Demand)
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="reserved"
                   {...register('paymentModels.reserved')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="reserved" className="text-white/90">
                   Instancias reservadas / Savings Plans
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="contracts"
                   {...register('paymentModels.longTermContracts')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="contracts" className="text-white/90">
                   Contratos a largo plazo con descuentos
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="byol"
                   {...register('paymentModels.byol')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="byol" className="text-white/90">
                   Licencias Bring Your Own License (BYOL)
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="freeTier"
                   {...register('paymentModels.freeTier')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="freeTier" className="text-white/90">
                   Free tier / créditos promocionales
@@ -701,57 +701,57 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
             <legend className="block text-lg font-medium text-white/90 mb-3">
               ¿Qué herramientas utilizan actualmente para la gestión y optimización de costos en la nube?
             </legend>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="flex items-center">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="nativeTools"
                   {...register('finOpsTools.nativeTools')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="nativeTools" className="text-white/90">
                   Herramientas nativas del CSP (Cost Explorer, Azure Cost Management, etc.)
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="thirdPartyTools"
                   {...register('finOpsTools.thirdPartyTools')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="thirdPartyTools" className="text-white/90">
                   Herramientas de terceros (CloudHealth, Apptio Cloudability, Spot.io, etc.)
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="internalTools"
                   {...register('finOpsTools.internalTools')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="internalTools" className="text-white/90">
                   Herramientas internas desarrolladas en la empresa
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="noTools"
                   {...register('finOpsTools.noTools')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="noTools" className="text-white/90">
                   No utilizamos ninguna herramienta específica
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="otherTools"
                   {...register('finOpsTools.other')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="otherTools" className="text-white/90">
                   Otro
@@ -760,13 +760,13 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
             </div>
             
             {watch('finOpsTools.other') && (
-              <div className="mt-3">
+              <div className="mt-4 ml-7">
                 <input
                   type="text"
                   id="otherToolsSpecified"
                   placeholder="Especificar otra herramienta"
                   {...register('finOpsTools.otherSpecified')}
-                  className="input-modern"
+                  className="input-modern w-full max-w-md"
                 />
               </div>
             )}
@@ -779,57 +779,57 @@ export default function InfrastructureQuestions({ userData, onSubmit }: Infrastr
             <legend className="block text-lg font-medium text-white/90 mb-3">
               ¿Aplica actualmente alguno de estos tipos de prácticas de reducción de costos en su organización?
             </legend>
-            <div className="grid grid-cols-1 gap-3">
-              <div className="flex items-center">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="rightsizing"
                   {...register('costReductionPractices.rightsizing')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="rightsizing" className="text-white/90">
                   Rightsizing – Ajuste del tamaño de instancias y recursos según uso real
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="storageReconfiguration"
                   {...register('costReductionPractices.storageReconfiguration')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="storageReconfiguration" className="text-white/90">
                   Reconfiguración de Discos/Storage según locación – Moviendo almacenamiento a regiones o tipos más económicos
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="scheduledShutdown"
                   {...register('costReductionPractices.scheduledShutdown')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="scheduledShutdown" className="text-white/90">
                   Apagado de recursos no utilizados fuera de horario laboral – Por ejemplo, apagar ambientes de desarrollo fuera del horario de oficina
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="reservedInstances"
                   {...register('costReductionPractices.reservedInstances')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="reservedInstances" className="text-white/90">
                   Uso de instancias reservadas / Savings Plans – Compra anticipada de capacidad con descuentos por compromiso
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <input
                   type="checkbox"
                   id="licenseOptimization"
                   {...register('costReductionPractices.licenseOptimization')}
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 mt-1 mr-3"
                 />
                 <label htmlFor="licenseOptimization" className="text-white/90">
                   Optimización del uso de licencias – Aplicación de BYOL (Bring Your Own License) o reducción de licencias innecesarias
