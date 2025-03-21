@@ -4,6 +4,7 @@ import { Assessment } from '@/types/assessment';
 import { categories } from '@/data/categories';
 import { useState, useEffect } from 'react';
 import { jsPDF } from 'jspdf';
+import Link from 'next/link';
 
 interface AssessmentSummaryProps {
   assessment: Assessment;
@@ -510,7 +511,7 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         
         // Cantidad de servidores
         checkAndAddPage(15);
-        doc.text('Cantidad de servidores en la nube:', 14, yPos);
+        doc.text('Cantidad de servidores:', 14, yPos);
         yPos += 10;
         
         let serversCountText = '';
@@ -589,7 +590,7 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
         
         // Compras Marketplace
         checkAndAddPage(15);
-        doc.text('Compras por Marketplace / Private Offers:', 14, yPos);
+        doc.text('Compras por Marketplace:', 14, yPos);
         yPos += 10;
         
         let marketplaceText = '';
@@ -1316,6 +1317,14 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
           <span className="mr-2">📊</span>
           Descargar CSV
         </button>
+      </div>
+      
+      {/* Botón de Análisis Avanzado AI */}
+      <div className="mt-6">
+        <Link href="/advanced-analysis" className="w-full button-modern bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center">
+          <span className="mr-2">🧠</span>
+          Análisis Avanzado AI
+        </Link>
       </div>
     </div>
   );
