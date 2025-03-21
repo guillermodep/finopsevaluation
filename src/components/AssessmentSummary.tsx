@@ -1317,15 +1317,7 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
           <span className="mr-2">📊</span>
           Descargar CSV
         </button>
-      </div>
-      
-      {/* Botón de Análisis Avanzado AI */}
-      <div className="mt-6">
-        <Link href="/advanced-analysis" className="w-full button-modern bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center">
-          <span className="mr-2">🧠</span>
-          Análisis Avanzado AI
-        </Link>
-      </div>
+      </div>      
     </div>
   );
 } 
