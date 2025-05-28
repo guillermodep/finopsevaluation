@@ -1,5 +1,51 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Acerca de este Proyecto: Auto Assessment de Madurez FinOps
+
+Este proyecto es una aplicación web diseñada para ayudar a las organizaciones a evaluar su nivel de madurez FinOps. Guía a los usuarios a través de una autoevaluación basada en el marco oficial de la FinOps Foundation, específicamente sus dominios y el modelo de madurez "Crawl, Walk, Run" (Gatear, Caminar, Correr).
+
+### Funcionalidad Principal y Flujo de Trabajo
+
+La aplicación proporciona un proceso de evaluación en múltiples pasos:
+
+1.  **Bienvenida y Registro:**
+    *   Introduce el modelo de madurez FinOps y las categorías a evaluar.
+    *   Recopila información básica del usuario (nombre, empresa, correo electrónico, cargo) a través del componente `RegistrationForm.tsx`.
+2.  **Información de Infraestructura y Equipo:**
+    *   Reúne un contexto detallado sobre el entorno en la nube del usuario utilizando `InfrastructureQuestions.tsx`. Esto incluye proveedores de nube, composición del equipo, presupuesto, tipos de cargas de trabajo, etc.
+3.  **Evaluación por Categoría:**
+    *   El usuario evalúa la madurez de su organización en cinco categorías clave de FinOps (definidas en `src/data/categories.ts`):
+        *   Visibilidad y Asignación de Costos
+        *   Optimización y Eficiencia
+        *   Gobernanza y Control
+        *   Planificación y Previsión
+        *   Cultura y Organización
+    *   Para cada categoría, `CategoryAssessment.tsx` presenta cinco descripciones de niveles de madurez, y el usuario selecciona el que mejor se adapta a su estado actual.
+4.  **Resultados y Resumen:**
+    *   `AssessmentSummary.tsx` muestra los resultados, incluyendo una puntuación media de madurez, la etapa correspondiente (Gatear, Caminar o Correr) y puntuaciones detalladas por categoría.
+    *   **Opciones de Exportación:** Los usuarios pueden descargar sus resultados como un archivo CSV o un informe PDF.
+5.  **Funcionalidad de Reinicio:** Permite a los usuarios borrar sus datos y reiniciar la evaluación.
+
+### Stack Tecnológico
+
+*   **Framework Frontend:** Next.js (React)
+*   **Lenguaje:** TypeScript
+*   **Estilos:** Tailwind CSS
+*   **Manejo de Formularios:** `react-hook-form`
+*   **Gestión de Estado:** `useState` de React y `localStorage` para persistencia.
+
+### Estructura del Proyecto
+
+*   `src/app/page.tsx`: Orquesta el flujo de la evaluación.
+*   `src/components/`: Contiene los componentes UI reutilizables.
+*   `src/data/categories.ts`: Define las categorías de evaluación.
+*   `src/store/assessmentStore.ts`: Maneja el almacenamiento en `localStorage`.
+*   `src/types/assessment.ts`: Define las interfaces TypeScript para las estructuras de datos.
+
+### Interfaz de Usuario
+
+La UI presenta un diseño moderno con efectos visuales como "glass-panel" y animaciones "fade-in", buscando una experiencia de usuario fluida.
+
 ## Getting Started
 
 First, run the development server:
