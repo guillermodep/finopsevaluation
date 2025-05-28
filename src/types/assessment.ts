@@ -1,3 +1,5 @@
+import React from 'react'; // Ensure React is imported for FC type
+
 export interface Level {
   level: number;
   title: string;
@@ -6,6 +8,7 @@ export interface Level {
 
 export interface Category {
   name: string;
+  icon: React.FC<React.SVGProps<SVGSVGElement>>;
   description: string;
   levelDescriptions: string[];
 }

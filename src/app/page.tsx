@@ -15,7 +15,7 @@ export default function Home() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [results, setResults] = useState<AssessmentResult[]>([]);
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(-1);
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(0); 
   const [showResults, setShowResults] = useState(false);
   const [showInfrastructureQuestions, setShowInfrastructureQuestions] = useState(false);
   const [showLogo, setShowLogo] = useState(true);
@@ -24,18 +24,14 @@ export default function Home() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
         setShowLogo(false);
       } else {
         setShowLogo(true);
       }
-
       setLastScrollY(currentScrollY);
     };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
-
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -44,7 +40,6 @@ export default function Home() {
   const handleReset = () => {
     localStorage.removeItem('userData');
     localStorage.removeItem('assessmentResults');
-
     setUserData(null);
     setResults([]);
     setCurrentCategoryIndex(-1);
@@ -59,8 +54,6 @@ export default function Home() {
     ? results.find(r => r.category === currentCategory.name)
     : null;
 
-  const allCompleted = results.length === categories.length;
-
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -69,7 +62,7 @@ export default function Home() {
     setUserData(data);
     storeUserData(data);
     setShowInfrastructureQuestions(true);
-    setStep(1);
+    setStep(1); 
   };
 
   const handleInfrastructureSubmit = (updatedUserData: UserData) => {
@@ -77,7 +70,7 @@ export default function Home() {
     storeUserData(updatedUserData);
     setShowInfrastructureQuestions(false);
     setCurrentCategoryIndex(0);
-    setStep(2);
+    setStep(2); 
   };
 
   const handleLevelSelect = (level: number) => {
@@ -85,7 +78,6 @@ export default function Home() {
     const existingResultIndex = newResults.findIndex(
       r => r.category === currentCategory?.name
     );
-
     if (existingResultIndex >= 0) {
       newResults[existingResultIndex].selectedLevel = level;
     } else if (currentCategory) {
@@ -94,9 +86,7 @@ export default function Home() {
         selectedLevel: level,
       });
     }
-
     setResults(newResults);
-
     if (currentCategory) {
       const resultToStore = {
         category: currentCategory.name,
@@ -109,19 +99,19 @@ export default function Home() {
   const handleNextCategory = () => {
     if (currentCategoryIndex < categories.length - 1) {
       setCurrentCategoryIndex(currentCategoryIndex + 1);
-      setStep(step + 1);
+      setStep(step + 1); 
     } else {
       setStep(categories.length + 2);
-      setShowResults(true);
+      setShowResults(true); 
     }
   };
 
   const handleSubmitResults = () => {
     setShowResults(true);
-    setStep(categories.length + 2);
+    setStep(categories.length + 2); 
   };
 
-  const totalLogicalSteps = categories.length + 3;
+  const totalLogicalSteps = categories.length + 3; 
   let currentLogicalStep = 0;
   let currentStepName = '';
 
@@ -129,14 +119,17 @@ export default function Home() {
     currentLogicalStep = totalLogicalSteps;
     currentStepName = 'Resultados Finales';
   } else if (currentCategoryIndex !== -1) {
-    currentLogicalStep = 3 + currentCategoryIndex;
+    currentLogicalStep = 3 + currentCategoryIndex; 
     currentStepName = 'Evaluación de Categorías';
   } else if (showInfrastructureQuestions) {
     currentLogicalStep = 2;
     currentStepName = 'Información de Infraestructura';
+  } else if (userData) { // After registration, before infra questions fully shown
+    currentLogicalStep = 1; 
+    currentStepName = 'Registro Completado';
   } else {
-    currentLogicalStep = 1;
-    currentStepName = 'Registro Inicial';
+    currentLogicalStep = 0; // Welcome screen
+    currentStepName = 'Bienvenida';
   }
 
   if (!mounted) {
@@ -178,7 +171,7 @@ export default function Home() {
           {currentLogicalStep > 0 && currentLogicalStep < totalLogicalSteps && (
             <ProgressBar
               currentStep={currentLogicalStep}
-              totalSteps={totalLogicalSteps - 1}
+              totalSteps={totalLogicalSteps -1} 
               stepName={currentStepName}
             />
           )}
@@ -202,12 +195,15 @@ export default function Home() {
                 El modelo de madurez FinOps evalúa
               </h2>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {categories.map((category) => (
-                  <li key={category.name} className="flex items-center space-x-3 text-white/90 p-2 rounded-lg hover:bg-white/5 transition-all duration-200">
-                    <span className="text-blue-300 text-xl">•</span>
-                    <span>{category.name}</span>
-                  </li>
-                ))}
+                {categories.map((category) => {
+                  const IconComponent = category.icon;
+                  return (
+                    <li key={category.name} className="flex items-center space-x-3 text-white/90 p-3 rounded-lg hover:bg-white/5 transition-all duration-200 border border-transparent hover:border-white/10">
+                      <IconComponent className="w-6 h-6 text-blue-300 flex-shrink-0" />
+                      <span>{category.name}</span>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
 
@@ -241,14 +237,14 @@ export default function Home() {
             />
             <div className="mt-8 flex justify-between">
               <button
-                onClick={handleReset}
+                onClick={handleReset} 
                 className="button-secondary"
               >
                 Reiniciar Evaluación
               </button>
               <button
                 onClick={handleNextCategory}
-                disabled={!currentResult}
+                disabled={!currentResult} 
                 className="button-modern"
               >
                 {currentCategoryIndex < categories.length - 1 ? 'Siguiente Categoría' : 'Ver Resultados'}

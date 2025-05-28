@@ -18,8 +18,8 @@ export const recommendationsData: CategoryRecommendations = {
       title: "Sugerencias para 'Visibilidad y Asignación de Costos' (Niveles 1-2)",
       texts: [
         "Comenzar a revisar las facturas de nube mensualmente para identificar los servicios de mayor costo.",
-        "Explorar las herramientas de visualización de costos nativas de su proveedor de nube (ej. AWS Cost Explorer, Azure Cost Management, Google Cloud Billing).",
-        "Implementar un sistema básico de etiquetado (tagging) para los recursos y proyectos principales para empezar a categorizar gastos.",
+        "Explorar las herramientas de visualización de costos nativas de su proveedor de nube (ej. [AWS Cost Explorer](https://aws.amazon.com/aws-cost-management/aws-cost-explorer/), [Azure Cost Management](https://azure.microsoft.com/es-es/products/cost-management), [Google Cloud Billing](https://cloud.google.com/billing/docs)).",
+        "Implementar un sistema básico de etiquetado (tagging) para los recursos y proyectos principales. [Aprende sobre etiquetado en FinOps.org](https://www.finops.org/framework/capabilities/tagging-metadata/)",
         "Identificar quiénes son los principales consumidores de nube dentro de la organización."
       ],
     },
