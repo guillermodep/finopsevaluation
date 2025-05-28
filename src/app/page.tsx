@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { UserData, AssessmentResult } from '@/types/assessment';
 import { categories } from '@/data/categories';
 import RegistrationForm from '@/components/RegistrationForm';
@@ -52,7 +53,7 @@ export default function Home() {
 
   const currentCategory = currentCategoryIndex >= 0 ? categories[currentCategoryIndex] : null;
   const currentResult = currentCategory
-    ? results.find(r => r.category === currentCategory.name)
+    ? results.find((r: AssessmentResult) => r.category === currentCategory.name)
     : null;
 
   useEffect(() => {
@@ -184,11 +185,14 @@ export default function Home() {
               <p className="text-xl text-white/90 mb-4 font-medium">
                 Bienvenido al Auto Assessment de FinOps
               </p>
-              <p className="text-lg text-white/80">
+              <p className="text-lg text-white/80 mb-6">
                 FinOps es una práctica de gestión financiera
                 colaborativa para entornos en la nube. Combina sistemas, finanzas y
                 equipos de negocio para maximizar el valor de la nube.
               </p>
+              <Link href="/entendiendo-finops/entendiendo.html" className="inline-block bg-sky-500 hover:bg-sky-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300 text-lg shadow-md hover:shadow-lg">
+                Entendiendo FinOps
+              </Link>
             </div>
 
             <div className="glass-panel">

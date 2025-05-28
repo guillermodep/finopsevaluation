@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Interactiva: Autoevaluación FinOps con IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Visualization & Content Choices:
+        - Principios: HTML Cards (Inform/Organize) + AI Explanation Button (Gemini API) - Detail from text, enhanced with AI.
+        - Dominios/Capacidades (Tabla 1): HTML Table (Organize/Inform) - Structured data.
+        - Modelo Madurez (Tabla 2): HTML Table + Bar Chart (Chart.js) (Compare/Inform) - Quantitative progression of objectives.
+        - KPIs (Tabla 4): HTML Table (Compare/Inform) - Key metrics.
+        - Fases de Autoevaluación: HTML/CSS Diagram (Organize/Process) - Steps.
+        - Lentes: HTML Cards (Inform/Organize) - Dimensions.
+        - Detalles Capacidades (C/W/R): Accordion/Tabs (Compare/Inform) + AI Improvement Tips Button (Gemini API) - Detailed stages, enhanced with AI-generated advice.
+        - All text content summarized/paraphrased from source.
+        - Justification: Enhance understanding via visual structure, interactivity, and AI-powered insights. NO SVG/Mermaid. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F5F2; 
+            color: #3C3633; 
+        }
+        .sticky-nav {
+            position: -webkit-sticky; 
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(248, 245, 242, 0.9); 
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .nav-link {
+            transition: color 0.3s ease;
+            color: #7A9E9F; 
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #A78B71; 
+            font-weight: 600;
+        }
+        .section-title {
+            color: #7A9E9F; 
+            border-bottom: 2px solid #B0A990; 
+            padding-bottom: 0.5rem;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border-radius: 0.5rem; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: box-shadow 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .table-header {
+            background-color: #E4DED8; 
+            color: #3C3633;
+            font-weight: 600;
+        }
+        .table-row:nth-child(even) {
+            background-color: #F8F5F2; 
+        }
+        .details-content {
+            display: none;
+            border-left: 3px solid #7A9E9F; 
+            padding-left: 1rem;
+            margin-top: 0.5rem;
+            background-color: #FFFFFF;
+        }
+        .accordion-button.open .arrow {
+            transform: rotate(90deg);
+        }
+        .arrow {
+            transition: transform 0.2s ease-in-out;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; 
+            max-height: 450px;
+        }
+        @media (min-width: 768px) { 
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .flow-step {
+            background-color: #E4DED8;
+            border: 1px solid #B0A990;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 0.375rem; 
+            flex-grow: 1;
+        }
+        .flow-arrow {
+            font-size: 1.5rem; 
+            color: #7A9E9F; 
+            padding: 0 0.5rem;
+        }
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+        }
+        .modal-content {
+            background-color: #FFFFFF;
+            margin: 8% auto;
+            padding: 2rem;
+            border: 1px solid #B0A990;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            position: relative;
+        }
+        .modal-close {
+            color: #A78B71;
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+        .modal-close:hover,
+        .modal-close:focus {
+            color: #3C3633;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #7A9E9F; 
+            animation: spin 1s ease infinite;
+            margin: 1rem auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .ai-button {
+            background-color: #7A9E9F;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            transition: background-color 0.2s ease;
+        }
+        .ai-button:hover {
+            background-color: #5A7F7F;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="py-6 bg-[#7A9E9F] text-white text-center shadow-lg">
+        <h1 class="text-3xl md:text-4xl font-bold">Guía Interactiva de Autoevaluación FinOps</h1>
+        <p class="mt-2 text-lg">Maximizando el Valor de la Nube con IA</p>
+    </header>
+
+    <nav id="mainNav" class="sticky-nav shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap justify-center space-x-2 sm:space-x-4 py-3 text-sm sm:text-base">
+                <a href="#intro" class="nav-link px-2 py-1 rounded-md">Introducción</a>
+                <a href="#marco" class="nav-link px-2 py-1 rounded-md">Marco FinOps</a>
+                <a href="#ejecucion" class="nav-link px-2 py-1 rounded-md">Ejecución</a>
+                <a href="#medicion" class="nav-link px-2 py-1 rounded-md">Medición (KPIs)</a>
+                <a href="#accion" class="nav-link px-2 py-1 rounded-md">Acción</a>
+                <a href="#recursos" class="nav-link px-2 py-1 rounded-md">Recursos</a>
+                <a href="#desafios" class="nav-link px-2 py-1 rounded-md">Desafíos</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section id="intro" class="mb-12 scroll-mt-20">
+            <h2 class="text-2xl md:text-3xl font-semibold mb-6 section-title">Sección 1: Introducción a la Autoevaluación FinOps</h2>
+            <p class="mb-6 text-gray-700 leading-relaxed">La autoevaluación FinOps es un proceso iterativo crucial para medir la efectividad, alinear con estrategias y optimizar el valor de las inversiones en la nube. Este proceso no solo proporciona una línea base objetiva sino que también cataliza la colaboración interfuncional, fundamental para una práctica FinOps madura.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-[#7A9E9F] mb-3">1.1. El Valor de la Autoevaluación</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li>Mide objetivamente la efectividad de los esfuerzos FinOps.</li>
+                        <li>Asegura la alineación con objetivos estratégicos del negocio.</li>
+                        <li>Identifica áreas que requieren mayor maduración.</li>
+                        <li>Proporciona una línea base para una hoja de ruta realista.</li>
+                        <li>Demuestra el valor incremental de la práctica FinOps.</li>
+                        <li>Cataliza la colaboración interfuncional (ingeniería, finanzas, negocio).</li>
+                    </ul>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-[#7A9E9F] mb-3">1.2. ¿Qué Implica una Autoevaluación Exhaustiva?</h3>
+                    <p class="text-gray-600 mb-2 leading-relaxed">Va más allá de una lista de verificación. Implica una inmersión profunda usando:</p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li>Modelo de Madurez FinOps (Gatear, Caminar, Correr).</li>
+                        <li>Lentes de Evaluación (Conocimiento, Proceso, Métricas, Adopción, Automatización).</li>
+                    </ul>
+                    <p class="text-gray-600 mt-3 leading-relaxed">Busca comprender el *qué*, *cómo*, *por qué* y la *efectividad*. Ayuda a revelar "puntos ciegos" organizacionales mediante la contrastación de perspectivas de múltiples stakeholders.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="marco" class="mb-12 scroll-mt-20">
+            <h2 class="text-2xl md:text-3xl font-semibold mb-6 section-title">Sección 2: Comprendiendo el Marco de Referencia FinOps</h2>
+            <p class="mb-6 text-gray-700 leading-relaxed">Un conocimiento sólido del marco de la FinOps Foundation es imprescindible. Proporciona la estructura, principios y lenguaje común para analizar y mejorar la gestión financiera de la nube.</p>
+
+            <div class="card p-6 mb-8">
+                <h3 class="text-xl font-semibold text-[#7A9E9F] mb-4">2.1. Principios Fundamentales de FinOps</h3>
+                <p class="text-gray-700 mb-4">Son el núcleo filosófico y guía constante. La falta de adhesión suele ser causa de baja madurez en múltiples capacidades.</p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="p-4 bg-[#F8F5F2] rounded-md border border-[#E4DED8]">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-semibold text-[#3C3633]">🤝 Colaboración</h4>
+                            <button class="ai-button explain-principle-btn" data-principle="Colaboración">✨ Explicar</button>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">Equipos (finanzas, ingeniería, producto, negocio) trabajan juntos.</p>
+                    </div>
+                    <div class="p-4 bg-[#F8F5F2] rounded-md border border-[#E4DED8]">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-semibold text-[#3C3633]">📈 Valor de Negocio</h4>
+                            <button class="ai-button explain-principle-btn" data-principle="Decisiones se Impulsan por el Valor de Negocio">✨ Explicar</button>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">Decisiones impulsadas por el valor, no solo reducción de costos.</p>
+                    </div>
+                    <div class="p-4 bg-[#F8F5F2] rounded-md border border-[#E4DED8]">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-semibold text-[#3C3633]">👤 Propiedad</h4>
+                            <button class="ai-button explain-principle-btn" data-principle="Todos Asumen la Propiedad de su Uso de la Nube">✨ Explicar</button>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">Todos asumen responsabilidad por su uso y costo de la nube.</p>
+                    </div>
+                    <div class="p-4 bg-[#F8F5F2] rounded-md border border-[#E4DED8]">
+                        <div class="flex justify-between items-center mb-1">
+                             <h4 class="font-semibold text-[#3C3633]">📊 Datos Accesibles</h4>
+                             <button class="ai-button explain-principle-btn" data-principle="Datos de FinOps Accesibles y Oportunos">✨ Explicar</button>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">Información de costos y uso oportuna para decisiones informadas.</p>
+                    </div>
+                    <div class="p-4 bg-[#F8F5F2] rounded-md border border-[#E4DED8]">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-semibold text-[#3C3633]">⚙️ Equipo Centralizado</h4>
+                            <button class="ai-button explain-principle-btn" data-principle="Equipo Centralizado que Impulsa FinOps">✨ Explicar</button>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">Un equipo FinOps dedicado impulsa mejores prácticas y gobernanza.</p>
+                    </div>
+                    <div class="p-4 bg-[#F8F5F2] rounded-md border border-[#E4DED8]">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-semibold text-[#3C3633]">☁️ Modelo de Costo Variable</h4>
+                            <button class="ai-button explain-principle-btn" data-principle="Aprovechar el Modelo de Costo Variable de la Nube">✨ Explicar</button>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">Aprovechar elasticidad y precios bajo demanda.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card p-6 mb-8">
+                <h3 class="text-xl font-semibold text-[#7A9E9F] mb-4">2.2. Dominios y Capacidades FinOps (Tabla 1)</h3>
+                <p class="text-gray-700 mb-4">Los Dominios son esferas generales de actividad; las Capacidades son áreas funcionales específicas. La evaluación se enfoca en capacidades relevantes para la organización.</p>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm text-left">
+                        <thead class="table-header">
+                            <tr>
+                                <th scope="col" class="px-4 py-2">Dominio</th>
+                                <th scope="col" class="px-4 py-2">Capacidad</th>
+                                <th scope="col" class="px-4 py-2">Breve Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-600">
+                            <tr class="table-row border-b border-[#E4DED8]"><td rowspan="4" class="px-4 py-2 align-top font-medium">Comprender el Uso y el Costo</td><td class="px-4 py-2">Ingesta de Datos</td><td class="px-4 py-2">Recopilación, procesamiento y correlación de datos.</td></tr>
+                            <tr class="table-row border-b border-[#E4DED8]"><td class="px-4 py-2">Asignación (Allocation)</td><td class="px-4 py-2">Estrategias para asignar costos y fomentar responsabilidad.</td></tr>
+                            <tr class="table-row border-b border-[#E4DED8]"><td class="px-4 py-2">Informes y Análisis</td><td class="px-4 py-2">Examen de datos para insights y optimización.</td></tr>
+                            <tr class="table-row border-b border-[#E4DED8]"><td class="px-4 py-2">Gestión de Anomalías</td><td class="px-4 py-2">Detección y gestión de costos inesperados.</td></tr>
+                            
+                            <tr class="table-row border-b border-[#E4DED8]"><td rowspan="5" class="px-4 py-2 align-top font-medium">Cuantificar el Valor de Negocio</td><td class="px-4 py-2">Planificación y Estimación</td><td class="px-4 py-2">Estimación de costo y valor de cargas de trabajo.</td></tr>
+                            <tr class="table-row border-b border-[#E4DED8]"><td class="px-4 py-2">Previsión (Forecasting)</td><td class="px-4 py-2">Creación de modelos de costos y valor futuros.</td></tr>
+                            <tr class="table-row border-b border-[#E4DED8]"><td class="px-4 py-2">Presupuestación (Budgeting)</td><td class="px-4 py-2">Proceso para establecer límites y monitorear gasto.</td></tr>
+                            <tr class="table-row border-b border-[#E4DED8]"><td class="px-4 py-2">Benchmarking</td><td class="px-4 py-2">Comparación de métricas para identificar mejoras.</td></tr>
+                            <tr class="table-row border-b border-[#E4DED8]"><td class="px-4 py-2">Economía de Unidades</td><td class="px-4 py-2">Métricas de cómo la nube impacta valor de productos.</td></tr>
+
+                            <tr class="table-row border-b border-[#E4DED8]"><td rowspan="5" class="px-4 py-2 align-top font-medium">Optimizar el Uso y el Costo</td><td class="px-4 py-2">Arquitectura para la Nube</td><td class="px-4 py-2">Selección de servicios eficientes y viables.</td></tr>
+                            <tr class="table-row border-b border-[#E4DED8]"><td class="px-4 py-2">Optimización de Tarifas</td><td class="px-4 py-2">Reducción de la tarifa pagada por recursos.</td></tr>
+                            <tr class="table-row border-b border-[#E4DED8]"><td class="px-4 py-2">Licencias y SaaS</td><td class="px-4 py-2">Optimización de impacto de licencias y SaaS.</td></tr>
+                            <tr class="table-row border-b border-[#E4DED8]"><td class="px-4 py-2">Sostenibilidad en la Nube</td><td class="px-4 py-2">Decisiones considerando impacto ambiental.</td></tr>
+                            <tr class="table-row border-b border-[#E4DED8]"><td class="px-4 py-2">Optimización de Cargas de Trabajo</td><td class="px-4 py-2">Análisis y optimización de recursos.</td></tr>
+                            
+                            <tr class="table-row"><td rowspan="8" class="px-4 py-2 align-top font-medium">Gestionar la Práctica FinOps</td><td class="px-4 py-2">Operaciones de la Práctica FinOps</td><td class="px-4 py-2">Actividades para construir y operar la práctica.</td></tr>
+                            <tr class="table-row border-t border-[#E4DED8]"><td class="px-4 py-2">Política y Gobernanza</td><td class="px-4 py-2">Establecimiento de políticas y controles.</td></tr>
+                            <tr class="table-row border-t border-[#E4DED8]"><td class="px-4 py-2">Evaluación FinOps</td><td class="px-4 py-2">Medición de efectividad e identificación de mejoras.</td></tr>
+                            <tr class="table-row border-t border-[#E4DED8]"><td class="px-4 py-2">Herramientas y Servicios FinOps</td><td class="px-4 py-2">Selección y uso de software de terceros.</td></tr>
+                            <tr class="table-row border-t border-[#E4DED8]"><td class="px-4 py-2">Educación y Habilitación FinOps</td><td class="px-4 py-2">Desarrollo de entendimiento común de FinOps.</td></tr>
+                            <tr class="table-row border-t border-[#E4DED8]"><td class="px-4 py-2">Facturación y Contracargo</td><td class="px-4 py-2">Gestión de facturas y contracargos.</td></tr>
+                            <tr class="table-row border-t border-[#E4DED8]"><td class="px-4 py-2">Incorporación de Cargas de Trabajo</td><td class="px-4 py-2">Orquestación de migración de sistemas.</td></tr>
+                            <tr class="table-row border-t border-[#E4DED8]"><td class="px-4 py-2">Disciplinas Intersecantes</td><td class="px-4 py-2">Coordinación con equipos aliados.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card p-6">
+                <h3 class="text-xl font-semibold text-[#7A9E9F] mb-4">2.3. Modelo de Madurez FinOps: Gatear, Caminar, Correr</h3>
+                <p class="text-gray-700 mb-4">Conceptualiza la progresión iterativa. El objetivo no es siempre "Correr" en todo; el valor de negocio guía.</p>
+                <div class="overflow-x-auto mb-6">
+                    <table class="min-w-full text-sm text-left">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="px-4 py-2">Nivel de Madurez</th>
+                                <th class="px-4 py-2">Características Generales</th>
+                                <th class="px-4 py-2">Enfoque Principal</th>
+                                <th class="px-4 py-2">Objetivos Típicos</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-600">
+                            <tr class="table-row border-b border-[#E4DED8]">
+                                <td class="px-4 py-2 font-semibold">Crawl (Gatear)</td>
+                                <td class="px-4 py-2">Prácticas reactivas, manuales, visibilidad limitada.</td>
+                                <td class="px-4 py-2">Establecer fundamentos, visibilidad básica, quick wins.</td>
+                                <td class="px-4 py-2">Asignación >50%, descuentos ~60%, pronóstico varianza 20%.</td>
+                            </tr>
+                            <tr class="table-row border-b border-[#E4DED8]">
+                                <td class="px-4 py-2 font-semibold">Walk (Caminar)</td>
+                                <td class="px-4 py-2">Prácticas proactivas, documentadas, mayor visibilidad.</td>
+                                <td class="px-4 py-2">Estandarizar, mejorar eficiencia, optimizar.</td>
+                                <td class="px-4 py-2">Asignación >80%, descuentos ~70%, pronóstico varianza 15%.</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="px-4 py-2 font-semibold">Run (Correr)</td>
+                                <td class="px-4 py-2">Prácticas predictivas, automatizadas, cultura internalizada.</td>
+                                <td class="px-4 py-2">Maximizar valor, innovación continua, optimización real.</td>
+                                <td class="px-4 py-2">Asignación >90%, descuentos ~80%, pronóstico varianza 12%.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="chart-container">
+                    <canvas id="maturityChart"></canvas>
+                </div>
+                 <p class="text-xs text-center text-gray-500 mt-2">Gráfico ilustrativo de objetivos típicos de KPIs por nivel de madurez.</p>
+            </div>
+        </section>
+
+        <section id="ejecucion" class="mb-12 scroll-mt-20">
+            <h2 class="text-2xl md:text-3xl font-semibold mb-6 section-title">Sección 3: Ejecutando su Autoevaluación FinOps</h2>
+            <p class="mb-6 text-gray-700 leading-relaxed">Una vez comprendidos los fundamentos, la ejecución sigue fases estructuradas para asegurar un enfoque metódico.</p>
+
+            <div class="card p-6 mb-8">
+                <h3 class="text-xl font-semibold text-[#7A9E9F] mb-4">Fases de la Autoevaluación</h3>
+                <div class="space-y-4 md:space-y-0 md:flex md:space-x-2 items-center justify-around">
+                    <div class="flow-step">
+                        <span class="text-2xl">1️⃣</span>
+                        <p class="font-semibold mt-1">Definir Objetivos y Alcance</p>
+                        <p class="text-xs text-gray-600">Claridad en metas, seleccionar capacidades críticas.</p>
+                    </div>
+                    <div class="flow-arrow hidden md:block">▶</div> <div class="flow-arrow text-center md:hidden">▼</div>
+                    <div class="flow-step">
+                        <span class="text-2xl">2️⃣</span>
+                        <p class="font-semibold mt-1">Identificar Stakeholders</p>
+                        <p class="text-xs text-gray-600">Involucrar Personas FinOps clave, fomentar ambiente sin culpa.</p>
+                    </div>
+                     <div class="flow-arrow hidden md:block">▶</div> <div class="flow-arrow text-center md:hidden">▼</div>
+                    <div class="flow-step">
+                        <span class="text-2xl">3️⃣</span>
+                        <p class="font-semibold mt-1">Aplicar Lentes de Evaluación</p>
+                        <p class="text-xs text-gray-600">Análisis multidimensional (Conocimiento, Proceso, Métricas, Adopción, Automatización).</p>
+                    </div>
+                     <div class="flow-arrow hidden md:block">▶</div> <div class="flow-arrow text-center md:hidden">▼</div>
+                     <div class="flow-step">
+                        <span class="text-2xl">4️⃣</span>
+                        <p class="font-semibold mt-1">Evaluación Detallada</p>
+                        <p class="text-xs text-gray-600">Examinar capacidades vs. niveles Crawl, Walk, Run.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-6 mb-8">
+                 <h3 class="text-xl font-semibold text-[#7A9E9F] mb-4">3.3. Las 5 Lentes de Evaluación</h3>
+                 <p class="text-gray-700 mb-4">Proporcionan un marco estructurado para una evaluación holística, evitando visiones sesgadas.</p>
+                 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="p-4 bg-[#F8F5F2] rounded-md border border-[#E4DED8]"><strong>Conocimiento:</strong> Amplitud de comprensión y conciencia.</div>
+                    <div class="p-4 bg-[#F8F5F2] rounded-md border border-[#E4DED8]"><strong>Proceso:</strong> Acciones y artefactos que definen la capacidad.</div>
+                    <div class="p-4 bg-[#F8F5F2] rounded-md border border-[#E4DED8]"><strong>Métricas:</strong> Cómo se mide y demuestra el progreso.</div>
+                    <div class="p-4 bg-[#F8F5F2] rounded-md border border-[#E4DED8]"><strong>Adopción:</strong> Grado de aceptación e integración por el grupo objetivo.</div>
+                    <div class="p-4 bg-[#F8F5F2] rounded-md border border-[#E4DED8]"><strong>Automatización:</strong> Grado de automatización de tareas repetibles.</div>
+                 </div>
+            </div>
+            
+            <div class="card p-6">
+                <h3 class="text-xl font-semibold text-[#7A9E9F] mb-4">3.4. Evaluación Detallada de Capacidades Clave (Ejemplos)</h3>
+                <p class="text-gray-700 mb-4">Examinar características vs. descriptores Crawl, Walk, Run. Reconocer interdependencias. Utilice los botones de IA para obtener consejos de mejora.</p>
+                <div id="capabilitiesAccordion" class="space-y-3">
+                    <div>
+                        <button class="accordion-button w-full text-left p-3 bg-[#E4DED8] hover:bg-[#dcd6cf] rounded-md font-semibold flex justify-between items-center">
+                            <span data-capability-name="Asignación (Allocation)">Asignación (Allocation)</span>
+                            <div>
+                                <button class="ai-button get-ai-tips-btn mr-2" data-capability="Asignación (Allocation)">✨ Consejos IA</button>
+                                <span class="arrow text-[#7A9E9F]">▶</span>
+                            </div>
+                        </button>
+                        <div class="details-content p-3 mt-1 text-sm text-gray-600 space-y-2">
+                            <p><strong>Crawl:</strong> Asignación básica (~50%), etiquetado inconsistente, costos compartidos a presupuestos centrales.</p>
+                            <p><strong>Walk:</strong> Estrategia documentada, asignación ~75% a nivel aplicación/servicio, etiquetado consistente en áreas críticas.</p>
+                            <p><strong>Run:</strong> Asignación granular (80-100%), estrategias efectivas universalmente, automatización para costos compartidos.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="accordion-button w-full text-left p-3 bg-[#E4DED8] hover:bg-[#dcd6cf] rounded-md font-semibold flex justify-between items-center">
+                            <span data-capability-name="Informes y Análisis">Informes y Análisis</span>
+                             <div>
+                                <button class="ai-button get-ai-tips-btn mr-2" data-capability="Informes y Análisis">✨ Consejos IA</button>
+                                <span class="arrow text-[#7A9E9F]">▶</span>
+                            </div>
+                        </button>
+                        <div class="details-content p-3 mt-1 text-sm text-gray-600 space-y-2">
+                            <p><strong>Crawl:</strong> Informes predefinidos, granularidad alta, comunicación manual, dependencia del equipo central.</p>
+                            <p><strong>Walk:</strong> Vistas personalizadas, informes granulares (KPIs, showback), enriquecimiento de datos, inicio de autoservicio.</p>
+                            <p><strong>Run:</strong> Datos en única fuente, lógica compleja, previsión avanzada (ML), resultados en cuadros de mando de ingeniería.</p>
+                        </div>
+                    </div>
+                     <div>
+                        <button class="accordion-button w-full text-left p-3 bg-[#E4DED8] hover:bg-[#dcd6cf] rounded-md font-semibold flex justify-between items-center">
+                            <span data-capability-name="Gestión de Anomalías">Gestión de Anomalías</span>
+                             <div>
+                                <button class="ai-button get-ai-tips-btn mr-2" data-capability="Gestión de Anomalías">✨ Consejos IA</button>
+                                <span class="arrow text-[#7A9E9F]">▶</span>
+                            </div>
+                        </button>
+                        <div class="details-content p-3 mt-1 text-sm text-gray-600 space-y-2">
+                            <p><strong>Crawl:</strong> Comprensión básica, verificación manual, reacción tardía (>1 semana), alertas de presupuesto.</p>
+                            <p><strong>Walk:</strong> Detección automatizada, uso prevalente de herramientas, umbrales contextuales, alertas a equipos responsables.</p>
+                            <p><strong>Run:</strong> Herramientas maduras integradas, automatización para detectar/resolver, umbrales granulares, análisis de anomalías pasadas.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="accordion-button w-full text-left p-3 bg-[#E4DED8] hover:bg-[#dcd6cf] rounded-md font-semibold flex justify-between items-center">
+                            <span data-capability-name="Economía de Unidades">Economía de Unidades</span>
+                            <div>
+                                <button class="ai-button get-ai-tips-btn mr-2" data-capability="Economía de Unidades">✨ Consejos IA</button>
+                                <span class="arrow text-[#7A9E9F]">▶</span>
+                            </div>
+                        </button>
+                        <div class="details-content p-3 mt-1 text-sm text-gray-600 space-y-2">
+                            <p><strong>Crawl:</strong> Nivel básico (costo total vs. resultados), foco en métricas técnicas, baja adopción para decisiones.</p>
+                            <p><strong>Walk:</strong> Equipos desarrollan economías específicas, resultados de negocio en métricas, confianza moderada para decisiones.</p>
+                            <p><strong>Run:</strong> Métricas integrales, definidas *antes* de construir/migrar, alta confianza para decisiones.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="medicion" class="mb-12 scroll-mt-20">
+            <h2 class="text-2xl md:text-3xl font-semibold mb-6 section-title">Sección 4: Midiendo la Madurez: KPIs en FinOps</h2>
+            <p class="mb-6 text-gray-700 leading-relaxed">Los KPIs son cruciales para cuantificar la madurez, rastrear progreso y demostrar valor. Su selección debe alinearse con objetivos y capacidades evaluadas.</p>
+             <div class="card p-6">
+                <h3 class="text-xl font-semibold text-[#7A9E9F] mb-4">4.2. Ejemplos de KPIs por Nivel de Madurez (Tabla 4)</h3>
+                <p class="text-gray-700 mb-4">La FinOps Foundation ofrece referencias de KPIs y objetivos típicos por nivel de madurez.</p>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm text-left">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="px-4 py-2">Nivel de Madurez</th>
+                                <th class="px-4 py-2">KPI Ejemplo</th>
+                                <th class="px-4 py-2">Objetivo Típico</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-600">
+                            <tr class="table-row border-b border-[#E4DED8]">
+                                <td rowspan="3" class="px-4 py-2 align-top font-semibold">Crawl (Gatear)</td>
+                                <td class="px-4 py-2">Porcentaje de Gasto Asignable</td>
+                                <td class="px-4 py-2">>50%</td>
+                            </tr>
+                            <tr class="table-row border-b border-[#E4DED8]"><td class="px-4 py-2">Cobertura de Descuentos Basados en Compromisos</td><td class="px-4 py-2">~60%</td></tr>
+                            <tr class="table-row border-b border-[#E4DED8]"><td class="px-4 py-2">Precisión del Pronóstico (Gasto vs. Real)</td><td class="px-4 py-2">Varianza del 20%</td></tr>
+                            
+                            <tr class="table-row border-b border-[#E4DED8]">
+                                <td rowspan="3" class="px-4 py-2 align-top font-semibold">Walk (Caminar)</td>
+                                <td class="px-4 py-2">Porcentaje de Gasto Asignable</td>
+                                <td class="px-4 py-2">>80%</td>
+                            </tr>
+                            <tr class="table-row border-b border-[#E4DED8]"><td class="px-4 py-2">Cobertura de Descuentos Basados en Compromisos</td><td class="px-4 py-2">~70%</td></tr>
+                            <tr class="table-row border-b border-[#E4DED8]"><td class="px-4 py-2">Precisión del Pronóstico (Gasto vs. Real)</td><td class="px-4 py-2">Varianza del 15%</td></tr>
+
+                            <tr class="table-row">
+                                <td rowspan="3" class="px-4 py-2 align-top font-semibold">Run (Correr)</td>
+                                <td class="px-4 py-2">Porcentaje de Gasto Asignable</td>
+                                <td class="px-4 py-2">>90%</td>
+                            </tr>
+                            <tr class="table-row border-t border-[#E4DED8]"><td class="px-4 py-2">Cobertura de Descuentos Basados en Compromisos</td><td class="px-4 py-2">~80%</td></tr>
+                            <tr class="table-row border-t border-[#E4DED8]"><td class="px-4 py-2">Precisión del Pronóstico (Gasto vs. Real)</td><td class="px-4 py-2">Varianza del 12%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">Fuente: Basado en datos de FinOps Foundation. Otros KPIs como % Cargas Optimizadas y Tiempo Detección Anomalías varían según objetivos.</p>
+            </div>
+        </section>
+
+        <section id="accion" class="mb-12 scroll-mt-20">
+            <h2 class="text-2xl md:text-3xl font-semibold mb-6 section-title">Sección 5: De la Evaluación a la Acción</h2>
+             <p class="mb-6 text-gray-700 leading-relaxed">La autoevaluación impulsa acciones concretas. Traducir hallazgos en una hoja de ruta es crucial.</p>
+             <div class="grid md:grid-cols-2 gap-6">
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-[#7A9E9F] mb-3">5.1. Análisis de Resultados</h3>
+                    <p class="text-gray-600 mb-2">Identificar fortalezas y debilidades buscando patrones:</p>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-600">
+                        <li>Dominios con baja madurez consistente.</li>
+                        <li>Lentes de evaluación débiles en general.</li>
+                        <li>Discrepancias entre percepciones de Personas FinOps.</li>
+                    </ul>
+                    <p class="text-gray-600 mt-2">Aprovechar fortalezas para impulsar mejoras.</p>
+                </div>
+                 <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-[#7A9E9F] mb-3">5.2. Priorización y Metas</h3>
+                    <p class="text-gray-600 mb-2">Priorizar iniciativas por:</p>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-600">
+                        <li>Impacto en el negocio.</li>
+                        <li>Viabilidad y esfuerzo.</li>
+                        <li>Dependencias entre capacidades.</li>
+                    </ul>
+                    <p class="text-gray-600 mt-2">Desarrollar hoja de ruta con metas SMART. Revisar y ajustar periódicamente.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="recursos" class="mb-12 scroll-mt-20">
+            <h2 class="text-2xl md:text-3xl font-semibold mb-6 section-title">Sección 6: Herramientas y Recursos de FinOps.org</h2>
+             <p class="mb-6 text-gray-700 leading-relaxed">La FinOps Foundation ofrece recursos para acelerar y estructurar la autoevaluación.</p>
+             <div class="grid sm:grid-cols-2 gap-6">
+                <div class="card p-4">
+                    <h4 class="font-semibold text-[#A78B71]">Guía de Evaluación FinOps</h4>
+                    <p class="text-sm text-gray-600">Documento fundamental con conceptos, mediciones (5 lentes) y marco metodológico.</p>
+                </div>
+                <div class="card p-4">
+                    <h4 class="font-semibold text-[#A78B71]">Hoja de Cálculo de Evaluación</h4>
+                    <p class="text-sm text-gray-600">Plantilla práctica para registrar y puntuar resultados.</p>
+                </div>
+                <div class="card p-4">
+                    <h4 class="font-semibold text-[#A78B71]">Ejemplos de Terceros</h4>
+                    <p class="text-sm text-gray-600">Evaluaciones como Invero FinOps Ready™ y Microsoft FinOps Review.</p>
+                </div>
+                <div class="card p-4">
+                    <h4 class="font-semibold text-[#A78B71]">Recursos Comunitarios</h4>
+                    <p class="text-sm text-gray-600">Descripciones detalladas de Capacidades, madurez y métricas en FinOps.org.</p>
+                </div>
+             </div>
+             <p class="mt-4 text-sm text-gray-600">Es importante adaptar plantillas genéricas al contexto específico de la organización. El valor reside en las discusiones y el análisis crítico que facilitan.</p>
+        </section>
+        
+        <section id="desafios" class="scroll-mt-20">
+            <h2 class="text-2xl md:text-3xl font-semibold mb-6 section-title">Sección 7: Desafíos Comunes y Mejores Prácticas</h2>
+             <p class="mb-6 text-gray-700 leading-relaxed">Anticipar obstáculos y aplicar mejores prácticas es clave para una evaluación transformadora.</p>
+             <div class="card p-6">
+                <h3 class="text-xl font-semibold text-[#7A9E9F] mb-3">7.1. Superando Obstáculos Comunes</h3>
+                <ul class="space-y-3 text-gray-600 text-sm">
+                    <li><strong>Obtener Compromiso (Buy-in):</strong> Comunicar el "por qué" y los beneficios tangibles.</li>
+                    <li><strong>Dedicación de Tiempo:</strong> Planificar en fases, comenzar con alcance limitado.</li>
+                    <li><strong>Subjetividad en Puntuaciones:</strong> Usar definiciones claras, fomentar discusión, triangular perspectivas.</li>
+                    <li><strong>Asegurar Respuestas Honestas:</strong> Crear entorno de confianza y aprendizaje, no culpas.</li>
+                    <li><strong>Fatiga de Evaluaciones:</strong> Comunicar propósito único y valor específico de la autoevaluación FinOps.</li>
+                </ul>
+                <h3 class="text-xl font-semibold text-[#7A9E9F] mt-6 mb-3">7.2. Asegurando Objetividad y Honestidad</h3>
+                 <ul class="space-y-3 text-gray-600 text-sm">
+                    <li>Utilizar definiciones claras y evidencia concreta.</li>
+                    <li>Involucrar múltiples perspectivas y discutir discrepancias.</li>
+                    <li>Enfocarse en el aprendizaje y la mejora colectiva.</li>
+                    <li>Considerar una revisión externa opcional para validar hallazgos.</li>
+                </ul>
+             </div>
+        </section>
+    </main>
+
+    <footer class="mt-12 py-8 bg-[#3C3633] text-[#E4DED8] text-center text-sm">
+        <p>&copy; 2025 Guía Interactiva de Autoevaluación FinOps. Contenido adaptado de la Guía Experta FinOps.</p>
+        <p>Esta es una herramienta ilustrativa. Consulte siempre las fuentes oficiales de FinOps.org.</p>
+    </footer>
+
+    <div id="aiPrincipleModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="closeAiPrincipleModal">&times;</span>
+            <h3 id="aiPrincipleModalTitle" class="text-2xl font-semibold mb-4 text-[#7A9E9F]"></h3>
+            <div id="aiPrincipleModalBody" class="text-gray-700 leading-relaxed"></div>
+        </div>
+    </div>
+
+    <div id="aiCapabilityModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="closeAiCapabilityModal">&times;</span>
+            <h3 id="aiCapabilityModalTitle" class="text-2xl font-semibold mb-4 text-[#7A9E9F]"></h3>
+            <div class="mb-4">
+                <label for="maturityLevelSelect" class="block text-sm font-medium text-gray-700 mb-1">Seleccione su nivel de madurez actual para esta capacidad:</label>
+                <select id="maturityLevelSelect" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#7A9E9F] focus:border-[#7A9E9F] sm:text-sm">
+                    <option value="Gatear (Crawl)">Gatear (Crawl)</option>
+                    <option value="Caminar (Walk)">Caminar (Walk)</option>
+                    <option value="Correr (Run)">Correr (Run)</option>
+                </select>
+            </div>
+            <button id="generateAiTipsBtn" class="w-full ai-button py-2 text-base font-semibold mb-4">Generar Consejos con IA</button>
+            <div id="aiCapabilityModalBody" class="text-gray-700 leading-relaxed"></div>
+        </div>
+    </div>
+
+    <script>
+        const maturityChartCtx = document.getElementById('maturityChart').getContext('2d');
+        const maturityChart = new Chart(maturityChartCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Gatear (Crawl)', 'Caminar (Walk)', 'Correr (Run)'],
+                datasets: [{
+                    label: 'Asignación de Costos (%)',
+                    data: [50, 80, 90],
+                    backgroundColor: '#7A9E9F', 
+                    borderColor: '#5A7F7F',
+                    borderWidth: 1
+                }, {
+                    label: 'Cobertura de Descuentos (%)',
+                    data: [60, 70, 80],
+                    backgroundColor: '#B0A990', 
+                    borderColor: '#908A70',
+                    borderWidth: 1
+                }, {
+                    label: 'Precisión Pronóstico (Varianza %)',
+                    data: [20, 15, 12],
+                    backgroundColor: '#A78B71', 
+                    borderColor: '#876B51',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + "%"
+                            },
+                            color: '#3C3633'
+                        },
+                        grid: {
+                            color: 'rgba(176, 169, 144, 0.2)' 
+                        }
+                    },
+                    x: {
+                         ticks: {
+                            color: '#3C3633',
+                            callback: function(value, index, values) {
+                                const label = this.getLabelForValue(value);
+                                if (label.length > 16) {
+                                    const words = label.split(' ');
+                                    const lines = [];
+                                    let currentLine = '';
+                                    words.forEach(word => {
+                                        if ((currentLine + word).length > 12 && currentLine !== '') {
+                                            lines.push(currentLine.trim());
+                                            currentLine = '';
+                                        }
+                                        currentLine += word + ' ';
+                                    });
+                                    lines.push(currentLine.trim());
+                                    return lines;
+                                }
+                                return label;
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                             color: '#3C3633'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y + '%';
+                                    if (context.dataset.label.toLowerCase().includes('varianza')) {
+                                        label += ' (menor es mejor)';
+                                    }
+                                }
+                                return label;
+                            },
+                             title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                  return label.join(' ');
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        document.querySelectorAll('.accordion-button').forEach(button => {
+            button.addEventListener('click', (event) => {
+                if (event.target.classList.contains('get-ai-tips-btn')) {
+                    return; 
+                }
+                const detailsContent = button.nextElementSibling;
+                const arrow = button.querySelector('.arrow');
+                
+                button.classList.toggle('open');
+                if (detailsContent.style.display === 'block') {
+                    detailsContent.style.display = 'none';
+                } else {
+                    detailsContent.style.display = 'block';
+                }
+            });
+        });
+
+        const navLinks = document.querySelectorAll('#mainNav a');
+        const sections = document.querySelectorAll('main section');
+
+        function changeNavActiveState() {
+            let index = sections.length;
+            while(--index && window.scrollY + 100 < sections[index].offsetTop) {}
+            
+            navLinks.forEach((link) => link.classList.remove('active'));
+            if (navLinks[index]) {
+                 navLinks[index].classList.add('active');
+            }
+        }
+        changeNavActiveState(); 
+        window.addEventListener('scroll', changeNavActiveState);
+
+        navLinks.forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    const navHeight = document.getElementById('mainNav').offsetHeight;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+                
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                    });
+                }
+            });
+        });
+
+        const apiKey = ""; 
+        const geminiApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+        const aiPrincipleModal = document.getElementById('aiPrincipleModal');
+        const aiPrincipleModalTitle = document.getElementById('aiPrincipleModalTitle');
+        const aiPrincipleModalBody = document.getElementById('aiPrincipleModalBody');
+        const closeAiPrincipleModalBtn = document.getElementById('closeAiPrincipleModal');
+
+        document.querySelectorAll('.explain-principle-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                const principleName = this.dataset.principle;
+                aiPrincipleModalTitle.textContent = `Explicando: ${principleName}`;
+                aiPrincipleModalBody.innerHTML = '<div class="spinner"></div> <p class="text-center text-gray-600">Consultando a la IA...</p>';
+                aiPrincipleModal.style.display = 'block';
+
+                const prompt = `Eres un experto en FinOps. Explica el principio FinOps de "${principleName}" de forma concisa y clara (2-3 frases), y proporciona un ejemplo práctico (1-2 frases) de cómo se aplicaría en una empresa que gestiona sus costos en la nube. Formatea la respuesta en HTML simple, usando párrafos y un encabezado <h4> para el ejemplo.`;
+                
+                try {
+                    const response = await fetch(geminiApiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                    });
+                    if (!response.ok) throw new Error(`Error de API: ${response.status} ${response.statusText}`);
+                    const result = await response.json();
+                    if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts && result.candidates[0].content.parts[0].text) {
+                        aiPrincipleModalBody.innerHTML = result.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
+                    } else {
+                        throw new Error('Respuesta inesperada o vacía de la API.');
+                    }
+                } catch (error) {
+                    console.error("Error fetching AI principle explanation:", error);
+                    aiPrincipleModalBody.innerHTML = `<p class="text-red-600 text-center">Error al obtener la explicación: ${error.message}. Por favor, inténtelo de nuevo más tarde.</p>`;
+                }
+            });
+        });
+        
+        closeAiPrincipleModalBtn.onclick = () => aiPrincipleModal.style.display = "none";
+
+        const aiCapabilityModal = document.getElementById('aiCapabilityModal');
+        const aiCapabilityModalTitle = document.getElementById('aiCapabilityModalTitle');
+        const aiCapabilityModalBody = document.getElementById('aiCapabilityModalBody');
+        const closeAiCapabilityModalBtn = document.getElementById('closeAiCapabilityModal');
+        const maturityLevelSelect = document.getElementById('maturityLevelSelect');
+        const generateAiTipsBtn = document.getElementById('generateAiTipsBtn');
+        let currentCapabilityForTips = '';
+
+        document.querySelectorAll('.get-ai-tips-btn').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.stopPropagation(); 
+                currentCapabilityForTips = this.dataset.capability;
+                aiCapabilityModalTitle.textContent = `Consejos de IA para: ${currentCapabilityForTips}`;
+                aiCapabilityModalBody.innerHTML = '';
+                aiCapabilityModal.style.display = 'block';
+            });
+        });
+
+        generateAiTipsBtn.addEventListener('click', async function() {
+            const selectedMaturity = maturityLevelSelect.value;
+            aiCapabilityModalBody.innerHTML = '<div class="spinner"></div> <p class="text-center text-gray-600">Generando consejos...</p>';
+
+            const prompt = `Eres un consultor experto en FinOps. Para la capacidad FinOps de "${currentCapabilityForTips}", que actualmente se encuentra en un nivel de madurez "${selectedMaturity}", proporciona 3 consejos accionables y priorizados para ayudar a una organización a mejorar y avanzar hacia el siguiente nivel. Si el nivel es 'Correr (Run)', enfócate en optimización avanzada, innovación y automatización continua. Presenta los consejos en una lista ordenada HTML (\<ol\> y \<li>\), donde cada \<li> comience con \<strong>Título del Consejo:\</strong> seguido del consejo.`;
+
+            try {
+                const response = await fetch(geminiApiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                });
+                if (!response.ok) throw new Error(`Error de API: ${response.status} ${response.statusText}`);
+                const result = await response.json();
+                if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts && result.candidates[0].content.parts[0].text) {
+                    aiCapabilityModalBody.innerHTML = result.candidates[0].content.parts[0].text;
+                } else {
+                    throw new Error('Respuesta inesperada o vacía de la API.');
+                }
+            } catch (error) {
+                console.error("Error fetching AI capability tips:", error);
+                aiCapabilityModalBody.innerHTML = `<p class="text-red-600 text-center">Error al generar los consejos: ${error.message}. Por favor, inténtelo de nuevo más tarde.</p>`;
+            }
+        });
+
+        closeAiCapabilityModalBtn.onclick = () => aiCapabilityModal.style.display = "none";
+
+        window.onclick = function(event) {
+            if (event.target == aiPrincipleModal) {
+                aiPrincipleModal.style.display = "none";
+            }
+            if (event.target == aiCapabilityModal) {
+                aiCapabilityModal.style.display = "none";
+            }
+        }
+
+    </script>
+</body>
+</html>
