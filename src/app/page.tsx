@@ -9,6 +9,7 @@ import AssessmentSummary from '@/components/AssessmentSummary';
 import { storeUserData, storeResult } from '@/store/assessmentStore';
 import InfrastructureQuestions from '@/components/InfrastructureQuestions';
 import ProgressBar from '@/components/ProgressBar';
+import Tooltip from '@/components/Tooltip';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -199,7 +200,12 @@ export default function Home() {
                   const IconComponent = category.icon;
                   return (
                     <li key={category.name} className="flex items-center space-x-3 text-white/90 p-3 rounded-lg hover:bg-white/5 transition-all duration-200 border border-transparent hover:border-white/10">
-                      <IconComponent className="w-6 h-6 text-blue-300 flex-shrink-0" />
+                      <div className="relative flex items-center">
+                        <IconComponent className="w-6 h-6 text-blue-300 flex-shrink-0" />
+                        {category.tooltipText && (
+                          <Tooltip text={category.tooltipText} position="top" />
+                        )}
+                      </div>
                       <span>{category.name}</span>
                     </li>
                   );

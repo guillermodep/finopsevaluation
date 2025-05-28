@@ -12,6 +12,7 @@ export const categories: Category[] = [
     name: 'Visibilidad y Asignación de Costos',
     icon: EyeIcon, 
     description: 'Evalúa la capacidad de la organización para ver, entender y asignar costos de la nube.',
+    tooltipText: 'Visibilidad: Ver, entender y asignar costos de nube.',
     levelDescriptions: [
       'Sin visibilidad de costos. Los gastos de la nube no se monitorean ni se asignan. Ej: Las facturas llegan como una sorpresa y no hay desglose interno.',
       'Visibilidad básica. Se revisan los costos mensualmente sin desglose detallado. Ej: El equipo de finanzas recibe la factura total del CSP y la revisa, pero no puede asignar fácilmente costos a proyectos o equipos específicos.',
@@ -24,6 +25,7 @@ export const categories: Category[] = [
     name: 'Optimización y Eficiencia',
     icon: CogIcon, 
     description: 'Mide la capacidad para optimizar recursos y maximizar el valor de la inversión en la nube.',
+    tooltipText: 'Optimización: Maximizar valor y eficiencia de recursos.',
     levelDescriptions: [
       'Sin optimización. Los recursos se aprovisionan sin considerar la eficiencia, a menudo sobredimensionados. Ej: Se lanzan VMs grandes por defecto, sin análisis previo de necesidades.',
       'Optimización reactiva. Se ajustan recursos solo cuando hay problemas evidentes de costo o rendimiento. Ej: Se reduce el tamaño de una instancia solo después de que el gasto mensual se dispara inesperadamente.',
@@ -36,6 +38,7 @@ export const categories: Category[] = [
     name: 'Gobernanza y Control',
     icon: ShieldCheckIcon, 
     description: 'Evalúa las políticas y controles para gestionar el gasto en la nube.',
+    tooltipText: 'Gobernanza: Políticas y control del gasto en nube.',
     levelDescriptions: [
       'Sin gobernanza. No existen políticas ni controles de gasto; los desarrolladores pueden aprovisionar libremente. Ej: Cualquier empleado con acceso puede crear cualquier recurso en la nube sin aprobación.',
       'Gobernanza básica. Políticas informales y controles mínimos, a menudo reactivos. Ej: Se pide verbalmente no gastar demasiado, pero no hay límites técnicos ni procesos de aprobación formales.',
@@ -48,6 +51,7 @@ export const categories: Category[] = [
     name: 'Planificación y Previsión',
     icon: ChartBarIcon, 
     description: 'Analiza la capacidad de planificar y prever gastos futuros en la nube.',
+    tooltipText: 'Planificación: Prever y planificar gastos futuros.',
     levelDescriptions: [
       'Sin planificación. Gastos no previstos ni planificados; se opera de forma completamente reactiva. Ej: No existen presupuestos para la nube; el gasto es una sorpresa cada mes.',
       'Planificación básica. Presupuestos anuales o generales sin seguimiento detallado ni desglose por servicio/proyecto. Ej: Se asigna una cantidad X para la nube al año, pero no se monitorea activamente el progreso hacia ese límite.',
@@ -60,6 +64,7 @@ export const categories: Category[] = [
     name: 'Cultura y Organización',
     icon: UsersIcon, 
     description: 'Evalúa la madurez organizacional en prácticas FinOps y la colaboración entre equipos.',
+    tooltipText: 'Cultura: Prácticas FinOps y colaboración organizacional.',
     levelDescriptions: [
       'Sin cultura FinOps. No hay conciencia sobre la gestión de costos en la nube; silos entre equipos. Ej: Los desarrolladores no conocen el costo de los servicios que usan y Finanzas no entiende la factura de la nube.',
       'Cultura emergente. Algunos equipos o individuos muestran interés y conciencia de costos; colaboración esporádica. Ej: Un par de ingenieros intentan optimizar sus recursos, pero no es una práctica extendida.',

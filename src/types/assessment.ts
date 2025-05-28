@@ -11,6 +11,7 @@ export interface Category {
   icon: React.FC<React.SVGProps<SVGSVGElement>>;
   description: string;
   levelDescriptions: string[];
+  tooltipText?: string; // Added for icon tooltips
 }
 
 export interface UserData {
