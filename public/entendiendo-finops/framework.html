@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Framework FinOps Interactivo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Visualization & Content Choices: 
+        - Introducción (Report 1.1, 1.2): Goal: Inform. Method: Text blocks. Interaction: None. Justification: Foundational context.
+        - Principios (Report 2.1, Table 1): Goal: Inform, Compare. Method: Clickable cards (HTML/CSS/JS). Interaction: Click to expand details. Justification: Easy access to core tenets.
+        - Fases (Report 2.2, Table 2): Goal: Organize, Inform. Method: Interactive diagram (HTML/CSS/JS for visual cycle). Interaction: Click phase to see details. Justification: Illustrate cyclical nature.
+        - Dominios y Capacidades (Report 2.3, 2.4, Table 3): Goal: Organize, Inform. Method: Nested lists/tabbed interface (HTML/CSS/JS). Interaction: Select domain to view its capabilities. Justification: Show hierarchy and relationships.
+        - Personas (Report 2.5, Table 4): Goal: Inform, Compare. Method: Profile cards (HTML/CSS/JS). Interaction: Hover/click for details. Justification: Clearly define roles.
+        - Modelo de Madurez (Report 2.6, Table 5): Goal: Inform, Compare, Change. Method: Text explanation + Bar Chart (Chart.js). Interaction: Chart tooltips. Justification: Visualize KPI progression.
+        - FOCUS™ (Report 3.1, 3.2): Goal: Inform, Organize. Method: Tabbed content for Definition/Benefits and Adoption Process (HTML/CSS/JS). Interaction: Tab selection. Justification: Structured presentation.
+        - Ámbitos (Report 4, Table 6): Goal: Compare, Inform. Method: Accordion/tabbed sections for each scope (HTML/CSS/JS). Interaction: Select scope. Justification: Highlight applicability.
+        - Póster FinOps (Report 2.7): Goal: Inform, Organize. Method: Display image. Justification: Central visual summary.
+        - Política y Gobernanza (Report 5.1): Goal: Inform. Method: Text blocks. Justification: Explain enabling function.
+        - Implementación (Report 5.2): Goal: Inform. Method: Bulleted list/Text blocks. Justification: Actionable advice.
+        - Library/Method: Chart.js for Maturity Model KPIs. Other dynamics: HTML, Tailwind CSS, Vanilla JS.
+    -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .nav-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s, color 0.3s;
+            cursor: pointer;
+        }
+        .nav-button.active, .nav-button:hover {
+            background-color: #EA580C; /* orange-600 */
+            color: white;
+        }
+        .nav-button:focus {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 2px #FDBA74; /* amber-300 */
+        }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px; /* Increased max-width for better chart readability */
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; /* Base height */
+            max-height: 450px; /* Increased max-height */
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px; /* Taller for md screens */
+            }
+        }
+        /* Tab and Accordion styling */
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem 0.375rem 0 0;
+            cursor: pointer;
+            background-color: #FFFBEB; /* amber-50 */
+            color: #D97706; /* amber-600 */
+            border: 1px solid #FDE68A; /* amber-200 */
+            border-bottom: none;
+        }
+        .tab-button.active {
+            background-color: #F97316; /* orange-500 */
+            color: white;
+            border-color: #F97316; /* orange-500 */
+        }
+        .tab-content {
+            display: none;
+            padding: 1rem;
+            border: 1px solid #FDE68A; /* amber-200 */
+            border-top: none;
+            border-radius: 0 0 0.375rem 0.375rem;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .accordion-button {
+            background-color: #FFFBEB; /* amber-50 */
+            color: #B45309; /* amber-700 */
+            cursor: pointer;
+            padding: 1rem;
+            width: 100%;
+            text-align: left;
+            border: none;
+            border-bottom: 1px solid #FDE68A; /* amber-200 */
+            outline: none;
+            transition: background-color 0.3s;
+        }
+        .accordion-button:hover, .accordion-button.active {
+            background-color: #FEF3C7; /* amber-100 */
+        }
+        .accordion-content {
+            padding: 0 1rem;
+            background-color: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        }
+        .phase-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 3px solid;
+        }
+        .phase-circle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        .inform-circle { background-color: #BFDBFE; border-color: #3B82F6; color: #1E3A8A; } /* blue-200, blue-500, blue-800 */
+        .optimize-circle { background-color: #A7F3D0; border-color: #10B981; color: #047857; } /* emerald-200, emerald-500, emerald-800 */
+        .operate-circle { background-color: #FBCFE8; border-color: #EC4899; color: #9D174D; } /* pink-200, pink-500, pink-800 */
+        .arrow {
+            font-size: 2rem;
+            color: #6B7280; /* gray-500 */
+        }
+    </style>
+</head>
+<body class="bg-amber-50 text-neutral-800">
+
+    <header class="bg-orange-600 text-white p-6 shadow-md">
+        <div class="container mx-auto">
+            <h1 class="text-3xl font-bold">Explorador Interactivo del Framework FinOps</h1>
+            <p class="text-orange-100">Una guía visual y interactiva para comprender FinOps.</p>
+        </div>
+    </header>
+
+    <nav class="bg-amber-100 p-4 shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto flex flex-wrap justify-center space-x-2 md:space-x-3">
+            <button class="nav-button active" data-target="introduccion">Introducción</button>
+            <button class="nav-button" data-target="principios">Principios</button>
+            <button class="nav-button" data-target="fases">Fases</button>
+            <button class="nav-button" data-target="dominios">Dominios y Capacidades</button>
+            <button class="nav-button" data-target="personas">Personas</button>
+            <button class="nav-button" data-target="madurez">Madurez</button>
+            <button class="nav-button" data-target="poster">Póster</button>
+            <button class="nav-button" data-target="focus">FOCUS™</button>
+            <button class="nav-button" data-target="ambitos">Ámbitos</button>
+            <button class="nav-button" data-target="gobernanza">Gobernanza</button>
+            <button class="nav-button" data-target="implementacion">Implementación</button>
+            <button class="nav-button" data-target="conclusion">Conclusión</button>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4 md:p-8">
+        
+        <section id="introduccion" class="content-section active space-y-6">
+            <h2 class="text-3xl font-semibold text-orange-700 border-b-2 border-orange-300 pb-2">1. Introducción al Framework FinOps</h2>
+            <div class="prose max-w-none">
+                 <p>Esta sección introduce el concepto de FinOps, explicando qué es, su propósito fundamental en la maximización del valor de negocio de las inversiones tecnológicas, y cómo responde a los cambios en los modelos de consumo de TI, especialmente con la llegada de la nube. También detalla los problemas clave que FinOps busca resolver, como la falta de visibilidad del gasto, la optimización de costos y la alineación de la tecnología con los objetivos de negocio.</p>
+            </div>
+
+            <div class="card">
+                <h3 class="text-2xl font-semibold text-amber-700 mb-3">1.1. ¿Qué es FinOps y su Propósito Fundamental?</h3>
+                <p class="mb-2">El término FinOps se refiere a un marco operativo y una práctica cultural en evolución, diseñada para maximizar el valor de negocio que las organizaciones obtienen de sus inversiones en la nube y otras tecnologías. Su esencia radica en la habilitación de la toma de decisiones basada en datos y en la creación de una cultura de responsabilidad financiera.</p>
+                <p class="mb-2">Esto se logra a través de una colaboración estrecha y continua entre los equipos de ingeniería, finanzas y las unidades de negocio. El objetivo primordial de FinOps no se limita a la simple reducción de costos; más bien, se enfoca en optimizar el gasto, es decir, en gastar de manera más inteligente, asegurando que cada dólar invertido en tecnología esté alineado con los objetivos estratégicos del negocio.</p>
+                <p>Un pilar fundamental es la colaboración. El principio de que "los equipos necesitan colaborar" es central, involucrando a Personas de ingeniería, finanzas, producto, adquisiciones y liderazgo.</p>
+            </div>
+
+            <div class="card">
+                <h3 class="text-2xl font-semibold text-amber-700 mb-3">1.2. Problemas Clave que Resuelve FinOps</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Visibilidad y Comprensión del Gasto:</strong> Entender dónde y por qué se gasta el dinero en entornos de nube complejos.</li>
+                    <li><strong>Responsabilidad Compartida (Accountability):</strong> Descentralizar la propiedad del costo y empoderar a los equipos que consumen recursos.</li>
+                    <li><strong>Optimización de Costos y Uso:</strong> Reducir el desperdicio y asegurar que los recursos se ajusten a la demanda real y las arquitecturas sean eficientes.</li>
+                    <li><strong>Alineación con el Negocio:</strong> Conectar el gasto en tecnología con el valor de negocio tangible que genera.</li>
+                    <li><strong>Gestión de la Variabilidad del Gasto:</strong> Mejorar la previsión y presupuestación en el modelo de costo variable de la nube.</li>
+                    <li><strong>Normalización de Datos Multi-Nube:</strong> Abordar la complejidad de consolidar datos de facturación de múltiples proveedores (ej. mediante FOCUS™).</li>
+                    <li><strong>Fricción Organizacional:</strong> Actuar como puente entre la agilidad de ingeniería y la necesidad de control financiero.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="principios" class="content-section space-y-6">
+            <h2 class="text-3xl font-semibold text-orange-700 border-b-2 border-orange-300 pb-2">2.1. Principios Fundamentales de FinOps</h2>
+            <div class="prose max-w-none mb-6">
+                <p>Los Principios de FinOps son el corazón del framework, guiando todas las actividades y decisiones. No son directrices aisladas, sino que están interconectados y se refuerzan mutuamente, formando la base de una cultura FinOps robusta. Esta sección te permite explorar cada uno de los seis principios clave y comprender su implicación práctica.</p>
+            </div>
+            <div id="principios-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+        </section>
+
+        <section id="fases" class="content-section space-y-6">
+            <h2 class="text-3xl font-semibold text-orange-700 border-b-2 border-orange-300 pb-2">2.2. El Ciclo Iterativo: Fases de FinOps</h2>
+             <div class="prose max-w-none mb-6">
+                <p>FinOps opera a través de un ciclo iterativo de tres fases: Informar, Optimizar y Operar. Este ciclo no es lineal, sino un bucle continuo que las organizaciones recorren para madurar sus prácticas. Explora cada fase para entender sus objetivos y actividades principales, y cómo contribuyen a una gestión financiera efectiva de la nube.</p>
+            </div>
+            <div class="flex flex-col md:flex-row items-center justify-around space-y-4 md:space-y-0 md:space-x-4 p-6 bg-white rounded-lg shadow">
+                <div id="phase-inform" class="phase-circle inform-circle">Informar</div>
+                <div class="arrow hidden md:block">➔</div>
+                <div id="phase-optimize" class="phase-circle optimize-circle">Optimizar</div>
+                <div class="arrow hidden md:block">➔</div>
+                <div id="phase-operate" class="phase-circle operate-circle">Operar</div>
+            </div>
+            <div id="phase-details-container" class="mt-6 card">
+                <h3 id="phase-title" class="text-2xl font-semibold text-amber-700 mb-2"></h3>
+                <p id="phase-description" class="mb-2"></p>
+                <strong id="phase-activities-label"></strong>
+                <ul id="phase-activities-list" class="list-disc list-inside"></ul>
+            </div>
+        </section>
+
+        <section id="dominios" class="content-section space-y-6">
+            <h2 class="text-3xl font-semibold text-orange-700 border-b-2 border-orange-300 pb-2">2.3 & 2.4. Dominios y Capacidades de FinOps</h2>
+            <div class="prose max-w-none mb-6">
+                <p>Los Dominios de FinOps describen los resultados fundamentales o áreas de conocimiento que las organizaciones deben desarrollar. Dentro de cada dominio, existen Capacidades específicas, que son las actividades funcionales para lograr dichos resultados. Esta sección te permite explorar los cuatro dominios principales y las capacidades clave asociadas a cada uno, mostrando la estructura funcional del framework.</p>
+            </div>
+            <div id="dominios-tabs-buttons" class="flex flex-wrap border-b border-orange-300 mb-0"></div>
+            <div id="dominios-tabs-content" class="bg-white p-3 md:p-5 rounded-b-lg shadow"></div>
+        </section>
+
+        <section id="personas" class="content-section space-y-6">
+            <h2 class="text-3xl font-semibold text-orange-700 border-b-2 border-orange-300 pb-2">2.5. Personas de FinOps</h2>
+             <div class="prose max-w-none mb-6">
+                <p>FinOps es un esfuerzo colaborativo que involucra a diversas partes interesadas, denominadas "Personas". Estas representan roles con responsabilidades específicas. Comprender estas Personas, tanto las Centrales (directamente involucradas) como las Aliadas (con disciplinas que se cruzan), es crucial para implementar FinOps eficazmente. Explora las diferentes Personas para entender sus roles y contribuciones.</p>
+            </div>
+            <div id="personas-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+        </section>
+
+        <section id="madurez" class="content-section space-y-6">
+            <h2 class="text-3xl font-semibold text-orange-700 border-b-2 border-orange-300 pb-2">2.6. Modelo de Madurez de FinOps</h2>
+             <div class="prose max-w-none mb-6">
+                 <p>El modelo de madurez de FinOps (Gatear, Caminar, Correr) guía a las organizaciones en la evolución de sus capacidades. El objetivo no es alcanzar la madurez "Correr" en todo indiscriminadamente, sino enfocar el esfuerzo donde aporte mayor valor al negocio. Esta sección explica los niveles de madurez y presenta un gráfico interactivo con KPIs de ejemplo.</p>
+            </div>
+            <div class="card mb-6">
+                <h3 class="text-xl font-semibold text-amber-700 mb-2">Niveles de Madurez: Crawl, Walk, Run</h3>
+                <p>El modelo permite a las organizaciones comenzar con actividades pequeñas y escalar en complejidad. La decisión de avanzar debe ser una inversión estratégica basada en el ROI esperado.</p>
+                 <ul class="list-disc list-inside space-y-1 mt-2">
+                    <li><strong>Crawl (Gatear):</strong> Informes limitados, KPIs básicos, procesos rudimentarios. Foco en "oportunidades fáciles".</li>
+                    <li><strong>Walk (Caminar):</strong> Capacidad comprendida, automatización/procesos cubren la mayoría de requisitos, KPIs de nivel medio/alto.</li>
+                    <li><strong>Run (Correr):</strong> Capacidad seguida por todos, casos difíciles abordados, KPIs muy altos, automatización extensiva.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3 class="text-xl font-semibold text-amber-700 mb-4 text-center">KPIs del Modelo de Madurez (Ejemplos)</h3>
+                <div class="chart-container">
+                    <canvas id="maturityChart"></canvas>
+                </div>
+                <p class="text-sm text-center mt-2 text-neutral-600">Estos son KPIs de ejemplo y pueden variar según la organización.</p>
+            </div>
+        </section>
+
+        <section id="poster" class="content-section space-y-6">
+            <h2 class="text-3xl font-semibold text-orange-700 border-b-2 border-orange-300 pb-2">2.7. Póster del Framework FinOps</h2>
+            <div class="prose max-w-none mb-6">
+                <p>El Póster del Framework FinOps es una representación visual integral que ilustra cómo se aplica el marco específicamente al ámbito de la nube pública. Muestra la interconexión de Principios, Personas, Fases, Dominios y Capacidades. Esta sección presenta el póster y una descripción de sus componentes clave, sirviendo como una herramienta de comunicación y alineación.</p>
+            </div>
+            <div class="card text-center">
+                <h3 class="text-2xl font-semibold text-amber-700 mb-4">FinOps Framework Poster 2025 - Cloud</h3>
+                <img src="https://www.finops.org/wp-content/uploads/2025/05/FinOps-Framework-Poster-2025-Cloud.png" alt="FinOps Framework Poster 2025 - Cloud" class="mx-auto max-w-full h-auto rounded-md shadow-lg" onerror="this.onerror=null; this.src='https://placehold.co/1920x1080/FDBA74/7C2D12?text=Error+al+cargar+imagen+del+Poster';">
+                <div class="mt-4 text-left prose max-w-none">
+                    <p><strong>Descripción de la imagen y sus componentes:</strong></p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>Núcleo/Centro:</strong> Usualmente los <strong>Principios de FinOps</strong>, la fundación filosófica y operativa.</li>
+                        <li><strong>Alrededor o Capa Adyacente:</strong> Las diferentes <strong>Personas de FinOps</strong>, destacando la colaboración.</li>
+                        <li><strong>Ciclo Continuo:</strong> Las <strong>Fases de FinOps (Informar, Optimizar, Operar)</strong>, mostrando el proceso evolutivo.</li>
+                        <li><strong>Pilares:</strong> Los <strong>Dominios de FinOps</strong> (Comprender Uso/Costo, Cuantificar Valor, Optimizar Uso/Costo, Gestionar Práctica), como áreas de resultados.</li>
+                        <li><strong>Dentro de Dominios:</strong> Las diversas <strong>Capacidades de FinOps</strong>, las actividades funcionales específicas.</li>
+                    </ul>
+                    <p>El póster es una herramienta valiosa para comunicar la totalidad y las interconexiones de FinOps, sirviendo como un "mapa" compartido.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="focus" class="content-section space-y-6">
+            <h2 class="text-3xl font-semibold text-orange-700 border-b-2 border-orange-300 pb-2">3. FOCUS™: Estandarización de Datos de Costo y Uso</h2>
+            <div class="prose max-w-none mb-6">
+                <p>FOCUS™ (FinOps Open Cost and Usage Specification) es una especificación técnica de código abierto para unificar los datos de facturación y uso de la nube. Esta sección explica su definición, importancia, los beneficios de su adopción y el proceso estructurado para implementarlo en una organización, abordando un desafío clave en entornos multi-nube.</p>
+            </div>
+            <div id="focus-tabs-buttons" class="flex flex-wrap border-b border-orange-300 mb-0"></div>
+            <div id="focus-tabs-content" class="bg-white p-3 md:p-5 rounded-b-lg shadow"></div>
+        </section>
+
+        <section id="ambitos" class="content-section space-y-6">
+            <h2 class="text-3xl font-semibold text-orange-700 border-b-2 border-orange-300 pb-2">4. Ámbitos de Aplicación de FinOps (Scopes)</h2>
+            <div class="prose max-w-none mb-6">
+                <p>FinOps no se limita a la nube pública. Los "Ámbitos de FinOps" definen segmentos específicos del gasto tecnológico donde se aplica el framework. Esta sección explora cómo FinOps se adapta a diversos entornos como Data Centers, SaaS e Inteligencia Artificial, destacando consideraciones y desafíos particulares para cada uno.</p>
+            </div>
+            <div id="ambitos-accordion-container">
+            </div>
+        </section>
+
+        <section id="gobernanza" class="content-section space-y-6">
+            <h2 class="text-3xl font-semibold text-orange-700 border-b-2 border-orange-300 pb-2">5.1. Política y Gobernanza en FinOps</h2>
+            <div class="prose max-w-none mb-6">
+                <p>La Política y Gobernanza es una capacidad crucial para establecer y mantener una cultura FinOps sólida. Implica definir cómo se deben ejecutar las actividades relacionadas con la nube (Política) y los mecanismos para asegurar la adhesión a esas intenciones (Gobernanza). Esta sección explica su propósito y por qué es fundamental para el éxito de FinOps.</p>
+            </div>
+            <div class="card">
+                <h3 class="text-xl font-semibold text-amber-700 mb-3">Rol de la Política y Gobernanza</h3>
+                <p class="mb-2">Asegura que el uso de la nube y otras tecnologías se alinee con los objetivos del negocio, cumpla con regulaciones y optimice recursos. Ayuda a transitar de una cultura tradicional a una cultura FinOps ágil y responsable.</p>
+                <p class="font-semibold mt-3 mb-1">Componentes clave para una práctica FinOps exitosa:</p>
+                <ul class="list-disc list-inside space-y-1">
+                    <li>Alinean actividades con objetivos de negocio.</li>
+                    <li>Controlan la implementación y uso de recursos para maximizar ROI.</li>
+                    <li>Aseguran costos predecibles y manejables.</li>
+                    <li>Apoyan la adopción consistente de mejores prácticas.</li>
+                    <li>Apoyan la defensa contra riesgos (financieros, seguridad, cumplimiento).</li>
+                </ul>
+                <p class="mt-3">La gobernanza efectiva crea "barandillas" (guardrails) inteligentes, no restricciones punitivas, equilibrando control con agilidad e innovación.</p>
+            </div>
+        </section>
+
+        <section id="implementacion" class="content-section space-y-6">
+            <h2 class="text-3xl font-semibold text-orange-700 border-b-2 border-orange-300 pb-2">5.2. Consideraciones Estratégicas para la Adopción</h2>
+             <div class="prose max-w-none mb-6">
+                <p>La adopción exitosa y la sostenibilidad de FinOps a largo plazo dependen de varias consideraciones estratégicas. Esta sección destaca los factores clave que las organizaciones deben abordar, desde el compromiso ejecutivo hasta la medición y mejora continua, para asegurar que FinOps se convierta en una fuente sostenible de valor.</p>
+            </div>
+            <div class="card">
+                <h3 class="text-xl font-semibold text-amber-700 mb-3">Factores Clave para el Éxito Sostenido</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Compromiso Ejecutivo (Executive Buy-in):</strong> Respaldo activo y visible del liderazgo.</li>
+                    <li><strong>Enfoque Iterativo y Basado en el Valor:</strong> Comenzar poco a poco (Crawl, Walk, Run), enfocándose en valor rápido.</li>
+                    <li><strong>Inversión en Personas y Habilidades:</strong> Desarrollar o contratar talento FinOps y capacitar a todas las Personas.</li>
+                    <li><strong>Elección de Herramientas Adecuadas:</strong> Seleccionar herramientas que apoyen las capacidades necesarias.</li>
+                    <li><strong>Comunicación Continua y Transparencia:</strong> Mantener a todos informados sobre progreso y desafíos.</li>
+                    <li><strong>Medición y Mejora Continua:</strong> Establecer KPIs y buscar mejoras constantes.</li>
+                </ul>
+                <p class="mt-3">FinOps debe integrarse profundamente en los procesos de negocio existentes para ser verdaderamente transformador, influyendo en la planificación de productos, presupuestos y estrategia tecnológica.</p>
+            </div>
+        </section>
+
+        <section id="conclusion" class="content-section space-y-6">
+            <h2 class="text-3xl font-semibold text-orange-700 border-b-2 border-orange-300 pb-2">6. Conclusión: FinOps como Motor de Valor</h2>
+             <div class="prose max-w-none">
+                <p>Esta sección final resume la esencia de FinOps como una práctica cultural y un marco operativo estratégico que va más allá de la simple gestión de costos. Destaca su adaptabilidad a diversos ámbitos tecnológicos y su creciente importancia como competencia empresarial fundamental en la era digital, posicionando a las organizaciones para innovar más rápido y obtener una ventaja competitiva sostenible.</p>
+                <div class="card mt-4">
+                    <p class="mb-2">El framework FinOps es una práctica cultural y un marco operativo estratégico diseñado para maximizar el valor de negocio de las inversiones en la nube y otras tecnologías. Su enfoque es la transformación cultural hacia la responsabilidad financiera compartida, la colaboración multifuncional y una toma de decisiones ágil y basada en datos.</p>
+                    <p class="mb-2">Su fortaleza radica en su estructura comprensiva y adaptabilidad, extendiéndose desde la nube pública a Data Centers, SaaS e IA. A medida que la tecnología se vuelve más intrínseca al negocio, FinOps está destinada a convertirse en una competencia empresarial fundamental.</p>
+                    <p>Las organizaciones que adopten y maduren sus prácticas FinOps no solo controlarán costos, sino que estarán mejor posicionadas para innovar, tomar decisiones de inversión más inteligentes y obtener una ventaja competitiva sostenible. FinOps es una preparación esencial para el futuro.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-orange-700 text-orange-100 text-center p-6 mt-12">
+        <p>&copy; 2024 Explorador del Framework FinOps. Basado en el contenido de FinOps.org.</p>
+    </footer>
+
+    <script>
+        const navButtons = document.querySelectorAll('.nav-button');
+        const contentSections = document.querySelectorAll('.content-section');
+        const principiosContainer = document.getElementById('principios-container');
+        const phaseDetailsContainer = document.getElementById('phase-details-container');
+        const phaseTitle = document.getElementById('phase-title');
+        const phaseDescription = document.getElementById('phase-description');
+        const phaseActivitiesLabel = document.getElementById('phase-activities-label');
+        const phaseActivitiesList = document.getElementById('phase-activities-list');
+        const dominiosTabsButtons = document.getElementById('dominios-tabs-buttons');
+        const dominiosTabsContent = document.getElementById('dominios-tabs-content');
+        const personasContainer = document.getElementById('personas-container');
+        const focusTabsButtons = document.getElementById('focus-tabs-buttons');
+        const focusTabsContent = document.getElementById('focus-tabs-content');
+        const ambitosAccordionContainer = document.getElementById('ambitos-accordion-container');
+
+        const finOpsData = {
+            principios: [
+                {
+                    nombre: "Los equipos necesitan colaborar",
+                    descripcion: "Finanzas, tecnología, producto y negocio trabajan juntos en tiempo casi real para mejorar continuamente la eficiencia y la innovación.",
+                    implicacion: "Establecer foros interdepartamentales, herramientas de comunicación compartidas y objetivos comunes."
+                },
+                {
+                    nombre: "El valor del negocio impulsa las decisiones tecnológicas",
+                    descripcion: "Las métricas de valor y economía unitaria demuestran mejor el impacto comercial que el gasto agregado. Se equilibran costo, calidad y velocidad.",
+                    implicacion: "Desarrollar y rastrear KPIs que vinculen el gasto en la nube con resultados de negocio específicos."
+                },
+                {
+                    nombre: "Todos asumen la responsabilidad de su uso de la tecnología",
+                    descripcion: "La responsabilidad del uso y costo se traslada al límite; los ingenieros consideran el costo desde el diseño. Los equipos gestionan su uso según su presupuesto.",
+                    implicacion: "Integrar la información de costos en las herramientas y procesos de los ingenieros; incluir la eficiencia de costos como un criterio en revisiones."
+                },
+                {
+                    nombre: "Los datos de FinOps deben ser accesibles, oportunos y precisos",
+                    descripcion: "Los datos de costos se procesan y comparten rápidamente. La visibilidad en tiempo real impulsa una mejor utilización. Ciclos de retroalimentación rápidos.",
+                    implicacion: "Invertir en plataformas de gestión de costos, asegurar calidad de datos de etiquetado y proporcionar paneles personalizados."
+                },
+                {
+                    nombre: "FinOps debe habilitarse de forma centralizada",
+                    descripcion: "Un equipo central fomenta y habilita las mejores prácticas en un modelo de responsabilidad compartida. Optimización de tarifas y descuentos centralizada.",
+                    implicacion: "Crear un equipo FinOps central (Centro de Excelencia) que defina estándares y gestione relaciones con proveedores."
+                },
+                {
+                    nombre: "Aprovechar el modelo de costo variable de la nube",
+                    descripcion: "Ver la variabilidad como una oportunidad. Adoptar planificación ágil, compra de capacidad justo a tiempo y diseño de sistema proactivo con optimización continua.",
+                    implicacion: "Implementar autoescalado, usar instancias spot/interrumpibles y revisar/ajustar continuamente el tamaño de los recursos."
+                }
+            ],
+            fases: [
+                {
+                    nombre: "Informar",
+                    objetivo: "Proporcionar visibilidad y comprensión del gasto en la nube, permitiendo la asignación, el análisis, la elaboración de informes, la presupuestación y la previsión.",
+                    actividades: ["Identificación de fuentes de datos", "Asignación de costos", "Elaboración de presupuestos", "Previsión de tendencias", "Creación de KPIs", "Benchmarking", "Desarrollo de métricas de valor comercial."]
+                },
+                {
+                    nombre: "Optimizar",
+                    objetivo: "Identificar e implementar oportunidades para mejorar la eficiencia de la nube y optimizar las tarifas, alineando el rendimiento con los objetivos de valor.",
+                    actividades: ["Ajuste de tamaño de recursos (rightsizing)", "Aprovechamiento de arquitecturas modernas", "Gestión de cargas de trabajo", "Automatización de eliminación de residuos", "Compra y gestión de modelos de precios de descuento (RIs, SPs, CUDs)."]
+                },
+                {
+                    nombre: "Operar",
+                    objetivo: "Implementar cambios organizacionales para operacionalizar FinOps, estableciendo gobernanza, monitoreando cumplimiento y fomentando una cultura de responsabilidad.",
+                    actividades: ["Establecimiento de políticas de gobernanza", "Monitoreo de cumplimiento", "Desarrollo de programas de capacitación", "Creación de directrices de equipo", "Implementación de políticas de automatización", "Fomento de la colaboración continua."]
+                }
+            ],
+            dominios: [
+                {
+                    nombre: "Comprender el Uso y el Costo",
+                    proposito: "Lograr una comprensión profunda del uso de la nube y los costos asociados, mediante la recopilación, asignación, informes y análisis de datos.",
+                    capacidades: ["Ingesta de Datos", "Asignación", "Informes y Análisis", "Gestión de Anomalías"],
+                    detalleCapacidades: {
+                        "Ingesta de Datos": "Recopilación, procesamiento y correlación de diversos conjuntos de datos (costos, uso, observabilidad, sostenibilidad) para crear un repositorio consultable y contextualizado.",
+                        "Asignación": "Definición de estrategias para asignar y compartir los costos de la nube utilizando cuentas, etiquetas y otros metadatos, creando responsabilidad.",
+                        "Informes y Análisis": "Examen y visualización de datos de la nube para obtener información sobre patrones de uso y gasto, identificar oportunidades y tomar decisiones.",
+                        "Gestión de Anomalías": "Detección, identificación, clarificación, alerta y gestión de eventos de costos inesperados de manera oportuna."
+                    }
+                },
+                {
+                    nombre: "Cuantificar el Valor Comercial",
+                    proposito: "Conectar los datos de uso y costo con el valor comercial que crean, asegurando transparencia y alineación con las expectativas.",
+                    capacidades: ["Planificación y Estimación", "Previsión", "Presupuesto", "Benchmarking", "Economía Unitaria"],
+                     detalleCapacidades: {
+                        "Planificación y Estimación": "Estimación del costo y valor potenciales de las cargas de trabajo si se implementan en el entorno de nube.",
+                        "Previsión": "Creación de un modelo del costo y valor futuros anticipados de los sistemas en la nube.",
+                        "Presupuesto": "Proceso estratégico y continuo para establecer límites, monitorear y gestionar el gasto en la nube.",
+                        "Benchmarking": "Comparación de métricas unitarias y KPIs internamente y externamente.",
+                        "Economía Unitaria": "Desarrollo y seguimiento de métricas sobre cómo el uso de la nube impacta el valor de productos/servicios."
+                    }
+                },
+                {
+                    nombre: "Optimizar el Uso y el Costo",
+                    proposito: "Asegurar que los recursos se utilicen eficientemente y se adquieran al costo e impacto más bajos aceptables para cumplir objetivos.",
+                    capacidades: ["Arquitectura para la Nube", "Optimización de Tarifas", "Optimización de Cargas de Trabajo", "Sostenibilidad en la Nube", "Licencias y SaaS"],
+                    detalleCapacidades: {
+                        "Arquitectura para la Nube": "Elección de servicios que cumplan requisitos operativos, de sostenibilidad y financieros.",
+                        "Optimización de Tarifas": "Reducción de la tarifa pagada por recursos mediante descuentos, negociación, etc.",
+                        "Optimización de Cargas de Trabajo": "Análisis y optimización de recursos para que coincidan con patrones de uso y generen valor.",
+                        "Sostenibilidad en la Nube": "Toma de decisiones sobre uso de la nube considerando impacto ambiental y objetivos de sostenibilidad.",
+                        "Licencias y SaaS": "Comprensión y optimización del impacto de licencias de software e inversiones SaaS."
+                    }
+                },
+                {
+                    nombre: "Gestionar la Práctica FinOps",
+                    proposito: "Habilitar la mejora continua y la alineación organizacional para adoptar FinOps y aplicar el Framework de manera que cree valor.",
+                    capacidades: ["Operaciones de la Práctica FinOps", "Política y Gobernanza", "Evaluación de FinOps", "Herramientas y Servicios de FinOps", "Educación y Habilitación de FinOps", "Facturación y Contracargo", "Incorporación de Cargas de Trabajo", "Disciplinas Intersecantes"],
+                    detalleCapacidades: {
+                        "Operaciones de la Práctica FinOps": "Actividades para construir y operar una práctica FinOps.",
+                        "Política y Gobernanza": "Establecimiento y evolución de políticas y controles para alinear uso de la nube con objetivos.",
+                        "Evaluación de FinOps": "Medición de la eficacia de la práctica FinOps e identificación de mejoras.",
+                        "Herramientas y Servicios de FinOps": "Selección y gestión de software y servicios de terceros.",
+                        "Educación y Habilitación de FinOps": "Desarrollo de una comprensión común de FinOps en la organización.",
+                        "Facturación y Contracargo": "Gestión de facturas de la nube y creación de contracargos a sistemas financieros.",
+                        "Incorporación de Cargas de Trabajo": "Orquestación de la migración de sistemas a la nube con transparencia de costos.",
+                        "Disciplinas Intersecantes": "Coordinación con disciplinas conectadas o equipos de Personas Aliadas."
+                    }
+                }
+            ],
+            personas: [
+                {
+                    nombre: "FinOps Practitioner",
+                    rol: "Actúa como puente entre equipos, aplica el conocimiento de FinOps para establecer una cultura y permitir decisiones basadas en evidencia.",
+                    contribuciones: ["Competencia técnica", "Habilidades analíticas", "Gestión y optimización de costos", "Colaboración y comunicación", "Mejora continua", "Gestión del cambio."],
+                    tipo: "Central"
+                },
+                {
+                    nombre: "Engineering (Ingeniería)",
+                    rol: "Diseña, gestiona y optimiza la infraestructura de la nube para lograr rentabilidad, rendimiento y fiabilidad.",
+                    contribuciones: ["Gestión de infraestructura", "Implementación de aplicaciones", "Optimización de recursos", "Monitoreo y alertas", "Seguridad y cumplimiento."],
+                    tipo: "Central"
+                },
+                {
+                    nombre: "Finance (Finanzas)",
+                    rol: "Proporciona experiencia financiera, concilia facturas, pronostica, presupuesta y carga costos de la nube.",
+                    contribuciones: ["Experiencia financiera", "Presupuestos y pronósticos", "Análisis de asignación", "Informes financieros", "Gobernanza financiera."],
+                    tipo: "Central"
+                },
+                {
+                    nombre: "Product (Producto)",
+                    rol: "Impulsa el valor de negocio definiendo requisitos y priorizando iniciativas que alinean FinOps con los objetivos de negocio.",
+                    contribuciones: ["Alineación estratégica", "Compromiso de partes interesadas", "Definición de requisitos", "Entrega de valor."],
+                    tipo: "Central"
+                },
+                {
+                    nombre: "Procurement (Adquisiciones)",
+                    rol: "Adquiere servicios en la nube, optimiza relaciones con proveedores y asegura compromisos rentables.",
+                    contribuciones: ["Gestión de riesgos", "Negociación de contratos", "Gestión de descuentos", "Monitoreo de licencias."],
+                    tipo: "Central"
+                },
+                {
+                    nombre: "Leadership (Liderazgo)",
+                    rol: "Facilita la alineación organizacional, prioriza iniciativas FinOps y conecta decisiones tecnológicas con objetivos de negocio.",
+                    contribuciones: ["Planificación estratégica", "Toma de decisiones", "Compromiso de partes interesadas", "Crecimiento de ingresos."],
+                    tipo: "Central"
+                },
+                {
+                    nombre: "ITAM (Gestión de Activos de TI)",
+                    rol: "Colabora para eficiencia y transparencia en gestión de activos de TI que impactan la nube.",
+                    contribuciones: ["Optimización de costos de licencias", "Garantía de cumplimiento."],
+                    tipo: "Aliada"
+                },
+                {
+                    nombre: "Sustainability (Sostenibilidad)",
+                    rol: "Colabora para asegurar que el uso de la nube se optimice para el impacto ambiental.",
+                    contribuciones: ["Impulso de responsabilidad y progreso hacia objetivos de sostenibilidad."],
+                    tipo: "Aliada"
+                }
+            ],
+            focus: {
+                definicionBeneficios: {
+                    titulo: "3.1. Definición e Importancia de FOCUS™",
+                    contenido: [
+                        "FOCUS™ (FinOps Open Cost and Usage Specification) es una especificación técnica de código abierto para datos de facturación de costos y uso en la nube.",
+                        "Su propósito es actuar como un formato unificador para facturas y datos de uso de diversos proveedores (CSPs) y otras fuentes de gasto tecnológico.",
+                        "Busca resolver la normalización de datos dispares en entornos multi-nube.",
+                        "Importancia: Necesidad de datos precisos, consistentes y oportunos para tomar decisiones informadas y maximizar el valor de las inversiones en la nube."
+                    ],
+                    beneficios: [
+                        "Toma de decisiones basada en datos multi-nube.",
+                        "Reducción de la complejidad de archivos de facturación.",
+                        "Mejora de consistencia y precisión de informes.",
+                        "Integración más fácil de nuevos proveedores.",
+                        "Mayor innovación (menos tiempo en normalización).",
+                        "Procesamiento de datos más económico.",
+                        "Conocimientos y habilidades transferibles para profesionales.",
+                        "Potencial para incluir SaaS, PaaS, licencias, costos locales.",
+                        "Lenguaje común con pares externos."
+                    ]
+                },
+                adopcion: {
+                    titulo: "3.2. El Proceso de Adopción de FOCUS™",
+                    etapas: [
+                        {
+                            nombre: "1. Decidir (Decide)",
+                            proposito: "Determinar si la adopción de FOCUS™ es la estrategia adecuada.",
+                            acciones: ["Familiarizarse con FOCUS™ y sus beneficios.", "Evaluar si los problemas de normalización son un punto de dolor.", "Determinar alcance y enfoque de adopción.", "Obtener aprobación necesaria (caso de negocio)."]
+                        },
+                        {
+                            nombre: "2. Diseñar (Design)",
+                            proposito: "Planificar la solución técnica y el proceso de adopción organizacional.",
+                            acciones: ["Formar equipo de adopción.", "Diseñar solución técnica (fuentes de datos, transformación, enriquecimiento, almacenamiento, acceso).", "Planificar proceso de adopción organizacional (capacitación, comunicación)."]
+                        },
+                        {
+                            nombre: "3. Construir (Build)",
+                            proposito: "Poner en práctica los planes de la solución técnica.",
+                            acciones: ["Crear pipelines de ingesta.", "Activar datos FOCUS™ (transformar o ingerir).", "Establecer almacenamiento de datos.", "Conectar sistemas.", "Preparar informes y análisis con el nuevo conjunto de datos."]
+                        },
+                        {
+                            nombre: "4. Probar (Test)",
+                            proposito: "Asegurar que la solución funcione como se espera y los datos sean precisos.",
+                            acciones: ["Verificar precisión y consistencia.", "Realizar piloto con grupo de confianza.", "Utilizar retroalimentación para refinar la solución.", "Validar con casos de uso y comparar con datos previos."]
+                        },
+                        {
+                            nombre: "5. Lanzar (Launch)",
+                            proposito: "Iniciar oficialmente el despliegue de FOCUS™.",
+                            acciones: ["Anunciar formalmente la adopción.", "Realizar educación y capacitación.", "Recopilar retroalimentación continua.", "Medir beneficios.", "Asegurar soporte a largo plazo y mejora continua."]
+                        }
+                    ]
+                }
+            },
+            ambitos: [
+                {
+                    nombre: "Nube Pública",
+                    descripcion: "Origen y núcleo de FinOps. Foco en transparencia financiera, responsabilidad y optimización de costos variables (IaaS, PaaS). Es el punto de partida natural para la mayoría de las organizaciones.",
+                    consideraciones: ["Elasticidad", "Modelos de pago por uso", "Vasta cantidad de servicios"],
+                    desafios: ["Complejidad de facturación de CSPs", "Proliferación de servicios", "Necesidad de etiquetado robusto", "Gestión de descuentos por compromiso."]
+                },
+                {
+                    nombre: "Data Center",
+                    descripcion: "Extender FinOps a la infraestructura on-premise. Transición de CAPEX a un modelo de pseudo-consumo, mejorando la economía unitaria y optimizando la ubicación de cargas de trabajo.",
+                    consideraciones: ["Cambio cultural", "Planificación conjunta", "Análisis de costos detallado", "Optimización continua de recursos del Data Center"],
+                    desafios: ["Visibilidad granular de costos", "Asignación de costos compartidos (energía, refrigeración)", "Mentalidad tradicional de planificación de capacidad", "Justificación de inversiones."]
+                },
+                {
+                    nombre: "Software como Servicio (SaaS)",
+                    descripcion: "Gestión del gasto descentralizado en aplicaciones de terceros. Optimización de licencias y suscripciones, descubrimiento de 'shadow IT' y evaluación del valor de las aplicaciones SaaS.",
+                    consideraciones: ["Adquisiciones descentralizadas", "Discusiones 'construir vs. comprar vs. alquilar'", "Costo total de ejecutar soluciones (IaaS, PaaS, SaaS)"],
+                    desafios: ["Variedad de modelos de precios de SaaS", "Datos de uso limitados o no estandarizados", "Gestión de contratos y renovaciones", "Seguimiento de la utilización real de licencias."]
+                },
+                {
+                    nombre: "Inteligencia Artificial (IA)",
+                    descripcion: "Gestionar costos de recursos de alto valor (GPUs) y optimizar modelos de IA (costo vs. rendimiento/precisión). Previsión de costos de entrenamiento e inferencia y etiquetado específico.",
+                    consideraciones: ["Nueva terminología (LLMs, tokens, GPUs)", "Recursos de mayor costo", "Toma de decisiones rápida", "Nuevas personas/roles (científicos de datos, ingenieros de ML)"],
+                    desafios: ["Costos elevados y a menudo impredecibles de entrenamiento", "Subutilización de hardware especializado", "Complejidad en medición del ROI", "Rápida evolución de tecnologías y servicios de IA."]
+                }
+            ]
+        };
+
+        function showSection(targetId) {
+            contentSections.forEach(section => {
+                section.classList.remove('active');
+                if (section.id === targetId) {
+                    section.classList.add('active');
+                }
+            });
+            navButtons.forEach(button => {
+                button.classList.remove('active');
+                if (button.dataset.target === targetId) {
+                    button.classList.add('active');
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                showSection(button.dataset.target);
+            });
+        });
+        
+        function createPrincipioCard(principio) {
+            const card = document.createElement('div');
+            card.className = 'card cursor-pointer';
+            card.innerHTML = `
+                <h3 class="text-xl font-semibold text-amber-700 mb-2">${principio.nombre}</h3>
+                <p class="text-sm text-neutral-600">${principio.descripcion}</p>
+                <div class="mt-3 text-xs text-orange-600 font-medium italic details" style="display: none;">
+                    <strong>Implicación Práctica:</strong> ${principio.implicacion}
+                </div>
+            `;
+            card.addEventListener('click', () => {
+                const details = card.querySelector('.details');
+                details.style.display = details.style.display === 'none' ? 'block' : 'none';
+            });
+            return card;
+        }
+
+        finOpsData.principios.forEach(principio => {
+            principiosContainer.appendChild(createPrincipioCard(principio));
+        });
+
+        const phaseCircles = document.querySelectorAll('.phase-circle');
+        phaseCircles.forEach(circle => {
+            circle.addEventListener('click', () => {
+                const phaseName = circle.textContent;
+                const phaseData = finOpsData.fases.find(f => f.nombre === phaseName);
+                if (phaseData) {
+                    phaseTitle.textContent = phaseData.nombre;
+                    phaseDescription.textContent = phaseData.objetivo;
+                    phaseActivitiesLabel.textContent = 'Actividades Representativas:';
+                    phaseActivitiesList.innerHTML = '';
+                    phaseData.actividades.forEach(act => {
+                        const li = document.createElement('li');
+                        li.textContent = act;
+                        phaseActivitiesList.appendChild(li);
+                    });
+                    phaseDetailsContainer.style.display = 'block';
+                }
+            });
+        });
+        if(finOpsData.fases.length > 0){ // Initialize with the first phase details
+             const firstPhase = finOpsData.fases[0];
+             phaseTitle.textContent = firstPhase.nombre;
+             phaseDescription.textContent = firstPhase.objetivo;
+             phaseActivitiesLabel.textContent = 'Actividades Representativas:';
+             phaseActivitiesList.innerHTML = '';
+             firstPhase.actividades.forEach(act => {
+                 const li = document.createElement('li');
+                 li.textContent = act;
+                 phaseActivitiesList.appendChild(li);
+             });
+             phaseDetailsContainer.style.display = 'block';
+        }
+
+
+        function createDominioTabs() {
+            finOpsData.dominios.forEach((dominio, index) => {
+                const button = document.createElement('button');
+                button.className = `tab-button text-sm md:text-base ${index === 0 ? 'active' : ''}`;
+                button.textContent = dominio.nombre;
+                button.dataset.target = `dominio-content-${index}`;
+                dominiosTabsButtons.appendChild(button);
+
+                const contentDiv = document.createElement('div');
+                contentDiv.id = `dominio-content-${index}`;
+                contentDiv.className = `tab-content ${index === 0 ? 'active' : ''}`;
+                
+                let capabilitiesHtml = '<ul class="list-disc list-inside space-y-2">';
+                dominio.capacidades.forEach(cap => {
+                     capabilitiesHtml += `<li><strong class="text-amber-700">${cap}:</strong> ${dominio.detalleCapacidades[cap] || ''}</li>`;
+                });
+                capabilitiesHtml += '</ul>';
+
+                contentDiv.innerHTML = `
+                    <h4 class="text-xl font-semibold text-orange-600 mb-2">${dominio.nombre}</h4>
+                    <p class="mb-3 text-neutral-700">${dominio.proposito}</p>
+                    <h5 class="text-lg font-medium text-amber-700 mb-1">Capacidades Clave:</h5>
+                    ${capabilitiesHtml}
+                `;
+                dominiosTabsContent.appendChild(contentDiv);
+
+                button.addEventListener('click', () => {
+                    dominiosTabsButtons.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    dominiosTabsContent.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                    document.getElementById(button.dataset.target).classList.add('active');
+                });
+            });
+        }
+        createDominioTabs();
+        
+        function createPersonaCard(persona) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            let contribucionesHtml = '<ul class="list-disc list-inside text-xs space-y-1 mt-1">';
+            persona.contribuciones.forEach(c => { contribucionesHtml += `<li>${c}</li>`; });
+            contribucionesHtml += '</ul>';
+
+            card.innerHTML = `
+                <h3 class="text-xl font-semibold text-amber-700 mb-1">${persona.nombre} <span class="text-sm font-normal text-orange-500">(${persona.tipo})</span></h3>
+                <p class="text-sm text-neutral-600 mb-2">${persona.rol}</p>
+                <strong class="text-xs text-neutral-700">Contribuciones Clave:</strong>
+                ${contribucionesHtml}
+            `;
+            return card;
+        }
+        finOpsData.personas.forEach(persona => {
+            personasContainer.appendChild(createPersonaCard(persona));
+        });
+
+        const maturityCtx = document.getElementById('maturityChart').getContext('2d');
+        const maturityChart = new Chart(maturityCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Gatear (Crawl)', 'Caminar (Walk)', 'Correr (Run)'],
+                datasets: [
+                    {
+                        label: 'Asignación de Gasto (%)',
+                        data: [50, 80, 90],
+                        backgroundColor: 'rgba(251, 191, 36, 0.7)', // amber-400
+                        borderColor: 'rgba(217, 119, 6, 1)', // amber-600
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Cobertura de Descuentos (%)',
+                        data: [60, 70, 80],
+                        backgroundColor: 'rgba(251, 146, 60, 0.7)', // orange-400
+                        borderColor: 'rgba(234, 88, 12, 1)', // orange-600
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Variación de Previsión (%)',
+                        data: [20, 15, 12],
+                        backgroundColor: 'rgba(245, 158, 11, 0.7)', // amber-500
+                        borderColor: 'rgba(180, 83, 9, 1)', // amber-700
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%'
+                            }
+                        }
+                    },
+                    x: {
+                         ticks: {
+                            maxRotation: 0,
+                            minRotation: 0,
+                            autoSkip: false, 
+                            callback: function(value, index, values) {
+                                const label = this.getLabelForValue(value);
+                                if (label.length > 15) {
+                                    return label.match(/.{1,15}/g); 
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y + '%';
+                                }
+                                return label;
+                            }
+                        }
+                    },
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+
+        function createFocusTabs() {
+            const focusContent = [finOpsData.focus.definicionBeneficios, finOpsData.focus.adopcion];
+            focusContent.forEach((item, index) => {
+                const button = document.createElement('button');
+                button.className = `tab-button text-sm md:text-base ${index === 0 ? 'active' : ''}`;
+                button.textContent = item.titulo.split('. ')[1]; // Get title part after "3.x. "
+                button.dataset.target = `focus-content-${index}`;
+                focusTabsButtons.appendChild(button);
+
+                const contentDiv = document.createElement('div');
+                contentDiv.id = `focus-content-${index}`;
+                contentDiv.className = `tab-content ${index === 0 ? 'active' : ''}`;
+                
+                let htmlContent = `<h4 class="text-xl font-semibold text-orange-600 mb-3">${item.titulo}</h4>`;
+                if (item.contenido) { // Definicion y Beneficios
+                    htmlContent += '<p class="font-semibold text-amber-700 mt-2 mb-1">Definición:</p><ul class="list-disc list-inside space-y-1 mb-3">';
+                    item.contenido.forEach(c => { htmlContent += `<li>${c}</li>`; });
+                    htmlContent += '</ul>';
+                    htmlContent += '<p class="font-semibold text-amber-700 mt-3 mb-1">Beneficios Clave:</p><ul class="list-disc list-inside space-y-1">';
+                    item.beneficios.forEach(b => { htmlContent += `<li>${b}</li>`; });
+                    htmlContent += '</ul>';
+                } else if (item.etapas) { // Proceso de Adopcion
+                    item.etapas.forEach(etapa => {
+                        htmlContent += `<div class="mb-3"><strong class="text-amber-700">${etapa.nombre}</strong>: ${etapa.proposito}`;
+                        htmlContent += '<ul class="list-disc list-inside text-sm text-neutral-600 ml-4 mt-1 space-y-0.5">';
+                        etapa.acciones.forEach(accion => { htmlContent += `<li>${accion}</li>`; });
+                        htmlContent += '</ul></div>';
+                    });
+                }
+                contentDiv.innerHTML = htmlContent;
+                focusTabsContent.appendChild(contentDiv);
+
+                button.addEventListener('click', () => {
+                    focusTabsButtons.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    focusTabsContent.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                    document.getElementById(button.dataset.target).classList.add('active');
+                });
+            });
+        }
+        createFocusTabs();
+
+        function createAmbitosAccordion() {
+            finOpsData.ambitos.forEach((ambito, index) => {
+                const button = document.createElement('button');
+                button.className = 'accordion-button flex justify-between items-center';
+                button.innerHTML = `<span>${ambito.nombre}</span> <span class="plus-minus text-xl font-bold text-orange-500">+</span>`;
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'accordion-content';
+                
+                let consideracionesHtml = '<ul class="list-disc list-inside space-y-1 text-sm">';
+                ambito.consideraciones.forEach(c => { consideracionesHtml += `<li>${c}</li>`; });
+                consideracionesHtml += '</ul>';
+
+                let desafiosHtml = '<ul class="list-disc list-inside space-y-1 text-sm">';
+                ambito.desafios.forEach(d => { desafiosHtml += `<li>${d}</li>`; });
+                desafiosHtml += '</ul>';
+
+                contentDiv.innerHTML = `
+                    <p class="py-2 text-neutral-700">${ambito.descripcion}</p>
+                    <div class="grid md:grid-cols-2 gap-4 mt-2">
+                        <div>
+                            <h5 class="font-semibold text-amber-600 mb-1">Consideraciones Específicas:</h5>
+                            ${consideracionesHtml}
+                        </div>
+                        <div>
+                            <h5 class="font-semibold text-amber-600 mb-1">Desafíos Particulares:</h5>
+                            ${desafiosHtml}
+                        </div>
+                    </div>
+                `;
+                
+                ambitosAccordionContainer.appendChild(button);
+                ambitosAccordionContainer.appendChild(contentDiv);
+
+                button.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const plusMinus = this.querySelector('.plus-minus');
+                    const content = this.nextElementSibling;
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                        content.style.paddingTop = '0';
+                        content.style.paddingBottom = '0';
+                        plusMinus.textContent = '+';
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        content.style.paddingTop = '1rem';
+                        content.style.paddingBottom = '1rem';
+                        plusMinus.textContent = '-';
+                    }
+                });
+            });
+        }
+        createAmbitosAccordion();
+
+        showSection('introduccion'); // Show the intro section by default
+    </script>
+</body>
+</html>

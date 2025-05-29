@@ -353,9 +353,14 @@ export default function Home() {
                 colaborativa para entornos en la nube. Combina sistemas, finanzas y
                 equipos de negocio para maximizar el valor de la nube.
               </p>
-              <Link href="/entendiendo-finops/entendiendo.html" className="inline-block bg-sky-900 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300 text-lg shadow-md hover:shadow-lg">
-                Entendiendo FinOps
-              </Link>
+              <div className="flex space-x-4">
+                <Link href="/entendiendo-finops/entendiendo.html" className="inline-block bg-sky-900 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300 text-lg shadow-md hover:shadow-lg">
+                  Entendiendo FinOps
+                </Link>
+                <Link href="/entendiendo-finops/framework.html" className="inline-block bg-teal-700 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300 text-lg shadow-md hover:shadow-lg">
+                  Framework
+                </Link>
+              </div>
             </div>
 
             <div className="glass-panel">
