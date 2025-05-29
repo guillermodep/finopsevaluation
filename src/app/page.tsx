@@ -11,10 +11,12 @@ import { storeUserData, storeResult } from '@/store/assessmentStore';
 import InfrastructureQuestions from '@/components/InfrastructureQuestions';
 import ProgressBar from '@/components/ProgressBar';
 import Tooltip from '@/components/Tooltip';
+import { supabase } from '@/lib/supabaseClient'; // Added Supabase client
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [assessmentId, setAssessmentId] = useState<string | null>(null); // Added for Supabase assessment ID
   const [results, setResults] = useState<AssessmentResult[]>([]);
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(-1);
   const [step, setStep] = useState(0); 
@@ -40,9 +42,10 @@ export default function Home() {
   }, [lastScrollY]);
 
   const handleReset = () => {
-    localStorage.removeItem('userData');
-    localStorage.removeItem('assessmentResults');
+    // localStorage.removeItem('userData'); // Supabase is the source of truth now
+    // localStorage.removeItem('assessmentResults'); // Supabase is the source of truth now
     setUserData(null);
+    setAssessmentId(null); // Reset assessmentId
     setResults([]);
     setCurrentCategoryIndex(-1);
     setStep(0);
@@ -60,19 +63,154 @@ export default function Home() {
     setMounted(true);
   }, []);
 
-  const handleRegistrationSubmit = (data: UserData) => {
-    setUserData(data);
-    storeUserData(data);
-    setShowInfrastructureQuestions(true);
-    setStep(1); 
+  const handleRegistrationSubmit = async (data: UserData) => { // Made async
+    setUserData(data); // Keep local state for UI updates
+
+    // Map UserData from registration form to Supabase 'assessments' table structure
+    const assessmentDataToInsert = {
+      full_name: data.fullName,
+      company: data.company,
+      email: data.email,
+      position: data.position,
+      cloud_provider_aws: data.cloudProviders?.aws ?? false,
+      cloud_provider_azure: data.cloudProviders?.azure ?? false,
+      cloud_provider_gcp: data.cloudProviders?.gcp ?? false,
+      cloud_provider_oracle: data.cloudProviders?.oracle ?? false,
+      cloud_provider_ibm: data.cloudProviders?.ibm ?? false,
+      cloud_provider_other: data.cloudProviders?.other ?? false,
+      cloud_provider_other_specified: data.cloudProviders?.otherSpecified ?? null,
+      // Initialize other fields that will be updated in the infrastructure step
+      team_composition: null,
+      team_composition_other: null,
+      annual_budget: null,
+      monthly_spend: null,
+      workload_type_iaas: false,
+      workload_type_paas: false,
+      workload_type_saas: false,
+      workload_type_faas: false,
+      workload_type_dbaas: false,
+      servers_count: null,
+      marketplace_purchases: null,
+      payment_model_on_demand: false,
+      payment_model_reserved: false,
+      payment_model_long_term_contracts: false,
+      payment_model_byol: false,
+      payment_model_free_tier: false,
+      finops_tool_native: false,
+      finops_tool_third_party: false,
+      finops_tool_internal: false,
+      finops_tool_no_tools: false,
+      finops_tool_other: false,
+      finops_tool_other_specified: null,
+      cost_reduction_rightsizing: false,
+      cost_reduction_storage_reconfiguration: false,
+      cost_reduction_scheduled_shutdown: false,
+      cost_reduction_reserved_instances: false,
+      cost_reduction_license_optimization: false,
+    };
+
+    try {
+      const { data: insertedData, error } = await supabase
+        .from('assessments')
+        .insert([assessmentDataToInsert])
+        .select('id')
+        .single();
+
+      if (error) {
+        console.error('Error inserting registration data:', error.message);
+        // TODO: Show user-friendly error
+        return;
+      }
+
+      if (insertedData && insertedData.id) {
+        setAssessmentId(insertedData.id);
+        setShowInfrastructureQuestions(true);
+        setStep(1);
+      } else {
+        console.error('No ID returned after inserting registration data, or insertedData is null.');
+        // TODO: Show user-friendly error
+        return;
+      }
+    } catch (e: any) {
+      console.error('Supabase call failed (registration):', e.message);
+      // TODO: Show user-friendly error
+    }
+    // storeUserData(data); // Removed: Supabase is the store
   };
 
-  const handleInfrastructureSubmit = (updatedUserData: UserData) => {
-    setUserData(updatedUserData);
-    storeUserData(updatedUserData);
-    setShowInfrastructureQuestions(false);
-    setCurrentCategoryIndex(0);
-    setStep(2); 
+  const handleInfrastructureSubmit = async (updatedUserData: UserData) => { // Made async
+    setUserData(updatedUserData); // Keep local state for UI updates
+
+    if (!assessmentId) {
+      console.error("Cannot submit infrastructure data: assessmentId is missing.");
+      // TODO: Show user-friendly error, perhaps redirect to registration
+      return;
+    }
+
+    // Map UserData from infrastructure form to Supabase 'assessments' table structure
+    const assessmentDataToUpdate = {
+      cloud_provider_aws: updatedUserData.cloudProviders?.aws ?? false,
+      cloud_provider_azure: updatedUserData.cloudProviders?.azure ?? false,
+      cloud_provider_gcp: updatedUserData.cloudProviders?.gcp ?? false,
+      cloud_provider_oracle: updatedUserData.cloudProviders?.oracle ?? false,
+      cloud_provider_ibm: updatedUserData.cloudProviders?.ibm ?? false,
+      cloud_provider_other: updatedUserData.cloudProviders?.other ?? false,
+      cloud_provider_other_specified: updatedUserData.cloudProviders?.otherSpecified ?? null,
+      
+      team_composition: updatedUserData.teamComposition,
+      team_composition_other: updatedUserData.teamCompositionOther ?? null,
+      annual_budget: updatedUserData.annualBudget,
+      monthly_spend: updatedUserData.monthlySpend,
+
+      workload_type_iaas: updatedUserData.workloadTypes?.iaas ?? false,
+      workload_type_paas: updatedUserData.workloadTypes?.paas ?? false,
+      workload_type_saas: updatedUserData.workloadTypes?.saas ?? false,
+      workload_type_faas: updatedUserData.workloadTypes?.faas ?? false,
+      workload_type_dbaas: updatedUserData.workloadTypes?.dbaas ?? false,
+      
+      servers_count: updatedUserData.serversCount,
+      marketplace_purchases: updatedUserData.marketplacePurchases,
+
+      payment_model_on_demand: updatedUserData.paymentModels?.onDemand ?? false,
+      payment_model_reserved: updatedUserData.paymentModels?.reserved ?? false,
+      payment_model_long_term_contracts: updatedUserData.paymentModels?.longTermContracts ?? false,
+      payment_model_byol: updatedUserData.paymentModels?.byol ?? false,
+      payment_model_free_tier: updatedUserData.paymentModels?.freeTier ?? false,
+
+      finops_tool_native: updatedUserData.finOpsTools?.nativeTools ?? false,
+      finops_tool_third_party: updatedUserData.finOpsTools?.thirdPartyTools ?? false,
+      finops_tool_internal: updatedUserData.finOpsTools?.internalTools ?? false,
+      finops_tool_no_tools: updatedUserData.finOpsTools?.noTools ?? false,
+      finops_tool_other: updatedUserData.finOpsTools?.other ?? false,
+      finops_tool_other_specified: updatedUserData.finOpsTools?.otherSpecified ?? null,
+
+      cost_reduction_rightsizing: updatedUserData.costReductionPractices?.rightsizing ?? false,
+      cost_reduction_storage_reconfiguration: updatedUserData.costReductionPractices?.storageReconfiguration ?? false,
+      cost_reduction_scheduled_shutdown: updatedUserData.costReductionPractices?.scheduledShutdown ?? false,
+      cost_reduction_reserved_instances: updatedUserData.costReductionPractices?.reservedInstances ?? false,
+      cost_reduction_license_optimization: updatedUserData.costReductionPractices?.licenseOptimization ?? false,
+    };
+
+    try {
+      const { error } = await supabase
+        .from('assessments')
+        .update(assessmentDataToUpdate)
+        .eq('id', assessmentId);
+
+      if (error) {
+        console.error('Error updating infrastructure data:', error.message);
+        // TODO: Show user-friendly error
+        return;
+      }
+
+      setShowInfrastructureQuestions(false);
+      setCurrentCategoryIndex(0);
+      setStep(2);
+    } catch (e: any) {
+      console.error('Supabase call failed (infrastructure):', e.message);
+      // TODO: Show user-friendly error
+    }
+    // storeUserData(updatedUserData); // Removed: Supabase is the store
   };
 
   const handleLevelSelect = (level: number) => {
@@ -89,13 +227,13 @@ export default function Home() {
       });
     }
     setResults(newResults);
-    if (currentCategory) {
-      const resultToStore = {
-        category: currentCategory.name,
-        selectedLevel: level,
-      };
-      storeResult(resultToStore);
-    }
+    // if (currentCategory) { // Logic to store individual results to localStorage removed
+    //   const resultToStore = {
+    //     category: currentCategory.name,
+    //     selectedLevel: level,
+    //   };
+    //   // storeResult(resultToStore); // Will be handled by handleSubmitResults with Supabase
+    // }
   };
 
   const handleNextCategory = () => {
@@ -108,9 +246,44 @@ export default function Home() {
     }
   };
 
-  const handleSubmitResults = () => {
+  const handleSubmitResults = async () => { // Made async
+    if (!assessmentId) {
+      console.error("Cannot submit results: assessmentId is missing.");
+      // TODO: Show user-friendly error or redirect
+      return;
+    }
+    if (results.length === 0) {
+      console.warn("No results to submit.");
+      setShowResults(true); // Still show results page, even if empty
+      setStep(categories.length + 2);
+      return;
+    }
+
+    const resultsToInsert = results.map(result => ({
+      assessment_id: assessmentId,
+      category_name: result.category,
+      selected_level: result.selectedLevel,
+    }));
+
+    try {
+      const { error } = await supabase
+        .from('assessment_results')
+        .insert(resultsToInsert);
+
+      if (error) {
+        console.error('Error inserting assessment results:', error.message);
+        // TODO: Show user-friendly error
+      } else {
+        // console.log('Assessment results saved successfully.');
+        // localStorage.removeItem('assessmentResults'); // Clear local storage if successfully saved to DB
+      }
+    } catch (e: any) {
+      console.error('Supabase call failed (assessment_results):', e.message);
+      // TODO: Show user-friendly error
+    }
+    
     setShowResults(true);
-    setStep(categories.length + 2); 
+    setStep(categories.length + 2);
   };
 
   const totalLogicalSteps = categories.length + 3; 
