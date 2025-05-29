@@ -355,9 +355,9 @@ export default function Home() {
               </p>
               <div className="flex space-x-4">
                 <Link href="/entendiendo-finops/entendiendo.html" className="inline-block bg-sky-900 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300 text-lg shadow-md hover:shadow-lg">
-                  Entendiendo FinOps
+                  Entendimiento AutoEvaluación
                 </Link>
-                <Link href="/entendiendo-finops/framework.html" className="inline-block bg-teal-700 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300 text-lg shadow-md hover:shadow-lg">
+                <Link href="/entendiendo-finops/framework.html" className="inline-block bg-sky-900 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300 text-lg shadow-md hover:shadow-lg">
                   Framework
                 </Link>
               </div>
