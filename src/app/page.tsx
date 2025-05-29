@@ -320,17 +320,7 @@ export default function Home() {
 
   return (
     <div className="bg-gradient-radial min-h-screen flex flex-col justify-center items-center p-4">
-      <div className={`fixed top-4 left-0 right-0 flex justify-center z-50 transition-transform duration-300 ${showLogo ? 'translate-y-0' : '-translate-y-20'}`}>
-        <img
-          src="/images/smart-solutions.png"
-          alt="Smart Solutions"
-          width={250}
-          height={60}
-          className="h-auto cursor-pointer hover:opacity-80 transition-opacity shadow-lg"
-          onClick={handleReset}
-          title="Volver al inicio"
-        />
-      </div>
+      {/* Smart Solutions Logo Removed */}
 
       <div className="max-w-4xl w-full pt-16 md:pt-24">
         <div className="text-center animate-fade-in">
